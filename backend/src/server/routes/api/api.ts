@@ -20,7 +20,7 @@ export class API {
     this.router.use("/v1", this.v1.router);
 
     // Mount the greeting endpoint
-    this.router;
+    this.router.use("/", (req, res) => this.greeting(req, res));
   }
 
   private greeting = (req: Request, res: Response) => {
