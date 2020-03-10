@@ -1,5 +1,5 @@
 {
-  "name": "double-note",
+  "name": "doublenote-frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,16 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bernd-L/DoubleNote.git"
+  },
+  "author": "Bernd-L <Bernd-L@bernd.pw>",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Bernd-L/DoubleNote/issues"
+  },
+  "homepage": "https://github.com/Bernd-L/DoubleNote#readme",
   "dependencies": {
     "@angular/animations": "~9.0.3",
     "@angular/common": "~9.0.3",
