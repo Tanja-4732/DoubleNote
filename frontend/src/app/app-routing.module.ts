@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { MainComponent } from "./components/main/main.component";
+import { WelcomeComponent } from "./components/welcome/welcome.component";
 
 const routes: Routes = [
-  // Main component
-  { path: "/main", pathMatch: "full", component: MainComponent }
+  // Welcome component
+  { path: "welcome", pathMatch: "full", component: WelcomeComponent }
 ];
 
 @NgModule({
