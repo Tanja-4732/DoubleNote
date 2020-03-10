@@ -1,5 +1,5 @@
 {
-  "name": "example",
+  "name": "doublenote",
   "version": "0.1.0",
   "description": "",
   "main": "main.js",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Someone/example.git"
+    "url": "git+https://github.com/Bernd-L/DoubleNote.git"
   },
-  "author": "Someone <someone@example.com>",
+  "author": "Bernd-L <Bernd-L@bernd.pw>",
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/Someone/example/issues"
+    "url": "https://github.com/Bernd-L/DoubleNote/issues"
   },
-  "homepage": "https://github.com/Someone/example#readme",
+  "homepage": "https://github.com/Bernd-L/DoubleNote#readme",
   "dependencies": {
     "typescript": "^3.8.2",
     "source-map-support": "^0.5.16"
