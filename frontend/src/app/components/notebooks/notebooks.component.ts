@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { NotebookService } from "src/app/services/notebook/notebook.service";
+import { map } from "rxjs/operators";
+import { interval } from "rxjs";
 
 @Component({
-  selector: 'app-notebooks',
-  templateUrl: './notebooks.component.html',
-  styleUrls: ['./notebooks.component.scss']
+  selector: "app-notebooks",
+  templateUrl: "./notebooks.component.html",
+  styleUrls: ["./notebooks.component.scss"]
 })
 export class NotebooksComponent implements OnInit {
+  constructor(public nbs: NotebookService) {}
 
-  constructor() { }
+  notebooks$ = interval(1000);
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

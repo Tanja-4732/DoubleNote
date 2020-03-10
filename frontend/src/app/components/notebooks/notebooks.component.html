@@ -1,1 +1,5 @@
 <p>notebooks works!</p>
+
+<ng-container *ngFor="let notebook of notebooks$ | async">
+  <p>{{ notebook }}</p>
+</ng-container>
