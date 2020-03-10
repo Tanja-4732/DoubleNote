@@ -2,7 +2,7 @@
   "name": "doublenote-backend",
   "version": "0.1.0",
   "description": "",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
     "watch": "nodemon -w src -x \"npm start\" -e ts",
     "start": "node -r source-map-support/register .",
@@ -21,10 +21,12 @@
   },
   "homepage": "https://github.com/Bernd-L/DoubleNote#readme",
   "dependencies": {
-    "typescript": "^3.8.2",
-    "source-map-support": "^0.5.16"
+    "express": "^4.17.1",
+    "source-map-support": "^0.5.16",
+    "typescript": "^3.8.2"
   },
   "devDependencies": {
+    "@types/express": "^4.17.3",
     "@types/node": "^13.7.6",
     "nodemon": "^2.0.2"
   }
