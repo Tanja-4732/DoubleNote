@@ -16,6 +16,8 @@ import { MatListModule } from '@angular/material/list';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { NotebooksComponent } from './components/notebooks/notebooks.component';
+import { DrawComponent } from './components/draw/draw.component';
+import { DemoComponent } from './components/demo/demo.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { NotebooksComponent } from './components/notebooks/notebooks.component';
     MainComponent,
     WelcomeComponent,
     SettingsComponent,
-    NotebooksComponent
+    NotebooksComponent,
+    DrawComponent,
+    DemoComponent
   ],
   imports: [
     BrowserModule,
