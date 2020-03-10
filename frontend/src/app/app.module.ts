@@ -14,12 +14,16 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { NotebooksComponent } from './components/notebooks/notebooks.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    SettingsComponent,
+    NotebooksComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 {
-  "cSpell.words": [
-    "prestart"
-  ]
+  "cSpell.words": ["prestart"],
+  "htmlhint.options": {
+    "attr-lowercase": false
+  }
 }
