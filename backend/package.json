@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "description": "",
   "main": "dist/main.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "watch": "nodemon -w src -x \"npm start\" -e ts",
     "start": "node -r source-map-support/register .",
     "prestart": "npm run build",
     "build": "tsc",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
