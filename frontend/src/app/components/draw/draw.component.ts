@@ -73,19 +73,31 @@ export class DrawComponent implements AfterViewInit {
           );
         })
       )
-      .subscribe((res: [MouseEvent, MouseEvent]) => {
+      .subscribe((res: [MouseEvent, MouseEvent] | [TouchEvent, TouchEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
 
         // previous and current position with the offset
-        const prevPos = {
-          x: res[0].clientX - rect.left,
-          y: res[0].clientY - rect.top
-        };
+        const prevPos =
+          res[0] instanceof MouseEvent
+            ? {
+                x: res[0].clientX - rect.left,
+                y: res[0].clientY - rect.top
+              }
+            : {
+                x: res[0].touches[0].clientX - rect.left,
+                y: res[0].touches[0].clientY - rect.top
+              };
 
-        const currentPos = {
-          x: res[1].clientX - rect.left,
-          y: res[1].clientY - rect.top
-        };
+        const currentPos =
+          res[1] instanceof MouseEvent
+            ? {
+                x: res[1].clientX - rect.left,
+                y: res[1].clientY - rect.top
+              }
+            : {
+                x: res[1].touches[0].clientX - rect.left,
+                y: res[1].touches[0].clientY - rect.top
+              };
 
         // this method we'll implement soon to do the actual drawing
         this.drawOnCanvas(prevPos, currentPos);
