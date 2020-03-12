@@ -66,7 +66,12 @@ export class DrawComponent implements AfterViewInit {
               )
             ),
             // we'll also stop (and unsubscribe) once the mouse leaves the canvas (mouseleave event)
-            takeUntil(fromEvent(canvasEl, "mouseleave")),
+            takeUntil(
+              merge(
+                fromEvent(canvasEl, "mouseleave"),
+                fromEvent(canvasEl, "touchcancel")
+              )
+            ),
             // pairwise lets us get the previous value to draw a line from
             // the previous point to the current point
             pairwise()
