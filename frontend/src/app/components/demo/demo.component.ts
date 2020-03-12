@@ -8,5 +8,8 @@ import { Component, OnInit } from "@angular/core";
 export class DemoComponent implements OnInit {
   constructor() {}
 
+  height = 100;
+  width = 200;
+
   ngOnInit(): void {}
 }

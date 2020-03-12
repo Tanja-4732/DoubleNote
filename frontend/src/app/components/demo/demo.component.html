@@ -1,5 +1,8 @@
 <p>demo works!</p>
 
+<input mat-input type="range" [(ngModel)]="height" />
+<input mat-input type="range" [(ngModel)]="width" />
+
 <br />
 
-<app-draw [width]="1000"></app-draw>
+<app-draw [width]="width" [height]="height"></app-draw>
