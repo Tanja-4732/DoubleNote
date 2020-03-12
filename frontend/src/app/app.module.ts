@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
+import { DragDropModule } from "@angular/cdk/drag-drop";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -19,6 +20,8 @@ import { NotebooksComponent } from "./components/notebooks/notebooks.component";
 import { DrawComponent } from "./components/draw/draw.component";
 import { DemoComponent } from "./components/demo/demo.component";
 import { FormsModule } from "@angular/forms";
+import { TextBoxComponent } from "./components/text-box/text-box.component";
+import { PageComponent } from "./components/page/page.component";
 
 @NgModule({
   declarations: [
@@ -28,13 +31,16 @@ import { FormsModule } from "@angular/forms";
     SettingsComponent,
     NotebooksComponent,
     DrawComponent,
-    DemoComponent
+    DemoComponent,
+    TextBoxComponent,
+    PageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FormsModule,
+    DragDropModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production
     }),

@@ -6,3 +6,11 @@
 <br />
 
 <app-draw [width]="width" [height]="height"></app-draw>
+
+<br />
+
+<div class="example-boundary">
+  <div class="example-box" cdkDragBoundary=".example-boundary" cdkDrag>
+    I can only be dragged within the dotted container
+  </div>
+</div>
