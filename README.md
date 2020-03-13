@@ -27,6 +27,11 @@ This is a new project; its development status is far away from a beta release.
 - Import/Export
   - (De)serialize notebooks to and from JSON
 
+## Further reading
+
+For information about the frontend, see the [frontend README.md](/frontend/README.md).
+For information about the backend, see the [backend README.md](/backend/README.md).
+
 ## Licence & Copyright
 
 Copyright (c) 2020 Bernd-L. All rights reserved.
