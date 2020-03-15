@@ -1,5 +1,6 @@
 import Express from "express";
 import { Routes } from "./routes/routes";
+import { log } from "console";
 
 export class Server {
   /**
@@ -51,7 +52,8 @@ export class Server {
    * Starts the HTTP server
    */
   private startHttpServer = () => {
-    this.server.listen(80);
+    this.server.listen(this.config.ports.http);
+    log(`HTTP server listening on port ${this.config.ports.http}`);
   };
 
   /**
