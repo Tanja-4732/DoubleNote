@@ -1,7 +1,11 @@
 {
   "cSpell.words": [
     "Affero",
-    "prestart"
+    "CQRS",
+    "editorconfig",
+    "ngsw",
+    "prestart",
+    "sidenav"
   ],
   "htmlhint.options": {
     "attr-lowercase": false

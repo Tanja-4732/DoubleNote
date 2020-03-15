@@ -2,7 +2,7 @@
 
 This is the backend of DoubleNote.
 
-It's an [Express.js](https://expressjs.com) server weitten in TypeScript.
+It's an [Express.js](https://expressjs.com) server written in TypeScript.
 
 The goal of the server is to serve the compiled files of the frontend (located in `/frontend/dist/DoubleNote/`) when requested via HTTP or HTTPS and serve API requests.
 
