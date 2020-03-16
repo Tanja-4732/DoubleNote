@@ -24,6 +24,15 @@ This is how I envision DoubleNote to be implemented
   - Branches
   - Push/Pull
 
+## 2nd iteration
+
+- Real-time collaboration requires one peer to be the host
+- Every action performed by any user needs to be an event
+- Pipe every event through the same pipeline
+- Treat own events the same way as incoming events from peers
+- Allow users to undo and redo any changes made during editing
+- Commit after changes are completed
+
 ## Folder structure
 
 Only the relevant files and folders are listed
