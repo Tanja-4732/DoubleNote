@@ -43,14 +43,17 @@ export class DemoComponent implements OnInit {
     // Listen for incoming connections
     this.peer.on("connection", conn => {
       this.connection = conn;
-      this.connection.on("data", (data: string) => {
-        console.log(data);
-
-        this._peerMessage = data;
-      });
+      this.initListening();
       // conn.on("open", () => {
       //   conn.send("hello!");
       // });
+    });
+  }
+
+  private initListening() {
+    this.connection.on("data", (data: string) => {
+      console.log(data);
+      this._peerMessage = data;
     });
   }
 
@@ -63,6 +66,7 @@ export class DemoComponent implements OnInit {
     // When the outgoing connection is established
     this.connection.on("open", () => {
       console.log("Peer connected");
+      this.initListening();
     });
   }
 }
