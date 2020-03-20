@@ -1,4 +1,29 @@
-<div class="example-box" cdkDragBoundary=".text-box-boundary" cdkDrag>
-  <p cdkDragHandle class="example-handle">Move</p>
-  Text box content
+<div class="editor-box" cdkDragBoundary=".text-box-boundary" cdkDrag>
+  <div class="editor-container">
+    <div class="editor-bar">
+      <div class="editor-state" (click)="cycleModes()">
+        {{ state }}
+      </div>
+
+      <div cdkDragHandle class="editor-handle">
+        Move
+      </div>
+    </div>
+
+    <div
+      *ngIf="state === 'both' || state === 'markdown'"
+      class="editor-markdown"
+    >
+      Markdown editor
+    </div>
+
+    <div
+      #wysiwyg
+      *ngIf="state === 'both' || state === 'wysiwyg'"
+      class="editor-wysiwyg"
+      contenteditable="true"
+    >
+      WYSIWYG editor
+    </div>
+  </div>
 </div>
