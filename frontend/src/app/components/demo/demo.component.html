@@ -1,3 +1,21 @@
+<p>
+  My peerId is
+  <code>
+    {{ peer.id }}
+  </code>
+</p>
+
+<p>
+  The other ID is
+  <input mat-input type="text" [(ngModel)]="peerId" />
+  <button (click)="connectToPeer()">Connect</button>
+</p>
+
+<p>Connected to {{ connection?.peer }}</p>
+
+<input mat-input type="text" [(ngModel)]="peerMessage" />
+
+<br />
 <p>demo works!</p>
 
 <input mat-input type="range" [(ngModel)]="height" />
