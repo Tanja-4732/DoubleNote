@@ -4,6 +4,7 @@
     "CQRS",
     "editorconfig",
     "ngsw",
+    "peerjs",
     "prestart",
     "sidenav"
   ],
