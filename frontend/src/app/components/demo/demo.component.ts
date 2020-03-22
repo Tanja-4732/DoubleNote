@@ -44,12 +44,12 @@ export class DemoComponent implements OnInit {
     this.peer.on("connection", conn => {
       this.connection = conn;
       this.initListening();
-      // conn.on("open", () => {
-      //   conn.send("hello!");
-      // });
     });
   }
 
+  /**
+   * Sets up a listener for incoming data
+   */
   private initListening() {
     this.connection.on("data", (data: string) => {
       this._peerMessage = data;
