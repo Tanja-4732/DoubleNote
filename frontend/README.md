@@ -15,6 +15,7 @@ This is how I envision DoubleNote to be implemented
 - Use event-sourcing (CQRS)
 - Represent any action as an event as soon as possible
 - Connect to users via WebRTC for peer-to-peer communication
+  - Use the PeerJS library
 - Send every event to all peers as soon as possible
 - Treat own events the same way as incoming events from peers
 - Only update the state of a note by applying events
