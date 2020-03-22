@@ -30,16 +30,21 @@ export class MessageBusService {
   private static myself: Peer;
 
   /**
-   * This is the primary subject for dispatching messages
-   *
-   * When a event occurs, it should be dispatched using this subject.
+   * The messages in this subject are either incoming ones or have been broadcast already.
    */
-  private static dispatchSubject = new ReplaySubject();
+  private static messagesSubject = new ReplaySubject();
 
   /**
    * A list of all open connections to other peers
    */
-  private static peerConnections: { [uuid: string]: DataConnection } = {};
+  private static peerConnections: DataConnection[] = [];
+
+  /**
+   * The UUID my this client used to connect to other peers
+   */
+  public get myUuid(): string {
+    return MessageBusService.myself.id;
+  }
 
   constructor() {
     if (MessageBusService.myself == null) {
@@ -59,9 +64,11 @@ export class MessageBusService {
     }
   }
 
+  /**
+   * This method handles incoming connections.\
+   * It's the callback for the on "connection" event
+   */
   private static handleIncomingConnection(connection: DataConnection) {
-    // TODO implement this method
-
     // Wait for the connection to be established
     connection.on("open", () =>
       // Prepare the new connection
@@ -69,11 +76,15 @@ export class MessageBusService {
     );
   }
 
+  /**
+   * Prepares new connections:
+   *
+   * - Register an event handler for incoming data
+   * - Add to the list of connections
+   */
   private static prepareNewConnection(connection: DataConnection) {
-    // TODO implement this method
-
     // Add the connection to the list of connections
-    MessageBusService.peerConnections[connection.peer] = connection;
+    MessageBusService.peerConnections.push(connection);
 
     // Handle incoming messages
     connection.on("data", message =>
@@ -81,13 +92,31 @@ export class MessageBusService {
     );
   }
 
+  /**
+   * Handles incoming messages, without sending them to others
+   */
   private static handleIncomingMessage(message: Message) {
-    // TODO Implement this method
+    // Send the message to the parts of the application which need it
+    MessageBusService.messagesSubject.next(message);
   }
 
+  /**
+   * Sends a message to all connected peers
+   */
+  private static broadcastMessage(message: Message) {
+    for (const connection of MessageBusService.peerConnections) {
+      connection.send(message);
+    }
+  }
+
+  /**
+   * Establishes a connection to a peer
+   *
+   * @param uuid The UUID of the peer to connect to
+   */
   public connectToPeer(uuid: string) {
     // Check if we are already connected to the peer
-    if (MessageBusService.peerConnections.hasOwnProperty(uuid)) {
+    if (MessageBusService.peerConnections.some(c => c.peer === uuid)) {
       // Don't connect
       return;
 
@@ -109,8 +138,17 @@ export class MessageBusService {
     );
   }
 
+  /**
+   * The entry point for messages into the MessageBus
+   *
+   * @param message The message to be handled
+   */
   public dispatchMessage(message: Message) {
-    MessageBusService.dispatchSubject.next(message);
+    // Send the message to all connected peers
+    MessageBusService.broadcastMessage(message);
+
+    // Send the message to the parts of the application which need it
+    MessageBusService.messagesSubject.next(message);
   }
 }
 
@@ -121,5 +159,13 @@ export class MessageBusService {
  * Some UI-events might not need to be treated as messages, such as opening or closing the sidenav.
  */
 export interface Message {
-  // TODO Implement this interface
+  /**
+   * The UUID of the peer who is responsible for this message
+   */
+  authorUuid: string;
+
+  /**
+   * An ISO date representing the  moment in time of this message's creation
+   */
+  creationDate: string;
 }
