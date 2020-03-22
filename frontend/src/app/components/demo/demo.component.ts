@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { v4 } from "uuid";
 import Peer, { DataConnection } from "peerjs";
 
@@ -31,7 +31,7 @@ export class DemoComponent implements OnInit {
 
   connection: DataConnection;
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   height = 100;
   width = 200;
@@ -52,8 +52,8 @@ export class DemoComponent implements OnInit {
 
   private initListening() {
     this.connection.on("data", (data: string) => {
-      console.log(data);
       this._peerMessage = data;
+      this.cdr.detectChanges();
     });
   }
 
@@ -65,7 +65,6 @@ export class DemoComponent implements OnInit {
 
     // When the outgoing connection is established
     this.connection.on("open", () => {
-      console.log("Peer connected");
       this.initListening();
     });
   }

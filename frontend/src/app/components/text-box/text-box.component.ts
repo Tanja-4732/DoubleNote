@@ -9,7 +9,7 @@ export class TextBoxComponent implements OnInit {
   // @ViewChild("wysiwyg")
   // wysiwyg: Element;
 
-  state = "both";
+  state: "both" | "markdown" | "wysiwyg" = "both";
 
   constructor() {}
 
