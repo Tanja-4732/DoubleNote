@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ReplaySubject } from "rxjs";
+import { ReplaySubject, Observable } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
 
@@ -32,18 +32,30 @@ export class MessageBusService {
   /**
    * The messages in this subject are either incoming ones or have been broadcast already.
    */
-  private static messagesSubject = new ReplaySubject();
+  private static readonly messageSubject = new ReplaySubject<Message>();
+
+  /**
+   * The observable containing all messages
+   */
+  private static readonly messageObservable = MessageBusService.messageSubject.asObservable();
 
   /**
    * A list of all open connections to other peers
    */
-  private static peerConnections: DataConnection[] = [];
+  private static readonly peerConnections: DataConnection[] = [];
 
   /**
    * The UUID my this client used to connect to other peers
    */
   public get myUuid(): string {
     return MessageBusService.myself.id;
+  }
+
+  /**
+   * The observable containing all messages
+   */
+  public get messageStream(): Observable<Message> {
+    return MessageBusService.messageObservable;
   }
 
   constructor() {
@@ -97,7 +109,7 @@ export class MessageBusService {
    */
   private static handleIncomingMessage(message: Message) {
     // Send the message to the parts of the application which need it
-    MessageBusService.messagesSubject.next(message);
+    MessageBusService.messageSubject.next(message);
   }
 
   /**
@@ -148,7 +160,7 @@ export class MessageBusService {
     MessageBusService.broadcastMessage(message);
 
     // Send the message to the parts of the application which need it
-    MessageBusService.messagesSubject.next(message);
+    MessageBusService.messageSubject.next(message);
   }
 }
 
