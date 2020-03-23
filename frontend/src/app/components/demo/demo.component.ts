@@ -1,16 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
 import {
   MessageBusService,
   Message
 } from "src/app/services/message-bus/message-bus.service";
+import { filter } from "rxjs/operators";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-demo",
   templateUrl: "./demo.component.html",
   styleUrls: ["./demo.component.scss"]
 })
-export class DemoComponent implements OnInit {
-  private subscription;
+export class DemoComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   private otherPeerMessage = "";
   public peerId: string;
 
@@ -28,23 +30,26 @@ export class DemoComponent implements OnInit {
   width = 200;
 
   ngOnInit(): void {
-    this.subscription = this.mbs.messageStream.subscribe(
-      (message: DemoTextMessage) => {
+    this.subscription = this.mbs.messageStream
+      .pipe(filter((m: Message) => m.messageType === "DemoTextMessage"))
+      .subscribe((message: DemoTextMessage) => {
         console.log(message);
 
-        if (message.hasOwnProperty("text")) {
-          this.otherPeerMessage = message.text;
-          this.cdr.detectChanges();
-        }
-      }
-    );
+        this.otherPeerMessage = message.text;
+        this.cdr.detectChanges();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private makeMessage(text: string): DemoTextMessage {
     return {
       text,
       authorUuid: this.mbs.myUuid,
-      creationDate: new Date().toISOString()
+      creationDate: new Date().toISOString(),
+      messageType: "DemoTextMessage"
     };
   }
 

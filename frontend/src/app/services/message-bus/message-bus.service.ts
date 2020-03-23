@@ -180,4 +180,9 @@ export interface Message {
    * An ISO date representing the  moment in time of this message's creation
    */
   creationDate: string;
+
+  /**
+   * The type of the message
+   */
+  messageType: "Message" | "DemoTextMessage" | "TextBoxMessage";
 }
