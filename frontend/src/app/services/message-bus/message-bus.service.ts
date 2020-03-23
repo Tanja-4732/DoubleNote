@@ -156,11 +156,11 @@ export class MessageBusService {
    * @param message The message to be handled
    */
   public dispatchMessage(message: Message) {
-    // Send the message to all connected peers
-    MessageBusService.broadcastMessage(message);
-
     // Send the message to the parts of the application which need it
     MessageBusService.messageSubject.next(message);
+
+    // Send the message to all connected peers
+    MessageBusService.broadcastMessage(message);
   }
 }
 
