@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
+import { Subscription } from "rxjs";
+import {
+  Message,
+  MessageBusService
+} from "src/app/services/message-bus/message-bus.service";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: "app-text-box",
@@ -6,15 +12,29 @@ import { Component, OnInit, ViewChild } from "@angular/core";
   styleUrls: ["./text-box.component.scss"]
 })
 export class TextBoxComponent implements OnInit {
-  // @ViewChild("wysiwyg")
-  // wysiwyg: Element;
+  @ViewChild("wysiwyg")
+  wysiwygEditor: Element;
+
+  @ViewChild("markdown")
+  markdownEditor: Element;
 
   state: "both" | "markdown" | "wysiwyg" = "both";
 
-  constructor() {}
+  markdownText = "Markdown editor";
+
+  subscription: Subscription;
+
+  constructor(public mbs: MessageBusService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // this.wysiwyg.contentEditable = true;
+    this.subscription = this.mbs.messageStream
+      .pipe(filter((m: Message) => m.messageType === "TextBoxMessage"))
+      .subscribe((message: TextBoxMessage) => {
+        console.log(message);
+
+        this.markdownText = message.markdownText;
+        this.cdr.detectChanges();
+      });
   }
 
   cycleModes() {
@@ -30,4 +50,17 @@ export class TextBoxComponent implements OnInit {
         break;
     }
   }
+
+  onKeyUp(event: KeyboardEvent) {
+    this.mbs.dispatchMessage({
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+      messageType: "TextBoxMessage",
+      markdownText: this.markdownEditor.textContent
+    } as TextBoxMessage);
+  }
+}
+
+interface TextBoxMessage extends Message {
+  markdownText: string;
 }

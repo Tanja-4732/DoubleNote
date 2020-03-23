@@ -11,10 +11,13 @@
     </div>
 
     <div
+      #markdown
       *ngIf="state === 'both' || state === 'markdown'"
       class="editor-markdown"
+      contenteditable="true"
+      (keyup)="onKeyUp($event)"
     >
-      Markdown editor
+      {{ markdownText }}
     </div>
 
     <div
