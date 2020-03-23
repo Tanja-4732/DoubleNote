@@ -1,6 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
-import { v4 } from "uuid";
-import Peer, { DataConnection } from "peerjs";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
+import {
+  MessageBusService,
+  Message
+} from "src/app/services/message-bus/message-bus.service";
 
 @Component({
   selector: "app-demo",
@@ -8,64 +10,49 @@ import Peer, { DataConnection } from "peerjs";
   styleUrls: ["./demo.component.scss"]
 })
 export class DemoComponent implements OnInit {
-  peer: Peer;
-
-  /**
-   * The ID of the (other) peer
-   */
-  peerId: string;
-
-  /**
-   * ~my~ OUR message (soviet anthem starts playing)
-   */
-  private _peerMessage: string;
+  private subscription;
+  private otherPeerMessage = "";
+  public peerId: string;
 
   get peerMessage(): string {
-    return this._peerMessage;
+    return this.otherPeerMessage;
   }
 
   set peerMessage(message: string) {
-    this._peerMessage = message;
-    this.connection.send(message);
+    this.mbs.dispatchMessage(this.makeMessage(message));
   }
 
-  connection: DataConnection;
-
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(public mbs: MessageBusService, private cdr: ChangeDetectorRef) {}
 
   height = 100;
   width = 200;
 
   ngOnInit(): void {
-    // Create a peer for myself
-    this.peer = new Peer(v4());
+    this.subscription = this.mbs.messageStream.subscribe(
+      (message: DemoTextMessage) => {
+        console.log(message);
 
-    // Listen for incoming connections
-    this.peer.on("connection", conn => {
-      this.connection = conn;
-      this.initListening();
-    });
+        if (message.hasOwnProperty("text")) {
+          this.otherPeerMessage = message.text;
+          this.cdr.detectChanges();
+        }
+      }
+    );
   }
 
-  /**
-   * Sets up a listener for incoming data
-   */
-  private initListening() {
-    this.connection.on("data", (data: string) => {
-      this._peerMessage = data;
-      this.cdr.detectChanges();
-    });
+  private makeMessage(text: string): DemoTextMessage {
+    return {
+      text,
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString()
+    };
   }
 
-  /**
-   * Initiates a connection
-   */
   connectToPeer() {
-    this.connection = this.peer.connect(this.peerId);
-
-    // When the outgoing connection is established
-    this.connection.on("open", () => {
-      this.initListening();
-    });
+    this.mbs.connectToPeer(this.peerId);
   }
+}
+
+interface DemoTextMessage extends Message {
+  text: string;
 }

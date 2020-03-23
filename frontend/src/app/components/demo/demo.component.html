@@ -1,7 +1,7 @@
 <p>
   My peerId is
   <code>
-    {{ peer.id }}
+    {{ mbs.myUuid }}
   </code>
 </p>
 
@@ -11,9 +11,13 @@
   <button (click)="connectToPeer()">Connect</button>
 </p>
 
-<p>Connected to {{ connection?.peer }}</p>
+<!-- <p>Connected to {{ connection?.peer }}</p> -->
 
 <input mat-input type="text" [(ngModel)]="peerMessage" />
+
+<p>
+  {{ peerMessage }}
+</p>
 
 <br />
 <p>demo works!</p>
