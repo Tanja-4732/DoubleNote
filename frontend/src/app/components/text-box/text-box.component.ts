@@ -1,10 +1,16 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import { Subscription } from "rxjs";
+import { filter } from "rxjs/operators";
 import {
   Message,
   MessageBusService
 } from "src/app/services/message-bus/message-bus.service";
-import { filter } from "rxjs/operators";
 
 @Component({
   selector: "app-text-box",
@@ -13,10 +19,10 @@ import { filter } from "rxjs/operators";
 })
 export class TextBoxComponent implements OnInit {
   @ViewChild("wysiwyg")
-  wysiwygEditor: Element;
+  wysiwygEditor: ElementRef;
 
   @ViewChild("markdown")
-  markdownEditor: Element;
+  markdownEditor: ElementRef;
 
   state: "both" | "markdown" | "wysiwyg" = "both";
 
@@ -56,7 +62,7 @@ export class TextBoxComponent implements OnInit {
       authorUuid: this.mbs.myUuid,
       creationDate: new Date().toISOString(),
       messageType: "TextBoxMessage",
-      markdownText: this.markdownEditor.textContent
+      markdownText: this.markdownEditor.nativeElement.innerText
     } as TextBoxMessage);
   }
 }
@@ -64,3 +70,30 @@ export class TextBoxComponent implements OnInit {
 interface TextBoxMessage extends Message {
   markdownText: string;
 }
+
+/*
+Use @ViewContainer
+
+https://youtu.be/qWmqiYDrnDc?t=1692
+"use custom directives to implement DOM manipulation logic"
+
+https://stackoverflow.com/a/48557247/5954839
+
+Create a virtual DOM for Markdown
+Call it MDDOM
+
+Maybe consider using FrontMatter as well
+There can be formatting (bold, italics, ...) inline
+*/
+
+interface MDDOM {
+  nodes: MddomNode[];
+}
+
+interface MddomNode {}
+
+interface MddomTextNode extends MddomNode {}
+
+interface MddomTableNode extends MddomNode {}
+
+interface MddomImageNode extends MddomNode {}
