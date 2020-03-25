@@ -80,18 +80,34 @@ https://youtu.be/qWmqiYDrnDc?t=1692
 https://stackoverflow.com/a/48557247/5954839
 
 Create a virtual DOM for Markdown
-Call it MDDOM
+Call it MDOM (=MarkDown Object Model)
 -> We need a syntax tree
+
+
+
+! Use advanced types
+! Probably use "type predicates"
+-> see https://www.typescriptlang.org/docs/handbook/advanced-types.html
+
 */
 
-interface MDDOM {
-  nodes: MddomNode[];
+/**
+ * MarkDown Object Model
+ *
+ * A syntax tree representation of a markdown document
+ */
+interface MdomNode {
+  type: MdomNodeType;
 }
 
-interface MddomNode {}
+interface MdomTextNode extends MdomNode {}
 
-interface MddomTextNode extends MddomNode {}
+interface MdomTableNode extends MdomNode {}
 
-interface MddomTableNode extends MddomNode {}
+interface MdomImageNode extends MdomNode {}
 
-interface MddomImageNode extends MddomNode {}
+enum MdomNodeType {
+  "text",
+  "heading",
+  "hr"
+}
