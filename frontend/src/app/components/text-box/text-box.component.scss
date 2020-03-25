@@ -1,6 +1,6 @@
 .editor-box {
-  width: 375px;
-  height: 200px;
+  width: 500px;
+  height: 300px;
 
   border: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
@@ -53,10 +53,14 @@
 
 .editor-markdown {
   grid-area: markdown;
+
+  overflow: auto;
 }
 
 .editor-wysiwyg {
   grid-area: wysiwyg;
+
+  overflow: auto;
 
   background-color: rgba(236, 236, 236, 0.308);
 }

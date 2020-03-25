@@ -78,6 +78,11 @@ List of nodes
 - Tables
 - Paragraphs
 
+### Another take on collaboration
+
+- Every peer parses their own changes
+- Only send the delta to the message bus
+
 ## Folder structure
 
 Only the relevant files and folders are listed
