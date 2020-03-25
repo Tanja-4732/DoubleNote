@@ -81,9 +81,7 @@ https://stackoverflow.com/a/48557247/5954839
 
 Create a virtual DOM for Markdown
 Call it MDDOM
-
-Maybe consider using FrontMatter as well
-There can be formatting (bold, italics, ...) inline
+-> We need a syntax tree
 */
 
 interface MDDOM {

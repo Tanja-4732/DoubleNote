@@ -10,6 +10,10 @@ The goal of the frontend is to provide a full-featured web application capable o
 
 This is how I envision DoubleNote to be implemented
 
+### Initial strategy
+
+Some of this is outdated (see below)
+
 - Provide a sidenav to switch between contexts such as the welcome screen, settings and notebooks
 - Use RxJS Observables and Subjects where possible
 - Use event-sourcing (CQRS)
@@ -25,7 +29,7 @@ This is how I envision DoubleNote to be implemented
   - Branches
   - Push/Pull
 
-## 2nd iteration
+### 2nd iteration
 
 - Real-time collaboration requires one peer to be the host
 - Every action performed by any user needs to be an event
@@ -33,6 +37,46 @@ This is how I envision DoubleNote to be implemented
 - Treat own events the same way as incoming events from peers
 - Allow users to undo and redo any changes made during editing
 - Commit after changes are completed
+
+### Editing notes & Markdown engine
+
+We need a syntax tree
+
+Maybe consider using FrontMatter as well
+There can be formatting (bold, italics, ...) inline
+
+Several markdown features can be applied to one piece of text.
+Some features disable each other, depending on which one is inside of the other
+We'll need to run the parser several times
+
+Markdown features
+
+- Code blocks
+- Inline code
+- Comments
+- Tables
+- Math blocks
+- Inline math
+- Inline formatting
+  - Bold
+  - Italics
+  - Underline
+  - Strike-through
+  - Highlight
+- Headings
+- Links
+- Images
+- Abbreviations
+- Text
+- Quotes
+- Critique markup
+
+List of nodes
+
+- Headings
+- Comments
+- Tables
+- Paragraphs
 
 ## Folder structure
 
