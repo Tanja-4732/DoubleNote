@@ -22,6 +22,7 @@ import { DemoComponent } from "./components/demo/demo.component";
 import { FormsModule } from "@angular/forms";
 import { TextBoxComponent } from "./components/text-box/text-box.component";
 import { PageComponent } from "./components/page/page.component";
+import { MarkdownBoxDirective } from './directives/MarkdownBox/markdown-box.directive';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { PageComponent } from "./components/page/page.component";
     DrawComponent,
     DemoComponent,
     TextBoxComponent,
-    PageComponent
+    PageComponent,
+    MarkdownBoxDirective
   ],
   imports: [
     BrowserModule,
