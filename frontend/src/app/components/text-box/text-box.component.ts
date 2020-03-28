@@ -89,24 +89,3 @@ Use Discriminated Unions
 -> see https://github.com/Microsoft/TypeScript/issues/14166#issuecomment-280875355
 
 */
-
-/**
- * MarkDown Object Model
- *
- * A syntax tree representation of a markdown document
- */
-interface MdomNode {
-  type: MdomNodeType;
-}
-
-interface MdomTextNode extends MdomNode {}
-
-interface MdomTableNode extends MdomNode {}
-
-interface MdomImageNode extends MdomNode {}
-
-enum MdomNodeType {
-  "text",
-  "heading",
-  "hr"
-}
