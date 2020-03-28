@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
-import {
-  MessageBusService,
-  Message
-} from "src/app/services/message-bus/message-bus.service";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
+import { Message } from "src/app/typings/Message";
 import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
+import { DemoTextMessage } from "../../typings/Message";
 
 @Component({
   selector: "app-demo",
@@ -56,8 +55,4 @@ export class DemoComponent implements OnInit, OnDestroy {
   connectToPeer() {
     this.mbs.connectToPeer(this.peerId);
   }
-}
-
-interface DemoTextMessage extends Message {
-  text: string;
 }

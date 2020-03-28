@@ -7,10 +7,9 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
-import {
-  Message,
-  MessageBusService
-} from "src/app/services/message-bus/message-bus.service";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
+import { Message } from "src/app/typings/Message";
+import { TextBoxMessage } from "../../typings/Message";
 
 @Component({
   selector: "app-text-box",
@@ -67,10 +66,6 @@ export class TextBoxComponent implements OnInit {
   }
 }
 
-interface TextBoxMessage extends Message {
-  markdownText: string;
-}
-
 /*
 Use @ViewContainer
 
@@ -85,9 +80,13 @@ Call it MDOM (=MarkDown Object Model)
 
 
 
-! Use advanced types
-! Probably use "type predicates"
+Use advanced types
+Probably use "type predicates"
 -> see https://www.typescriptlang.org/docs/handbook/advanced-types.html
+
+Use Discriminated Unions
+-> see https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
+-> see https://github.com/Microsoft/TypeScript/issues/14166#issuecomment-280875355
 
 */
 

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { ReplaySubject, Observable } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
+import { Message } from "../../typings/Message";
 
 /**
  * # MessageBusService
@@ -162,27 +163,4 @@ export class MessageBusService {
     // Send the message to all connected peers
     MessageBusService.broadcastMessage(message);
   }
-}
-
-/**
- * A message is the smallest unit of information which can be sent to other peers
- *
- * Any event modifying the shared state of the application or its data needs to be treated as a message.
- * Some UI-events might not need to be treated as messages, such as opening or closing the sidenav.
- */
-export interface Message {
-  /**
-   * The UUID of the peer who is responsible for this message
-   */
-  authorUuid: string;
-
-  /**
-   * An ISO date representing the  moment in time of this message's creation
-   */
-  creationDate: string;
-
-  /**
-   * The type of the message
-   */
-  messageType: "Message" | "DemoTextMessage" | "TextBoxMessage";
 }
