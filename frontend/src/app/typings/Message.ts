@@ -1,3 +1,5 @@
+import { MdomNode } from "./MDOM";
+
 /**
  * A message is a unit of information which should be sent to other peers.
  *
@@ -37,5 +39,14 @@ export interface DemoTextMessage extends BaseMessage {
 
 export interface TextBoxMessage extends BaseMessage {
   messageType: "TextBoxMessage";
-  markdownText: string;
+
+  /**
+   * The MarkDown Object Model representation of the text box content
+   */
+  mdom: MdomNode[];
+
+  /**
+   * The UUID of the text box this message applies to
+   */
+  uuid: string;
 }

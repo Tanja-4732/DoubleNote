@@ -7,8 +7,11 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
+import { MarkdownEngineService } from "src/app/services/markdown-engine/markdown-engine.service";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
+import { MdomNode } from "src/app/typings/MDOM";
 import { Message } from "src/app/typings/Message";
+import { v4 } from "uuid";
 import { TextBoxMessage } from "../../typings/Message";
 
 @Component({
@@ -23,25 +26,34 @@ export class TextBoxComponent implements OnInit {
   @ViewChild("markdown")
   markdownEditor: ElementRef;
 
-  state: "both" | "markdown" | "wysiwyg" = "both";
+  /**
+   * Which editor(s) to display in the text box
+   */
+  state: "both" | "markdown" | "wysiwyg" = "markdown";
 
-  markdownText = "Markdown editor";
+  /**
+   * The MarkDown Object Model representation of the content of this text box
+   */
+  mdom: MdomNode[];
 
   subscription: Subscription;
 
-  constructor(public mbs: MessageBusService, private cdr: ChangeDetectorRef) {}
+  /**
+   * The UUID of the text box
+   *
+   * Used to separate messages from multiple text boxes
+   */
+  uuid = v4();
 
-  ngOnInit(): void {
-    this.subscription = this.mbs.messageStream
-      .pipe(filter((m: Message) => m.messageType === "TextBoxMessage"))
-      .subscribe((message: TextBoxMessage) => {
-        console.log(message);
+  constructor(
+    public mb: MessageBusService,
+    private me: MarkdownEngineService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-        this.markdownText = message.markdownText;
-        this.cdr.detectChanges();
-      });
-  }
-
+  /**
+   * Cycles the editor(s) displayed in the text box
+   */
   cycleModes() {
     switch (this.state) {
       case "both":
@@ -56,13 +68,36 @@ export class TextBoxComponent implements OnInit {
     }
   }
 
+  ngOnInit(): void {
+    // Get the message bus observable
+    // Subscribe to the message bus
+    this.subscription = this.mb.messageStream
+
+      // Apply a filter to only get TextBoxMessages
+      .pipe(filter((m: Message) => m.messageType === "TextBoxMessage"))
+
+      // Handle incoming messages
+      .subscribe((message: TextBoxMessage) =>
+        this.handleIncomingMessage(message)
+      );
+  }
+
+  private handleIncomingMessage(message: TextBoxMessage) {
+    console.log(message);
+
+    this.mdom = message.mdom;
+
+    this.cdr.detectChanges();
+  }
+
   onKeyUp(event: KeyboardEvent) {
-    this.mbs.dispatchMessage({
-      authorUuid: this.mbs.myUuid,
-      creationDate: new Date().toISOString(),
+    this.mb.dispatchMessage({
       messageType: "TextBoxMessage",
-      markdownText: this.markdownEditor.nativeElement.innerText
-    } as TextBoxMessage);
+      authorUuid: this.mb.myUuid,
+      creationDate: new Date().toISOString(),
+      mdom: this.me.parseMarkdown(this.markdownEditor.nativeElement.innerText),
+      uuid: this.uuid
+    });
   }
 }
 
