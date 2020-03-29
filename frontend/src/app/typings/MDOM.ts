@@ -14,12 +14,13 @@ export type MdomNode =
   | BoldNode
   | ItalicsNode
   | UnderlineNode
-  | TableRowNode
+  | TableCellNode
   | InlineMathNode
   | BlockMathNode
   | InlineCodeNode
   | BlockCodeNode
-  | CommentNode;
+  | CommentNode
+  | QuoteNode;
 
 interface MdomBaseNode {
   /**
@@ -31,6 +32,7 @@ interface MdomBaseNode {
     | "image"
     | "hr"
     | "comment"
+    | "quote"
 
     // Inline formatting
     | "bold"
@@ -39,7 +41,7 @@ interface MdomBaseNode {
 
     // Table
     | "table"
-    | "tableRow"
+    | "tableCell"
 
     // Math
     | "inlineMath"
@@ -70,27 +72,48 @@ export interface TextNode extends MdomBaseNode {
   text: string;
 }
 
+/**
+ * A node representing a table
+ *
+ * The `columns` property defines the columns of the table,
+ * both in how each of them is aligned and how many of them there are.
+ *
+ * The children represent the cells of the table: left to right,
+ * top to bottom (including the header).
+ */
 export interface TableNode extends MdomBaseNode {
   nodeType: "table";
 
   /**
-   * The header row of the table
+   * The columns of the table
    */
-  header: MdomNode[];
-
-  /**
-   * The rows of the table
-   */
-  children: TableRowNode[];
+  columns: { alignment: "default" | "left" | "center" | "right" }[];
 }
 
-export interface TableRowNode extends MdomBaseNode {
-  nodeType: "tableRow";
+/**
+ * Wraps the content of a table cell
+ *
+ * This is required, when several nodes need to be placed inside
+ * the same cell of a table, for example when a cell should contain
+ * text of which only some portion is supposed to be bold text.
+ *
+ * This node also contains two boolean values, which represent whether
+ * this cell spans up and/or to the right.
+ *
+ * If either rowSpan OR colSpan are true, the node may not have any children.
+ */
+export interface TableCellNode extends MdomBaseNode {
+  nodeType: "tableCell";
 
   /**
-   * The cells of the columns of this row
+   * Indicates whether the cell spans up
    */
-  children: MdomNode[];
+  rowSpan: boolean;
+
+  /**
+   * Indicates whether the cell spans to the right
+   */
+  colSpan: boolean;
 }
 
 export interface BoldNode extends MdomBaseNode {
@@ -151,10 +174,16 @@ export interface BlockCodeNode extends MdomBaseNode {
    * The language to be used this code block
    */
   language: string;
+
+  // TODO add support for special language settings such as diagram configs
+}
+
+export interface QuoteNode extends MdomBaseNode {
+  nodeType: "quote";
 }
 
 export interface CommentNode extends MdomBaseNode {
   nodeType: "comment";
 
-  //  TODO add support for special comments such as next-slide
+  // TODO add support for special comments such as next-slide
 }
