@@ -1,3 +1,4 @@
+@use "matcha";
 /* You can add global styles to this file, and also import other style files */
 
 html,
@@ -9,4 +10,11 @@ body {
   // font-family: "system-ui" !important;
   // font-variant-ligatures: common-ligatures !important;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: matcha.$bg_color;
+}
+
+button {
+  color: matcha.$text_color;
+  background-color: matcha.$button_bg;
+  border: matcha.$button_border;
 }
