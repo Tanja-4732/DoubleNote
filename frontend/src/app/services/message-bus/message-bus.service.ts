@@ -59,8 +59,8 @@ export class MessageBusService {
     return MessageBusService.messageObservable;
   }
 
-  constructor(disable = true) {
-    if (!disable && MessageBusService.myself == null) {
+  constructor() {
+    if (MessageBusService.myself == null) {
       // Create a peer representing myself
       MessageBusService.myself = new Peer(v4());
 
