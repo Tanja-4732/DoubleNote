@@ -44,10 +44,130 @@ export class MarkdownEngineService {
         - Cut off the empty line
         - Rerun the parser
       - Use several regexes on one line
+      - Search for the first special character
+        - Check if it has a backslash in front of it
+        - Act based on what it is
     */
 
+    // TODO decide if I want to discard all progress so far and think about the parser implementation more thoroughly
+
     const result: MdomNode[] = [];
-    result.push({ nodeType: "text", text, children: [] });
+
+    /**
+     * Escape flag
+     *
+     * Indicates, if the previous character was a backslash
+     */
+    let escape = false;
+
+    /**
+     * Whether the parser is inside a code block
+     */
+    let codeBlock: "none" | "backticks" | "spaces" = "none";
+
+    /**
+     * The level of the heading at the parser location
+     */
+    let headingLevel = 0;
+
+    /**
+     * Whether the parser is inside a comment
+     */
+    let comment = false;
+
+    /**
+     * How many backticks are used in the current inline code segment.
+     * If no inline code element is present at the parser location,
+     * the value is 0
+     */
+    let inlineCode = 0;
+
+    /**
+     * The column the parser is currently is currently at in a line
+     */
+    let columnNumber = 0;
+
+    /**
+     * How many whitespace characters have been encountered in the current
+     * line, but only at its beginning. Null if non-whitespace characters
+     * have been encountered in the current line.
+     */
+    let startingWWhitespace = 0;
+
+    // TODO handle tables
+    // TODO handle hr
+    // TODO handle images
+    // TODO handle quotes
+    // TODO handle links
+    // TODO handle italics
+    // TODO handle bold
+    // TODO handle math blocks
+    // TODO handle inline math
+
+    // TODO handle tabs
+
+    /**
+     * The text the parser is currently working with
+     */
+    let stack = "";
+
+    // loop
+    parserLoop: for (const [i, c] of Array.from(text).entries()) {
+      // loop > handle line breaks
+      if (c === "\n") {
+        lineNumber++;
+        columnNumber = -1;
+        startingWWhitespace = 0;
+        continue parserLoop;
+      } else {
+        columnNumber++;
+      }
+
+      if (
+        // loop > normal conditions
+        !escape &&
+        codeBlock === "none" &&
+        headingLevel === 0 &&
+        !comment &&
+        inlineCode === 0
+      ) {
+        if (
+          // loop > normal conditions > handle heading starts
+          startingWWhitespace !== null &&
+          startingWWhitespace < 4
+        ) {
+          switch (c) {
+            case " ":
+              startingWWhitespace++;
+              continue parserLoop;
+            case "#":
+              headingLevel = 1;
+              continue parserLoop;
+            default:
+              startingWWhitespace = null;
+          }
+        }
+
+        switch (c) {
+          // loop > normal conditions > handle others
+          case "\\":
+            escape = true;
+            break;
+          default:
+            stack += c;
+          // TODO
+        }
+      } else if (
+        // Heading
+        headingLevel > 0 &&
+        !escape &&
+        codeBlock === "none" &&
+        !comment &&
+        inlineCode === 0
+      ) {
+      }
+    }
+
     return result;
   }
 }
