@@ -13,7 +13,6 @@ export type MdomNode =
   // Inline formatting
   | BoldNode
   | ItalicsNode
-  | UnderlineNode
   | TableCellNode
   | InlineMathNode
   | BlockMathNode
@@ -37,7 +36,6 @@ interface MdomBaseNode {
     // Inline formatting
     | "bold"
     | "italics"
-    | "underline"
 
     // Table
     | "table"
@@ -122,10 +120,6 @@ export interface BoldNode extends MdomBaseNode {
 
 export interface ItalicsNode extends MdomBaseNode {
   nodeType: "italics";
-}
-
-export interface UnderlineNode extends MdomBaseNode {
-  nodeType: "underline";
 }
 
 export interface ImageNode extends MdomBaseNode {
