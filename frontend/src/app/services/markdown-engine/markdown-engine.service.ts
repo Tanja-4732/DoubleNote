@@ -21,6 +21,31 @@ export class MarkdownEngineService {
    * @param lineNumber The number of the first line inputted from the text
    */
   parseMarkdown(text: string, lineNumber = 0): MdomNode[] {
+    /*
+      # Objectives
+
+      - Producing markdown from one MDOM tree should always produce the same markdown
+      - Only update the nodes in an existing tree which need to be updated
+      - Mark where in the tree those nodes belong
+        - A node might be
+          - new
+          - updated
+          - removed
+
+      # Strategy
+
+      - Support parsing a markdown document from scratch
+      - Support partial updates to existing trees
+
+      ## Implementation
+
+      - Check if line is empty
+        - Increment line number
+        - Cut off the empty line
+        - Rerun the parser
+      - Use several regexes on one line
+    */
+
     const result: MdomNode[] = [];
     result.push({ nodeType: "text", text, children: [] });
     return result;

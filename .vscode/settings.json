@@ -8,6 +8,7 @@
     "ngsw",
     "peerjs",
     "prestart",
+    "regexes",
     "sidenav"
   ],
   "htmlhint.options": {
