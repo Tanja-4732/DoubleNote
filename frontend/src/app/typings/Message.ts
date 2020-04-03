@@ -22,7 +22,7 @@ interface BaseMessage {
   authorUuid: string;
 
   /**
-   * An ISO date representing the  moment in time of this message's creation
+   * An ISO date representing the moment in time of this message's creation
    */
   creationDate: string;
 
