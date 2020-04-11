@@ -9,23 +9,45 @@
   >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="welcome">Welcome</a>
-      <a mat-list-item routerLink="notebooks">Notebooks</a>
-      <a mat-list-item routerLink="settings">Settings</a>
-      <a mat-list-item routerLink="demo">Demo</a>
+      <a mat-list-item routerLink="welcome">
+        <mat-icon>account_circle</mat-icon>
+        &nbsp; Welcome
+      </a>
+
+      <a mat-list-item routerLink="notebooks">
+        <mat-icon>account_circle</mat-icon>
+        &nbsp; Notebooks
+      </a>
+
+      <a mat-list-item routerLink="settings">
+        <mat-icon>account_circle</mat-icon>
+        &nbsp; Settings
+      </a>
+
+      <a mat-list-item routerLink="demo">
+        <mat-icon>account_circle</mat-icon>
+        &nbsp; Demo
+      </a>
+
+      <mat-divider></mat-divider>
+
       <a
         mat-list-item
         target="_blank"
         href="https://github.com/Bernd-L/DoubleNote#readme"
       >
-        Sources
+        <mat-icon>open_in_new</mat-icon>
+        &nbsp; Sources
+        <mat-icon class="icon-right">open_in_new</mat-icon>
       </a>
       <a
         mat-list-item
         target="_blank"
         href="https://github.com/Bernd-L/DoubleNote/blob/master/LICENSE.md"
       >
-        Licence
+        <mat-icon>open_in_new</mat-icon>
+        &nbsp; Licence
+        <mat-icon class="icon-right">open_in_new</mat-icon>
       </a>
     </mat-nav-list>
   </mat-sidenav>
