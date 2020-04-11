@@ -14,6 +14,7 @@ export type MdomNode =
   | BlockCodeNode
   | CommentNode
   | BlockQuoteNode
+  | IndentedCodeNode
 
   // Inline nodes
   | TextNode
@@ -37,6 +38,7 @@ interface MdomBaseNode {
     | "blockCode"
     | "comment"
     | "blockQuote"
+    | "indentedCode"
 
     // Inline nodes
     | "text"
@@ -181,4 +183,8 @@ export interface CommentNode extends MdomBaseNode {
 
 export interface ParagraphNode extends MdomBaseNode {
   nodeType: "paragraph";
+}
+
+export interface IndentedCodeNode extends MdomBaseNode {
+  nodeType: "indentedCode";
 }
