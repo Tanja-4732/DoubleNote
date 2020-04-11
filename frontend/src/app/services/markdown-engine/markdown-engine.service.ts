@@ -31,14 +31,14 @@ export class MarkdownEngineService {
           - created
           - updated
           - removed
-
-      # Strategy
-
       - Support parsing a markdown document from scratch
       - Support partial updates to existing trees
 
-      ## Implementation
+      # Strategy
 
+      See <https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md>
+
+      - Normalize the input
       - Divide the text into block elements
         - Keep track of the line numbers (start & end)
       - Parse inline elements within the block elements
@@ -47,6 +47,12 @@ export class MarkdownEngineService {
     // TODO think about the parser implementation more thoroughly
 
     const result: MdomNode[] = [];
+
+    // Normalize newlines
+    text = text.replace(/\r\n?|\n/g, "\n");
+
+    // Replace NULL characters
+    text = text.replace(/\0/g, "\uFFFD");
 
     return result;
   }
