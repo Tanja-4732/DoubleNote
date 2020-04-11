@@ -26,9 +26,9 @@ export class MarkdownEngineService {
 
       - Producing markdown from one MDOM tree should always produce the same markdown
       - Only update the nodes in an existing tree which need to be updated
-      - Mark where in the tree those nodes belong
+      - Mark where in the text those nodes belong
         - A node might be
-          - new
+          - created
           - updated
           - removed
 
@@ -39,14 +39,9 @@ export class MarkdownEngineService {
 
       ## Implementation
 
-      - Check if line is empty
-        - Increment line number
-        - Cut off the empty line
-        - Rerun the parser
-      - Use several regexes on one line
-      - Search for the first special character
-        - Check if it has a backslash in front of it
-        - Act based on what it is
+      - Divide the text into block elements
+        - Keep track of the line numbers (start & end)
+      - Parse inline elements within the block elements
     */
 
     // TODO think about the parser implementation more thoroughly

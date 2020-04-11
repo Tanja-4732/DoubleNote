@@ -4,50 +4,47 @@
  * A syntax tree representing a markdown document
  */
 export type MdomNode =
-  | TextNode
+  // Block nodes
+  | ParagraphNode
   | HeadingNode
   | ImageNode
   | TableNode
   | HrNode
+  | BlockMathNode
+  | BlockCodeNode
+  | CommentNode
+  | BlockQuoteNode
 
-  // Inline formatting
+  // Inline nodes
+  | TextNode
   | BoldNode
   | ItalicsNode
   | TableCellNode
   | InlineMathNode
-  | BlockMathNode
-  | InlineCodeNode
-  | BlockCodeNode
-  | CommentNode
-  | QuoteNode;
+  | InlineCodeNode;
 
 interface MdomBaseNode {
   /**
    * The type of the node
    */
-  nodeType:
-    | "text"
+  nodeType: // Block nodes
+  | "paragraph"
     | "heading"
     | "image"
+    | "table"
     | "hr"
+    | "blockMath"
+    | "blockCode"
     | "comment"
-    | "quote"
+    | "blockQuote"
 
-    // Inline formatting
+    // Inline nodes
+    | "text"
     | "bold"
     | "italics"
-
-    // Table
-    | "table"
     | "tableCell"
-
-    // Math
     | "inlineMath"
-    | "blockMath"
-
-    // Code
-    | "inlineCode"
-    | "blockCode";
+    | "inlineCode";
 
   /**
    * The child-nodes of this node
@@ -172,12 +169,16 @@ export interface BlockCodeNode extends MdomBaseNode {
   // TODO add support for special language settings such as diagram configs
 }
 
-export interface QuoteNode extends MdomBaseNode {
-  nodeType: "quote";
+export interface BlockQuoteNode extends MdomBaseNode {
+  nodeType: "blockQuote";
 }
 
 export interface CommentNode extends MdomBaseNode {
   nodeType: "comment";
 
   // TODO add support for special comments such as next-slide
+}
+
+export interface ParagraphNode extends MdomBaseNode {
+  nodeType: "paragraph";
 }
