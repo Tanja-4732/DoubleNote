@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   OnInit,
-  ViewChild
+  ViewChild,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -17,7 +17,7 @@ import { TextBoxMessage } from "../../typings/Message";
 @Component({
   selector: "app-text-box",
   templateUrl: "./text-box.component.html",
-  styleUrls: ["./text-box.component.scss"]
+  styleUrls: ["./text-box.component.scss"],
 })
 export class TextBoxComponent implements OnInit {
   @ViewChild("wysiwyg")
@@ -87,20 +87,27 @@ export class TextBoxComponent implements OnInit {
   }
 
   private handleIncomingMessage(message: TextBoxMessage) {
+    // Log the incoming message
     console.log(message);
 
+    // Update the markdown object model
     this.mdom = message.mdom;
 
+    // Get Angular to re-render the view
     this.cdr.detectChanges();
   }
 
   onKeyUp(event: KeyboardEvent) {
+    const mdom = this.me.parseMarkdown(
+      this.markdownEditor.nativeElement.innerText
+    );
+
     this.mb.dispatchMessage({
       messageType: "TextBoxMessage",
       authorUuid: this.mb.myUuid,
       creationDate: new Date().toISOString(),
-      mdom: this.me.parseMarkdown(this.markdownEditor.nativeElement.innerText),
-      uuid: this.uuid
+      mdom,
+      uuid: this.uuid,
     });
   }
 }
