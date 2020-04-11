@@ -1,6 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "ignore-bound-class-methods": true,
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
