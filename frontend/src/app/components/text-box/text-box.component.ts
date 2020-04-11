@@ -73,9 +73,13 @@ export class TextBoxComponent implements OnInit {
     // Subscribe to the message bus
     this.subscription = this.mb.messageStream
 
-      // Apply a filter to only get TextBoxMessages
-      .pipe(filter((m: Message) => m.messageType === "TextBoxMessage"))
+      .pipe(
+        // Filter for TextBoxMessages only
+        filter((m: Message) => m.messageType === "TextBoxMessage"),
 
+        // Filter for messages about this TextBox only
+        filter((m: TextBoxMessage) => m.uuid === this.uuid)
+      )
       // Handle incoming messages
       .subscribe((message: TextBoxMessage) =>
         this.handleIncomingMessage(message)
