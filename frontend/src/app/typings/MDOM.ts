@@ -145,7 +145,10 @@ export interface HeadingNode extends MdomBaseNode {
   /**
    * The level of the heading
    */
-  level: 1 | 2 | 3 | 4 | 5 | 6;
+  level: number;
+
+  // TODO revert to the line below
+  // level: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 export interface InlineMathNode extends MdomBaseNode {
