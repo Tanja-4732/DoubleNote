@@ -10,6 +10,13 @@ The goal of the frontend is to provide a full-featured web application capable o
 
 This is how I envision DoubleNote to be implemented
 
+### Older stuff (1st and 2nd iteration)
+
+<details>
+<summary>
+  Show older ideas (1st and 2nd iteration)
+</summary>
+
 ### Initial strategy
 
 Some of this is outdated (see below)
@@ -82,6 +89,10 @@ List of nodes
 
 - Every peer parses their own changes
 - Only send the delta to the message bus
+
+</details>
+
+### 3rd iteration
 
 ## Folder structure
 
