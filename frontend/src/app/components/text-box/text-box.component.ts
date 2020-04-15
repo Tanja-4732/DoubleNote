@@ -88,7 +88,7 @@ export class TextBoxComponent implements OnInit {
 
   private handleIncomingMessage(message: TextBoxMessage) {
     // Log the incoming message
-    console.log(message);
+    console.log(message.mdom);
 
     // Update the markdown object model
     this.mdom = message.mdom;
