@@ -94,6 +94,54 @@ List of nodes
 
 ### 3rd iteration
 
+- Sections and pages are stored in notebooks
+- Sections can be sub-sections of other sections
+- Pages must be part of exactly one section
+- Send every event to the message bus
+- Every event which affects the view must come from the message bus
+- The message bus propagates messages to peers
+- The message bus receives incoming messages from peers
+- Assume the Markdown engine to be sufficiently fast
+- Every text box has its own MDOM
+- One page can have multiple text boxes
+- On local change of the markdown text, the engine should parse it again
+- On local change of the WYSIWYG text, the engine should parse it again
+- The resulting MDOM needs to be sent to the message bus in its entirety
+- Incoming MDOM from the message bus needs to be compared against the local MDOM
+- Only calculate the delta locally and apply it to the markdown text and the WYSIWYG text
+  - Handle conflicting changes
+  - What if two people delete a different paragraph?
+- Think about persisting messages
+  - Probably store the JSON of every MDOM as text in the localStorage
+  - Distributed versioning
+- How to handle drawing?
+  - A user can draw on every page
+  - Only allow drawing in draw boxes?
+  - How to synchronize drawing?
+  - Introduce some kind of Drawing Object Model?
+  - Only allow one Drawing Object Model per page?
+    - If so, every page should have one
+- Git works best on text files on a line by line basis
+  - How would applying such version control look like using an AST?
+  - What if something changes sub-node?
+  - When a node changes, it needs to be replaced
+  - Handle sub-node conflicts
+  - When are two text nodes the same node but with changes?
+  - What if two peers paste the same text as a paragraph?
+    - What if there are two, non-conflicting changes?
+  - What if there are changes on separate lines of one markdown paragraph?
+  - How to handle changes in the WYSIWYG text?
+  - How to handle paragraphs being merged with other paragraphs?
+  - How to handle paragraphs being re-ordered?
+  - The third iteration plans suggest sending the entire MDOM in every event
+  - Delta cannot be calculated on the side of the sending peer
+    - At least not without some kind of Git-like commit structure
+- **Real-time peer-to-peer heeds to work as well as asynchronous peer-to-peer editing**
+  - Decide where to handle delta calculations
+  - Real-time editing requires fast delta computations
+  - Async editing requires distributed merging of conflicting changes
+  - Achieve eventual consistency somehow
+
 ## Folder structure
 
 Only the relevant files and folders are listed
