@@ -24,8 +24,6 @@ export class SettingsService {
    */
   private loadSettings() {
     this.settings = JSON.parse(localStorage.getItem("settings")) ?? {};
-
-    console.log(this.settings);
   }
 
   /**
