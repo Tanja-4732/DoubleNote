@@ -150,8 +150,21 @@ List of nodes
 - Collaboration
   - Real-time
     - Message bus via WebRTC
+  - Async
+- Notebooks
+- Tags
 
 WIP
+
+## Sub-projects
+
+- Frontend user interface
+- Message bus
+- Markdown engine
+- WYSIWYG editor
+- Distributed version control
+- SBP implementation
+- BCP implementation
 
 ## Folder structure
 
