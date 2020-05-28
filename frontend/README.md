@@ -134,7 +134,7 @@ List of nodes
   - The third iteration plans suggest sending the entire MDOM in every event
   - Delta cannot be calculated on the side of the sending peer
     - At least not without some kind of Git-like commit structure
-- **Real-time peer-to-peer heeds to work as well as asynchronous peer-to-peer editing**
+- **Real-time peer-to-peer needs to work as well as asynchronous peer-to-peer editing**
   - Decide where to handle delta calculations
   - Real-time editing requires fast delta computations
   - Async editing requires distributed merging of conflicting changes
@@ -147,8 +147,9 @@ List of nodes
 - Two kinds of pages
   - Sequential block pages (SBP)
   - Box canvas pages (BCP)
-- Real-time collaboration
-  - Message bus via WebRTC
+- Collaboration
+  - Real-time
+    - Message bus via WebRTC
 
 WIP
 
