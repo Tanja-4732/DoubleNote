@@ -3,6 +3,7 @@ import { ReplaySubject, Observable } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
 import { Message } from "../../typings/Message";
+import { SettingsService } from "../settings/settings.service";
 
 /**
  * # MessageBusService
@@ -20,7 +21,7 @@ import { Message } from "../../typings/Message";
  * - Deliver messages the parts of the application which need them
  */
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class MessageBusService {
   /**
@@ -49,7 +50,8 @@ export class MessageBusService {
    * The UUID my this client used to connect to other peers
    */
   public get myUuid(): string {
-    return MessageBusService.myself.id;
+    // Check if the application is running in offline mode
+    return this.settings.offlineMode ? "offline" : MessageBusService.myself.id;
   }
 
   /**
@@ -59,8 +61,8 @@ export class MessageBusService {
     return MessageBusService.messageObservable;
   }
 
-  constructor() {
-    if (MessageBusService.myself == null) {
+  constructor(private settings: SettingsService) {
+    if (!this.settings.offlineMode && MessageBusService.myself == null) {
       // Create a peer representing myself
       MessageBusService.myself = new Peer(v4());
 
@@ -71,7 +73,7 @@ export class MessageBusService {
       );
 
       // Handle incoming connections
-      MessageBusService.myself.on("connection", connection =>
+      MessageBusService.myself.on("connection", (connection) =>
         MessageBusService.handleIncomingConnection(connection)
       );
     }
@@ -100,7 +102,7 @@ export class MessageBusService {
     MessageBusService.peerConnections.push(connection);
 
     // Handle incoming messages
-    connection.on("data", message =>
+    connection.on("data", (message) =>
       MessageBusService.handleIncomingMessage(message)
     );
   }
@@ -128,8 +130,13 @@ export class MessageBusService {
    * @param uuid The UUID of the peer to connect to
    */
   public connectToPeer(uuid: string) {
+    // Check if the application is running in offline mode
+    if (this.settings.offlineMode) {
+      throw new Error("Operation not available in offline mode");
+    }
+
     // Check if we are already connected to the peer
-    if (MessageBusService.peerConnections.some(c => c.peer === uuid)) {
+    if (MessageBusService.peerConnections.some((c) => c.peer === uuid)) {
       // Don't connect
       return;
 
@@ -141,7 +148,7 @@ export class MessageBusService {
      */
     const connection = MessageBusService.myself.connect(uuid, {
       reliable: true,
-      label: uuid
+      label: uuid,
     });
 
     // Wait for the connection to be established
@@ -160,7 +167,10 @@ export class MessageBusService {
     // Send the message to the parts of the application which need it
     MessageBusService.messageSubject.next(message);
 
-    // Send the message to all connected peers
-    MessageBusService.broadcastMessage(message);
+    // Check if the application is running in offline mode
+    if (!this.settings.offlineMode) {
+      // Send the message to all connected peers
+      MessageBusService.broadcastMessage(message);
+    }
   }
 }

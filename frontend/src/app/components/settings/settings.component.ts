@@ -1,15 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { SettingsService } from "src/app/services/settings/settings.service";
+import { Subscription } from "rxjs";
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  selector: "app-settings",
+  templateUrl: "./settings.component.html",
+  styleUrls: ["./settings.component.scss"],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
+  formGroup: FormGroup;
+  private sub: Subscription;
 
-  constructor() { }
+  constructor(private settings: SettingsService, formBuilder: FormBuilder) {
+    this.formGroup = formBuilder.group({
+      enableOfflineMode: true,
+    });
 
-  ngOnInit(): void {
+    this.formGroup.setValue(
+      { enableOfflineMode: this.settings.offlineMode },
+      { emitEvent: false }
+    );
   }
 
+  ngOnInit(): void {
+    this.sub = this.formGroup.valueChanges.subscribe(
+      (value) => (this.settings.offlineMode = value.enableOfflineMode)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
 }

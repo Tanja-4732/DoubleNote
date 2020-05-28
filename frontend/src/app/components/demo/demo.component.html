@@ -1,23 +1,29 @@
-<p>
-  My peerId is
-  <code>
-    {{ mbs.myUuid }}
-  </code>
-</p>
+<ng-container *ngIf="!settings.offlineMode">
+  <p>
+    My peerId is
+    <code>
+      {{ mbs.myUuid }}
+    </code>
+  </p>
 
-<p>
-  The other ID is
-  <input mat-input type="text" [(ngModel)]="peerId" />
-  <button (click)="connectToPeer()">Connect</button>
-</p>
+  <p>
+    The other ID is
+    <input mat-input type="text" [(ngModel)]="peerId" />
+    <button (click)="connectToPeer()">Connect</button>
+  </p>
 
-<!-- <p>Connected to {{ connection?.peer }}</p> -->
+  <!-- <p>Connected to {{ connection?.peer }}</p> -->
 
-<input mat-input type="text" [(ngModel)]="peerMessage" />
+  <input mat-input type="text" [(ngModel)]="peerMessage" />
 
-<p>
-  {{ peerMessage }}
-</p>
+  <p>
+    {{ peerMessage }}
+  </p>
+</ng-container>
+
+<ng-container *ngIf="settings.offlineMode">
+  <p>Offline mode active; connecting unavailable</p>
+</ng-container>
 
 <br />
 <p>demo works!</p>

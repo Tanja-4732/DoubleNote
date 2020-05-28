@@ -19,10 +19,13 @@ import { SettingsComponent } from "./components/settings/settings.component";
 import { NotebooksComponent } from "./components/notebooks/notebooks.component";
 import { DrawComponent } from "./components/draw/draw.component";
 import { DemoComponent } from "./components/demo/demo.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TextBoxComponent } from "./components/text-box/text-box.component";
 import { PageComponent } from "./components/page/page.component";
-import { MarkdownBoxDirective } from './directives/MarkdownBox/markdown-box.directive';
+import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.directive";
+import { HttpClientModule } from "@angular/common/http";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -35,7 +38,7 @@ import { MarkdownBoxDirective } from './directives/MarkdownBox/markdown-box.dire
     DemoComponent,
     TextBoxComponent,
     PageComponent,
-    MarkdownBoxDirective
+    MarkdownBoxDirective,
   ],
   imports: [
     BrowserModule,
@@ -44,16 +47,20 @@ import { MarkdownBoxDirective } from './directives/MarkdownBox/markdown-box.dire
     FormsModule,
     DragDropModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
-      enabled: environment.production
+      enabled: environment.production,
     }),
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    HttpClientModule,
+    MatNativeDateModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

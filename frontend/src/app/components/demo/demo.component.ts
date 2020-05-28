@@ -4,11 +4,12 @@ import { Message } from "src/app/typings/Message";
 import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
 import { DemoTextMessage } from "../../typings/Message";
+import { SettingsService } from "src/app/services/settings/settings.service";
 
 @Component({
   selector: "app-demo",
   templateUrl: "./demo.component.html",
-  styleUrls: ["./demo.component.scss"]
+  styleUrls: ["./demo.component.scss"],
 })
 export class DemoComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
@@ -23,7 +24,11 @@ export class DemoComponent implements OnInit, OnDestroy {
     this.mbs.dispatchMessage(this.makeMessage(message));
   }
 
-  constructor(public mbs: MessageBusService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    public settings: SettingsService,
+    public mbs: MessageBusService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   height = 100;
   width = 200;
@@ -48,7 +53,7 @@ export class DemoComponent implements OnInit, OnDestroy {
       text,
       authorUuid: this.mbs.myUuid,
       creationDate: new Date().toISOString(),
-      messageType: "DemoTextMessage"
+      messageType: "DemoTextMessage",
     };
   }
 
