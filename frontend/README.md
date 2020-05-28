@@ -90,8 +90,6 @@ List of nodes
 - Every peer parses their own changes
 - Only send the delta to the message bus
 
-</details>
-
 ### 3rd iteration
 
 - Sections and pages are stored in notebooks
@@ -141,6 +139,18 @@ List of nodes
   - Real-time editing requires fast delta computations
   - Async editing requires distributed merging of conflicting changes
   - Achieve eventual consistency somehow
+
+</details>
+
+### 4th iteration
+
+- Two kinds of pages
+  - Sequential block pages (SBP)
+  - Box canvas pages (BCP)
+- Real-time collaboration
+  - Message bus via WebRTC
+
+WIP
 
 ## Folder structure
 

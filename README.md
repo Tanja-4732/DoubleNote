@@ -4,6 +4,8 @@ This is a new project; its development status is far away from a beta release.
 
 ## (Planned) Features
 
+_See the newest plans in the [4th iteration of the frontend README](/frontend/README.md#4th-iteration)_
+
 - Progressive web application
   - Full offline support
 - Real-time collaboration
