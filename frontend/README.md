@@ -10,7 +10,7 @@ The goal of the frontend is to provide a fully-featured web application capable 
 
 This is how I envision DoubleNote to be implemented
 
-### Older stuff (1st and 2nd iteration)
+### Older stuff (1st, 2nd and 3rd iteration)
 
 <details>
 <summary>
