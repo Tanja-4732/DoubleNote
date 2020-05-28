@@ -4,7 +4,7 @@ This is the Frontend of DoubleNote.
 
 It's an [Angular](https://angular.io) single page application written in TypeScript, HTML, and SCSS.
 
-The goal of the frontend is to provide a full-featured web application capable of creating, editing, and view notes -- both in Markdown and as free-hand drawings.
+The goal of the frontend is to provide a fully-featured web application capable of creating, editing, and view notes -- both in Markdown and as free-hand drawings.
 
 ## Implementation strategy
 
