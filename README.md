@@ -33,7 +33,7 @@ Frontend-specific features are specified in the [frontend implementation strateg
 
 ## Further reading
 
-For information about the frontend, see the [frontend README.md](/frontend/README.md).
+For information about the frontend, see the [frontend README.md](/frontend/README.md).  
 For information about the backend, see the [backend README.md](/backend/README.md).
 
 ## Licence & Copyright

@@ -191,5 +191,5 @@ Only the relevant files and folders are listed
 
 ## Further reading
 
-For information about the backend, see the [backend README.md](/backend/README.md).
+For information about the backend, see the [backend README.md](/backend/README.md).  
 For information about the application as a whole, see the [main README.md](/README.md).
