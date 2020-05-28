@@ -14,7 +14,7 @@ This is how I envision DoubleNote to be implemented
 
 <details>
 <summary>
-  Show older ideas (1st and 2nd iteration)
+  Show older ideas (1st, 2nd and 3rd iteration)
 </summary>
 
 ### Initial strategy
