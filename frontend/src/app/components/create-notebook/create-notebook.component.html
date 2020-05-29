@@ -14,12 +14,13 @@
       <mat-error *ngIf="formGroup.invalid">A name must be provided</mat-error>
     </mat-form-field>
     <br />
+    <br />
 
     <mat-label>Notebook type</mat-label> <br />
     <mat-radio-group formControlName="type">
-      <mat-radio-button value="BCP">Box canvas</mat-radio-button>
+      <mat-radio-button value="BCP">Box canvas page</mat-radio-button>
       <br />
-      <mat-radio-button value="SBP">Sequential block</mat-radio-button>
+      <mat-radio-button value="SBP">Sequential block page</mat-radio-button>
     </mat-radio-group>
   </div>
   <div mat-dialog-actions>

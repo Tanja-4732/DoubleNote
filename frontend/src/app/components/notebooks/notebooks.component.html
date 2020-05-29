@@ -1,4 +1,8 @@
-<button (click)="openDialog('BCP')">Create notebook</button>
+<button mat-stroked-button (click)="openDialog('BCP')" color="accent">
+  Create notebook
+</button>
+<br />
+<br />
 
 <ng-container *ngFor="let notebook of nbs.notebooks">
   <p>{{ notebook.title }} ({{ notebook.type }})</p>
