@@ -1,5 +1,5 @@
-<p>notebooks works!</p>
+<button (click)="openDialog('BCP')">Create notebook</button>
 
 <ng-container *ngFor="let notebook of nbs.notebooks">
-  <p>{{ notebook }}</p>
+  <p>{{ notebook.title }} ({{ notebook.type }})</p>
 </ng-container>

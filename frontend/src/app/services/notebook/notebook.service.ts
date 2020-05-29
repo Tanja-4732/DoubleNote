@@ -30,7 +30,7 @@ export class NotebookService {
   /**
    * Persist the notebooks to localStorage
    */
-  private persist() {
+  public persist() {
     localStorage.setItem("notebooks", JSON.stringify(this.notebooks));
   }
 }

@@ -1,32 +1,36 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
+import { LayoutModule } from "@angular/cdk/layout";
+import { HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
+import { MatListModule } from "@angular/material/list";
+import { MatRadioModule } from "@angular/material/radio";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
-import { MainComponent } from "./components/main/main.component";
-import { LayoutModule } from "@angular/cdk/layout";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatIconModule } from "@angular/material/icon";
-import { MatListModule } from "@angular/material/list";
-import { WelcomeComponent } from "./components/welcome/welcome.component";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { NotebooksComponent } from "./components/notebooks/notebooks.component";
-import { DrawComponent } from "./components/draw/draw.component";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { CreateNotebookComponent } from "./components/create-notebook/create-notebook.component";
+import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.component";
 import { DemoComponent } from "./components/demo/demo.component";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { TextBoxComponent } from "./components/text-box/text-box.component";
+import { DrawComponent } from "./components/draw/draw.component";
+import { MainComponent } from "./components/main/main.component";
+import { NotebooksComponent } from "./components/notebooks/notebooks.component";
 import { PageComponent } from "./components/page/page.component";
+import { SettingsComponent } from "./components/settings/settings.component";
+import { TextBoxComponent } from "./components/text-box/text-box.component";
+import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.directive";
-import { HttpClientModule } from "@angular/common/http";
-import { MatNativeDateModule } from "@angular/material/core";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +45,7 @@ import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.compon
     PageComponent,
     MarkdownBoxDirective,
     CrumbTrailComponent,
+    CreateNotebookComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,6 +66,11 @@ import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.compon
     MatNativeDateModule,
     ReactiveFormsModule,
     MatSlideToggleModule,
+    MatDialogModule,
+    MatInputModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatRadioModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

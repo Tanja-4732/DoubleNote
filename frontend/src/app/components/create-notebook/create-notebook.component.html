@@ -1,0 +1,33 @@
+<h1>Create a notebook</h1>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="My notes"
+        required
+        cdkFocusInitial
+      />
+      <mat-error *ngIf="formGroup.invalid">A name must be provided</mat-error>
+    </mat-form-field>
+    <br />
+
+    <mat-label>Notebook type</mat-label> <br />
+    <mat-radio-group formControlName="type">
+      <mat-radio-button value="BCP">Box canvas</mat-radio-button>
+      <br />
+      <mat-radio-button value="SBP">Sequential block</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">
+      Cancel
+    </button>
+    <button mat-button [disabled]="formGroup.invalid" type="submit">
+      Confirm
+    </button>
+  </div>
+</form>
