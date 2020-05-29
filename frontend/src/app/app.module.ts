@@ -26,6 +26,7 @@ import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.dire
 import { HttpClientModule } from "@angular/common/http";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { CrumbTrailComponent } from './components/crumb-trail/crumb-trail.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
     TextBoxComponent,
     PageComponent,
     MarkdownBoxDirective,
+    CrumbTrailComponent,
   ],
   imports: [
     BrowserModule,

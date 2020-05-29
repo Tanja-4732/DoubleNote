@@ -2,6 +2,10 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { SettingsService } from "src/app/services/settings/settings.service";
 import { Subscription } from "rxjs";
+import {
+  CrumbTrailComponent,
+  Icon,
+} from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-settings",
@@ -24,6 +28,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Settings,
+        title: "Settings",
+      },
+    ];
+
     this.sub = this.formGroup.valueChanges.subscribe(
       (value) => (this.settings.offlineMode = value.enableOfflineMode)
     );
