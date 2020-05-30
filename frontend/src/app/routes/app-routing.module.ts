@@ -3,7 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { WelcomeComponent } from "../user-interface/components/welcome/welcome.component";
 import { SettingsComponent } from "../user-interface/components/settings/settings.component";
 import { NotebooksComponent } from "../user-interface/components/notebooks/notebooks.component";
-import { DemoComponent } from "../user-interface/components/demo/demo.component";
+import { DemoComponent } from "../box-canvas-page/components/demo/demo.component";
 
 const routes: Routes = [
   // Welcome component
