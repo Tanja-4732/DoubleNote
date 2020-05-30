@@ -32,6 +32,7 @@ import { SettingsComponent } from "./components/settings/settings.component";
 import { TextBoxComponent } from "./components/text-box/text-box.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.directive";
+import { SideNavComponent } from './components/side-nav/side-nav.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.dire
     CrumbTrailComponent,
     CreateNotebookComponent,
     NotebookCardComponent,
+    SideNavComponent,
   ],
   imports: [
     BrowserModule,
