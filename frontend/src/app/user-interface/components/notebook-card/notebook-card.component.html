@@ -4,7 +4,9 @@
   <mat-card-actions>
     <button
       mat-raised-button
-      routerLink="/notebooks/{{ notebook.uuid }}"
+      routerLink="/notebooks/{{ notebook.type.toLowerCase() }}/{{
+        notebook.uuid
+      }}"
       color="primary"
     >
       Open
