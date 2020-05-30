@@ -6,6 +6,7 @@ export type Notebook = SbpNotebook | BcpNotebook;
 interface BaseNotebook {
   title: string;
   type: "SBP" | "BCP";
+  uuid: string;
 }
 
 /**

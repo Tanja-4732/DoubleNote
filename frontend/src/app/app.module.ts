@@ -5,6 +5,7 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import { MatCardModule } from "@angular/material/card";
 import { MatNativeDateModule } from "@angular/material/core";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
@@ -25,6 +26,7 @@ import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.compon
 import { DemoComponent } from "./components/demo/demo.component";
 import { DrawComponent } from "./components/draw/draw.component";
 import { MainComponent } from "./components/main/main.component";
+import { NotebookCardComponent } from "./components/notebook-card/notebook-card.component";
 import { NotebooksComponent } from "./components/notebooks/notebooks.component";
 import { PageComponent } from "./components/page/page.component";
 import { SettingsComponent } from "./components/settings/settings.component";
@@ -46,6 +48,7 @@ import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.dire
     MarkdownBoxDirective,
     CrumbTrailComponent,
     CreateNotebookComponent,
+    NotebookCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +74,7 @@ import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.dire
     MatButtonModule,
     MatButtonToggleModule,
     MatRadioModule,
+    MatCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

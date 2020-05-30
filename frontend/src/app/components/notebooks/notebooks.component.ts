@@ -9,6 +9,7 @@ import {
   CreateNotebookComponent,
   DialogResult,
 } from "../create-notebook/create-notebook.component";
+import { v4 } from "uuid";
 
 @Component({
   selector: "app-notebooks",
@@ -30,6 +31,7 @@ export class NotebooksComponent implements OnInit {
   private handleResult(result: DialogResult) {
     if (result?.create && result.name) {
       this.nbs.notebooks.push({
+        uuid: v4(),
         title: result.name,
         pages: [],
         type: result.type,

@@ -1,9 +1,10 @@
-<button mat-stroked-button (click)="openDialog('BCP')" color="accent">
+<button mat-raised-button (click)="openDialog('BCP')" color="accent">
   Create notebook
 </button>
 <br />
 <br />
-
-<ng-container *ngFor="let notebook of nbs.notebooks">
-  <p>{{ notebook.title }} ({{ notebook.type }})</p>
-</ng-container>
+<div class="card-grid">
+  <ng-container *ngFor="let notebook of nbs.notebooks">
+    <app-notebook-card [notebook]="notebook"></app-notebook-card>
+  </ng-container>
+</div>

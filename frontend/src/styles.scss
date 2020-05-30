@@ -5,6 +5,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   // font-family: "system-ui" !important;
@@ -13,12 +14,21 @@ body {
   // background-color: matcha.$bg_color;
 }
 
-button {
-  // color: matcha.$text_color;
-  // background-color: matcha.$button_bg;
-  // border: matcha.$button_border;
-}
+// button {
+// color: matcha.$text_color;
+// background-color: matcha.$button_bg;
+// border: matcha.$button_border;
+// }
 
 .defaultMargin {
   margin: 8px;
+}
+
+/**
+The css-grid for card layouts
+*/
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
 }
