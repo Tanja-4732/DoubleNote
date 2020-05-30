@@ -13,6 +13,8 @@ import {
   styleUrls: ["./sbp-notebook.component.scss"],
 })
 export class SbpNotebookComponent implements OnInit {
+  // This will get implemented after BCP
+
   notebook: SbpNotebook;
 
   constructor(
