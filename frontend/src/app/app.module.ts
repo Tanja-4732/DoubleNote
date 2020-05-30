@@ -28,7 +28,6 @@ import { DrawComponent } from "./components/draw/draw.component";
 import { MainComponent } from "./components/main/main.component";
 import { NotebookCardComponent } from "./components/notebook-card/notebook-card.component";
 import { NotebooksComponent } from "./components/notebooks/notebooks.component";
-import { PageComponent } from "./components/page/page.component";
 import { SettingsComponent } from "./components/settings/settings.component";
 import { TextBoxComponent } from "./components/text-box/text-box.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
@@ -44,7 +43,6 @@ import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.dire
     DrawComponent,
     DemoComponent,
     TextBoxComponent,
-    PageComponent,
     MarkdownBoxDirective,
     CrumbTrailComponent,
     CreateNotebookComponent,
