@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Notebook } from "src/app/typings/Notebook";
+import { Notebook } from "src/typings/Notebook";
 
 @Injectable({
   providedIn: "root",

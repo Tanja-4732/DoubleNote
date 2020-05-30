@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { Notebook } from "src/app/typings/Notebook";
+import { Notebook } from "src/typings/Notebook";
 
 @Component({
   selector: "app-notebook-card",

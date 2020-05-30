@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { MdomNode } from "src/app/typings/MDOM";
+import { MdomNode } from "src/typings/MDOM";
 
 @Injectable({
   providedIn: "root",

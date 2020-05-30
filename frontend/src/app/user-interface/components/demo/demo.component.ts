@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
-import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
-import { Message } from "src/app/typings/Message";
+import { MessageBusService } from "src/app/core/services/message-bus/message-bus.service";
+import { Message } from "src/typings/Message";
 import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
-import { DemoTextMessage } from "../../typings/Message";
-import { SettingsService } from "src/app/services/settings/settings.service";
+import { DemoTextMessage } from "../../../../typings/Message";
+import { SettingsService } from "src/app/user-interface/services/settings/settings.service";
 
 @Component({
   selector: "app-demo",

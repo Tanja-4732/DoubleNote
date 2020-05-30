@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { WelcomeComponent } from "./components/welcome/welcome.component";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { NotebooksComponent } from "./components/notebooks/notebooks.component";
-import { DemoComponent } from "./components/demo/demo.component";
+import { WelcomeComponent } from "../user-interface/components/welcome/welcome.component";
+import { SettingsComponent } from "../user-interface/components/settings/settings.component";
+import { NotebooksComponent } from "../user-interface/components/notebooks/notebooks.component";
+import { DemoComponent } from "../user-interface/components/demo/demo.component";
 
 const routes: Routes = [
   // Welcome component
@@ -16,11 +16,11 @@ const routes: Routes = [
   { path: "notebooks", component: NotebooksComponent },
 
   // Demo component
-  { path: "demo", component: DemoComponent }
+  { path: "demo", component: DemoComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

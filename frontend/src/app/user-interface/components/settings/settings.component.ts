@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { SettingsService } from "src/app/services/settings/settings.service";
+import { SettingsService } from "src/app/user-interface/services/settings/settings.service";
 import { Subscription } from "rxjs";
 import {
   CrumbTrailComponent,

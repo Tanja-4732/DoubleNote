@@ -19,20 +19,19 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
-import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { CreateNotebookComponent } from "./components/create-notebook/create-notebook.component";
-import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.component";
-import { DemoComponent } from "./components/demo/demo.component";
-import { DrawComponent } from "./components/draw/draw.component";
-import { MainComponent } from "./components/main/main.component";
-import { NotebookCardComponent } from "./components/notebook-card/notebook-card.component";
-import { NotebooksComponent } from "./components/notebooks/notebooks.component";
-import { SettingsComponent } from "./components/settings/settings.component";
-import { TextBoxComponent } from "./components/text-box/text-box.component";
-import { WelcomeComponent } from "./components/welcome/welcome.component";
-import { MarkdownBoxDirective } from "./directives/MarkdownBox/markdown-box.directive";
-import { SideNavComponent } from './components/side-nav/side-nav.component';
+import { CreateNotebookComponent } from "./user-interface/components/create-notebook/create-notebook.component";
+import { CrumbTrailComponent } from "./user-interface/components/crumb-trail/crumb-trail.component";
+import { DemoComponent } from "./user-interface/components/demo/demo.component";
+import { DrawComponent } from "./box-canvas-page/components/draw/draw.component";
+import { NotebookCardComponent } from "./user-interface/components/notebook-card/notebook-card.component";
+import { NotebooksComponent } from "./user-interface/components/notebooks/notebooks.component";
+import { TextBoxComponent } from "./box-canvas-page/components/text-box/text-box.component";
+import { AppRoutingModule } from "./routes/app-routing.module";
+import { MainComponent } from "./user-interface/components/main/main.component";
+import { SettingsComponent } from "./user-interface/components/settings/settings.component";
+import { SideNavComponent } from "./user-interface/components/side-nav/side-nav.component";
+import { WelcomeComponent } from "./user-interface/components/welcome/welcome.component";
 
 @NgModule({
   declarations: [
@@ -44,7 +43,6 @@ import { SideNavComponent } from './components/side-nav/side-nav.component';
     DrawComponent,
     DemoComponent,
     TextBoxComponent,
-    MarkdownBoxDirective,
     CrumbTrailComponent,
     CreateNotebookComponent,
     NotebookCardComponent,
