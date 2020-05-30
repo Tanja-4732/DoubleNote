@@ -5,6 +5,10 @@ import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
 import { DemoTextMessage } from "../../../../typings/Message";
 import { SettingsService } from "src/app/user-interface/services/settings/settings.service";
+import {
+  CrumbTrailComponent,
+  Icon,
+} from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-demo",
@@ -34,6 +38,13 @@ export class DemoComponent implements OnInit, OnDestroy {
   width = 200;
 
   ngOnInit(): void {
+    CrumbTrailComponent.crumbs = [
+      {
+        icon: Icon.Demo,
+        title: "Demo",
+      },
+    ];
+
     this.subscription = this.mbs.messageStream
       .pipe(filter((m: Message) => m.messageType === "DemoTextMessage"))
       .subscribe((message: DemoTextMessage) => {
