@@ -4,7 +4,6 @@ import { MainComponent } from "./components/main/main.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { SettingsComponent } from "./components/settings/settings.component";
 import { NotebooksComponent } from "./components/notebooks/notebooks.component";
-import { DemoComponent } from "../box-canvas-page/components/demo/demo.component";
 import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.component";
 import { CreateNotebookComponent } from "./components/create-notebook/create-notebook.component";
 import { NotebookCardComponent } from "./components/notebook-card/notebook-card.component";
@@ -25,6 +24,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { BoxCanvasPageModule } from "../box-canvas-page/box-canvas-page.module";
 
 @NgModule({
   declarations: [
@@ -58,6 +58,6 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
     MatRadioModule,
     MatCardModule,
   ],
-  exports: [MainComponent],
+  exports: [MainComponent, BoxCanvasPageModule],
 })
 export class UserInterfaceModule {}
