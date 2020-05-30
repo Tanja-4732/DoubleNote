@@ -25,6 +25,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { BoxCanvasPageModule } from "../box-canvas-page/box-canvas-page.module";
+import { SequentialBlockPageModule } from "../sequential-block-page/sequential-block-page.module";
 
 @NgModule({
   declarations: [
@@ -58,6 +59,6 @@ import { BoxCanvasPageModule } from "../box-canvas-page/box-canvas-page.module";
     MatRadioModule,
     MatCardModule,
   ],
-  exports: [MainComponent, BoxCanvasPageModule],
+  exports: [MainComponent, BoxCanvasPageModule, SequentialBlockPageModule],
 })
 export class UserInterfaceModule {}
