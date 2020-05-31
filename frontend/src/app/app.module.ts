@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { AppComponent } from "./app.component";
 
-import { CoreModule } from "./core/core.module";
 import { AppRoutingModule } from "./routes/app-routing.module";
 import { UserInterfaceModule } from "./user-interface/user-interface.module";
 
@@ -15,7 +14,6 @@ import { UserInterfaceModule } from "./user-interface/user-interface.module";
   declarations: [AppComponent],
   imports: [
     UserInterfaceModule,
-    CoreModule,
 
     BrowserAnimationsModule,
     LayoutModule,

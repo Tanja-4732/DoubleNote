@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { NotebookService } from "src/app/user-interface/services/notebook/notebook.service";
+import { NotebookService } from "src/app/services/notebook/notebook.service";
 import {
   CrumbTrailComponent,
   Icon,

@@ -7,8 +7,8 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
-import { MarkdownEngineService } from "src/app/core/services/markdown-engine/markdown-engine.service";
-import { MessageBusService } from "src/app/core/services/message-bus/message-bus.service";
+import { MarkdownEngineService } from "src/app/services/markdown-engine/markdown-engine.service";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 import { MdomNode } from "src/typings/markdown/MDOM";
 import { Message } from "src/typings/core/Message";
 import { v4 } from "uuid";

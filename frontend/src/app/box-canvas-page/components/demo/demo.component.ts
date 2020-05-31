@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from "@angular/core";
-import { MessageBusService } from "src/app/core/services/message-bus/message-bus.service";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 import { Message } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
 import { DemoTextMessage } from "../../../../typings/core/Message";
-import { SettingsService } from "src/app/user-interface/services/settings/settings.service";
+import { SettingsService } from "src/app/services/settings/settings.service";
 import {
   CrumbTrailComponent,
   Icon,
