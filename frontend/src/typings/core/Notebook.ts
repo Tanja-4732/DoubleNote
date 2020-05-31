@@ -9,5 +9,17 @@ export interface BaseNotebook {
   type: "SBP" | "BCP";
   uuid: string;
 
-  commits: Commit[];
+  strings: {
+    /**
+     * The branches of this notebook
+     */
+    branches: {
+      [
+        /**
+         * The name of the branch
+         */
+        name: string
+      ]: string;
+    };
+  };
 }

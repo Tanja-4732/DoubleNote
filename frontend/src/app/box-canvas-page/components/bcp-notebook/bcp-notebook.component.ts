@@ -1,12 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
-import { NotebookService } from "src/app/services/notebook/notebook.service";
 import {
   CrumbTrailComponent,
   Icon,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { Notebook } from "src/typings/core/Notebook";
+import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
 
 @Component({
   selector: "app-bcp-notebook",
@@ -17,12 +18,12 @@ export class BcpNotebookComponent implements OnInit {
   notebook: BcpNotebook;
 
   constructor(
-    private nbs: NotebookService,
     private bcpVcs: BcpVcsService,
+    private sbpVcs: SbpVcsService,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    const retrievedNotebook = nbs.notebooks.find(
+    const retrievedNotebook = this.notebooks.find(
       (notebook) => notebook.uuid === route.snapshot.params.notebookUuid
     );
 
@@ -39,6 +40,10 @@ export class BcpNotebookComponent implements OnInit {
     }
   }
 
+  get notebooks(): Notebook[] {
+    return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
+  }
+
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
@@ -50,9 +55,5 @@ export class BcpNotebookComponent implements OnInit {
         title: this.notebook.name + " (BCP)",
       },
     ];
-  }
-
-  test(): void {
-    this.bcpVcs.test();
   }
 }

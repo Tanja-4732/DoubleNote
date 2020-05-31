@@ -4,8 +4,6 @@ import { Notebook } from "./Notebook";
 export type Commit = BcpCommit;
 
 export interface BaseCommit {
-  type: "SBP" | "BCP";
-
   /**
    * The `new Date().toISOString()` of the commit
    */
@@ -19,11 +17,6 @@ export interface BaseCommit {
      * The hash of the previous commit
      */
     previous: string;
-
-    /**
-     * The UUID of the notebook this commit belongs to
-     */
-    notebook: string;
   };
 
   /**
@@ -34,10 +27,5 @@ export interface BaseCommit {
      * The previous commit
      */
     previous: Commit;
-
-    /**
-     * The notebook this commit belongs to
-     */
-    notebook: Notebook;
   };
 }

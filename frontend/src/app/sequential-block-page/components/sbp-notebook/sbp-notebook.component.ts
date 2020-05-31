@@ -1,11 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { SbpNotebook } from "src/typings/sbp/SbpNotebook";
-import { NotebookService } from "src/app/services/notebook/notebook.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   CrumbTrailComponent,
   Icon,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
+import { Notebook } from "src/typings/core/Notebook";
 
 @Component({
   selector: "app-sbp-notebook",
@@ -18,11 +20,12 @@ export class SbpNotebookComponent implements OnInit {
   notebook: SbpNotebook;
 
   constructor(
-    private nbs: NotebookService,
+    private bcpVcs: BcpVcsService,
+    private sbpVcs: SbpVcsService,
     private route: ActivatedRoute,
     private router: Router
   ) {
-    const retrievedNotebook = nbs.notebooks.find(
+    const retrievedNotebook = this.notebooks.find(
       (notebook) => notebook.uuid === route.snapshot.params.notebookUuid
     );
 
@@ -37,6 +40,10 @@ export class SbpNotebookComponent implements OnInit {
         this.router.navigateByUrl("/notebooks");
         return;
     }
+  }
+
+  get notebooks(): Notebook[] {
+    return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
   }
 
   ngOnInit(): void {

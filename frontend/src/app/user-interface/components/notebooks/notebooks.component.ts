@@ -34,7 +34,7 @@ export class NotebooksComponent implements OnInit {
   }
 
   get notebooks(): Notebook[] {
-    return this.bcpVcs.getNotebooks().concat(this.sbpVcs.getNotebooks());
+    return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
   }
 
   private handleResult(result: DialogResult) {
