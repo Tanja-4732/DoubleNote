@@ -4,23 +4,26 @@ import { Notebook } from "src/typings/core/Notebook";
 @Injectable({
   providedIn: "root",
 })
+/**
+ * @deprecated
+ *
+ */
 export class NotebookService {
+  /**
+   * @deprecated
+   */
   constructor() {
     this.load();
   }
 
-  private privateNotebooks: Notebook[];
-
-  public get notebooks(): Notebook[] {
-    return this.privateNotebooks;
-  }
-
-  public set notebooks(value: Notebook[]) {
-    this.privateNotebooks = value;
-    this.persist();
-  }
+  /**
+   * @deprecated
+   */
+  notebooks: Notebook[];
 
   /**
+   * @deprecated
+   *
    * Reads the notebooks from localStorage
    */
   private load() {
@@ -28,6 +31,8 @@ export class NotebookService {
   }
 
   /**
+   * @deprecated
+   *
    * Persist the notebooks to localStorage
    */
   public persist() {
