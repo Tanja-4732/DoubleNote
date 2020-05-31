@@ -177,13 +177,19 @@ Only the relevant files and folders are listed
 - `/frontend/` Contains all files of the frontend
   - `README.md` You are here
   - `src/` Contains all frontend application-source files
-    - `app/` The application code
-      - `components/` Contains all Angular components
-      - `services/` Contains all Angular services
-      - `app.module.ts` The main app module
-      - `app-routing.module.ts` The routing module (specifies Angular routes)
+    - `app/` The application code, structured in modules
+      - `core/` The core module containing all globally used services
+      - `user-interface/` The main UI module containing most UI components
+      - `routes/` Contains Angular routing
+        - `app-routing.module.ts` The routing module (specifies Angular routes)
+      - `box-canvas-page` The Box canvas page implementation
+      - `sequential-block-page` The Sequential block page implementation
+      - `app.module.ts` The root app module
       - `app.component.*` The root angular component
+    - `typings/` The TypeScript interfaces used in the application
+    - `assets/` This directory contains some icons
     - `styles.scss` The global styles
+    - `_matcha.scss` The [matcha](https://github.com/vinceliuice/Matcha-gtk-theme#readme) port
     - `index.html` The index.html file (Includes the Angular root component)
     - `manifest.webmanifest` The Progressive Web App manifest
   - `dist/` Compiler outout; Served by the backend; included in .gitignore
