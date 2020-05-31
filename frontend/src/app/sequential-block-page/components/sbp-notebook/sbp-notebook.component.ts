@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { SbpNotebook } from "src/typings/Notebook";
+import { SbpNotebook } from "src/typings/sbp/SbpNotebook";
 import { NotebookService } from "src/app/user-interface/services/notebook/notebook.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import {

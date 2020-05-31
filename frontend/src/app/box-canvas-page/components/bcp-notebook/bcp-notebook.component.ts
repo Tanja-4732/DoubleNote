@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { BcpNotebook } from "src/typings/Notebook";
+import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import { NotebookService } from "src/app/user-interface/services/notebook/notebook.service";
 import {
   CrumbTrailComponent,

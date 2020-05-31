@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ReplaySubject, Observable } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
-import { Message } from "../../../../typings/Message";
+import { Message } from "../../../../typings/core/Message";
 import { SettingsService } from "../../../user-interface/services/settings/settings.service";
 
 /**

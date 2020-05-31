@@ -1,4 +1,4 @@
-import { MdomNode } from "./MDOM";
+import { MdomNode } from "../markdown/MDOM";
 
 /**
  * A message is a unit of information which should be sent to other peers.

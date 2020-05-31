@@ -1,4 +1,4 @@
-import { MdomNode } from "./MDOM";
+import { MdomNode } from "../markdown/MDOM";
 
 export interface TextBox {
   /**

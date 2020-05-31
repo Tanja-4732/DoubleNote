@@ -9,10 +9,10 @@ import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
 import { MarkdownEngineService } from "src/app/core/services/markdown-engine/markdown-engine.service";
 import { MessageBusService } from "src/app/core/services/message-bus/message-bus.service";
-import { MdomNode } from "src/typings/MDOM";
-import { Message } from "src/typings/Message";
+import { MdomNode } from "src/typings/markdown/MDOM";
+import { Message } from "src/typings/core/Message";
 import { v4 } from "uuid";
-import { TextBoxMessage } from "../../../../typings/Message";
+import { TextBoxMessage } from "../../../../typings/core/Message";
 
 @Component({
   selector: "app-text-box",
