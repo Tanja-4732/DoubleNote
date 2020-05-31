@@ -26,6 +26,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { BoxCanvasPageModule } from "../box-canvas-page/box-canvas-page.module";
 import { SequentialBlockPageModule } from "../sequential-block-page/sequential-block-page.module";
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { SequentialBlockPageModule } from "../sequential-block-page/sequential-b
     CreateNotebookComponent,
     NotebookCardComponent,
     SideNavComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     CommonModule,

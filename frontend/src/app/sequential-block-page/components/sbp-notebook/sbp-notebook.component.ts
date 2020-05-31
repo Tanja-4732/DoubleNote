@@ -26,13 +26,16 @@ export class SbpNotebookComponent implements OnInit {
       (notebook) => notebook.uuid === route.snapshot.params.notebookUuid
     );
 
-    switch (retrievedNotebook.type) {
+    switch (retrievedNotebook?.type) {
       case "BCP":
         this.router.navigateByUrl("/notebooks/bcp/" + retrievedNotebook.uuid);
         break;
       case "SBP":
         this.notebook = retrievedNotebook;
         break;
+      case undefined:
+        this.router.navigateByUrl("/notebooks");
+        return;
     }
   }
 

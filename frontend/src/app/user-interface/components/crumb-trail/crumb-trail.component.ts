@@ -35,6 +35,7 @@ export enum Icon {
   Notebook = "book",
   Settings = "settings",
   Demo = "bug_report",
+  Error = "error",
 }
 
 /**

@@ -6,6 +6,7 @@ import { NotebooksComponent } from "../user-interface/components/notebooks/noteb
 import { DemoComponent } from "../box-canvas-page/components/demo/demo.component";
 import { SbpNotebookComponent } from "../sequential-block-page/components/sbp-notebook/sbp-notebook.component";
 import { BcpNotebookComponent } from "../box-canvas-page/components/bcp-notebook/bcp-notebook.component";
+import { PageNotFoundComponent } from "../user-interface/components/page-not-found/page-not-found.component";
 
 const routes: Routes = [
   // Welcome component
@@ -26,6 +27,12 @@ const routes: Routes = [
 
   // Demo component
   { path: "demo", component: DemoComponent },
+
+  // Redirect to welcome
+  { path: "", pathMatch: "full", redirectTo: "/welcome" },
+
+  // 404 component
+  { path: "**", component: PageNotFoundComponent },
 ];
 
 @NgModule({
