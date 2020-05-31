@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { NotebookService } from "src/app/services/notebook/notebook.service";
 import {
   CrumbTrailComponent,
   Icon,
@@ -9,7 +8,9 @@ import {
   CreateNotebookComponent,
   DialogResult,
 } from "../create-notebook/create-notebook.component";
-import { v4 } from "uuid";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
+import { Notebook } from "src/typings/core/Notebook";
 
 @Component({
   selector: "app-notebooks",
@@ -17,7 +18,11 @@ import { v4 } from "uuid";
   styleUrls: ["./notebooks.component.scss"],
 })
 export class NotebooksComponent implements OnInit {
-  constructor(public nbs: NotebookService, public dialog: MatDialog) {}
+  constructor(
+    private bcpVcs: BcpVcsService,
+    private sbpVcs: SbpVcsService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
@@ -28,17 +33,23 @@ export class NotebooksComponent implements OnInit {
     ];
   }
 
+  get notebooks(): Notebook[] {
+    return this.bcpVcs.getNotebooks().concat(this.sbpVcs.getNotebooks());
+  }
+
   private handleResult(result: DialogResult) {
     if (result?.create && result.name) {
-      this.nbs.notebooks.push({
-        uuid: v4(),
-        name: result.name,
-        pages: [],
-        type: result.type,
-        commits: [],
-      });
+      switch (result?.type) {
+        case "BCP":
+          this.bcpVcs.createNotebook(result.name);
+          break;
 
-      this.nbs.persist();
+        case "SBP":
+          throw new Error("Not implemented yet");
+
+        case undefined:
+          throw new Error("Something went wrong");
+      }
     }
   }
 

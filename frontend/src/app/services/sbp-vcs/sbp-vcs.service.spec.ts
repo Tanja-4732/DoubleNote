@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NotebookService } from './notebook.service';
+import { SbpVcsService } from './sbp-vcs.service';
 
-describe('NotebookService', () => {
-  let service: NotebookService;
+describe('SbpVcsService', () => {
+  let service: SbpVcsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(NotebookService);
+    service = TestBed.inject(SbpVcsService);
   });
 
   it('should be created', () => {
