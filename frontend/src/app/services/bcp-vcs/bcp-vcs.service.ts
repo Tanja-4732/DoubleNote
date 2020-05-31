@@ -87,7 +87,7 @@ export class BcpVcsService {
   private initNotebooks(): void {
     // For every notebook
     for (const notebook of this.notebooks) {
-      // Initialize the target data structure
+      // Prepare the target data structure
       notebook.objects = { branches: {} };
 
       // Initialize every branch
@@ -96,6 +96,12 @@ export class BcpVcsService {
       )) {
         // Get the last commit
         notebook.objects.branches[branchName] = this.commits[latestCommitHash];
+
+        // Prepare the target data structure
+        notebook.objects.branches[branchName].objects = {
+          previous: null,
+          rootCategory: null,
+        };
 
         // Set the root category
         notebook.objects.branches[branchName].objects.rootCategory = this.trees[
