@@ -1,10 +1,10 @@
 import { MdomNode } from "../markdown/MDOM";
 
 export interface TextBox {
-  /**
-   * The UUID of the text box
-   */
-  uuid: string;
+  // /**
+  //  * The UUID of the text box
+  //  */
+  // uuid: string;
 
   /**
    * Which editor(s) to display in the text box

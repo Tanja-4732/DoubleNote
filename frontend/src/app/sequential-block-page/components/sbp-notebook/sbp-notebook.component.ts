@@ -47,7 +47,7 @@ export class SbpNotebookComponent implements OnInit {
         routerLink: "/notebooks",
       },
       {
-        title: this.notebook.title + " (SBP)",
+        title: this.notebook.name + " (SBP)",
       },
     ];
   }

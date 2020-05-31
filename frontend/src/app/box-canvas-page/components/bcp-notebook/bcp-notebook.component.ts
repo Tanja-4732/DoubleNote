@@ -47,7 +47,7 @@ export class BcpNotebookComponent implements OnInit {
         routerLink: "/notebooks",
       },
       {
-        title: this.notebook.title + " (BCP)",
+        title: this.notebook.name + " (BCP)",
       },
     ];
   }

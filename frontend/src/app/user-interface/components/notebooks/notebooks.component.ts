@@ -32,9 +32,10 @@ export class NotebooksComponent implements OnInit {
     if (result?.create && result.name) {
       this.nbs.notebooks.push({
         uuid: v4(),
-        title: result.name,
+        name: result.name,
         pages: [],
         type: result.type,
+        commits: [],
       });
 
       this.nbs.persist();
