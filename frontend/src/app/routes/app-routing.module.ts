@@ -28,7 +28,7 @@ const routes: Routes = [
   // Demo component
   { path: "demo", component: DemoComponent },
 
-  // Redirect to welcome 
+  // Redirect to welcome
   { path: "", pathMatch: "full", redirectTo: "/welcome" },
 
   // 404 component

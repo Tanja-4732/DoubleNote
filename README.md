@@ -2,6 +2,9 @@
 
 This is a new project; its development status is far away from a beta release.
 
+See the `master` branch deployed here: <https://bernd-l.github.io/DoubleNote/>  
+Notice: This is only the frontend served statically. Some (planned) features are only available using the backend server.
+
 ## (Planned) Features
 
 _See the newest plans in the [4th iteration of the frontend README](/frontend/README.md#4th-iteration)_
