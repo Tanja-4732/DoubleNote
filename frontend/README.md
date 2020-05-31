@@ -144,6 +144,9 @@ List of nodes
 
 ### 4th iteration
 
+- Function both as a static website and with a server
+  - A static website host (such as GitHub pages) should work for most features
+  - The backend server should provide additional functionality
 - Two kinds of pages
   - Sequential block pages (SBP)
   - Box canvas pages (BCP)
