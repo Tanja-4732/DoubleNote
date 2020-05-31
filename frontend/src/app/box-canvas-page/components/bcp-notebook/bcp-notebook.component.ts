@@ -6,6 +6,7 @@ import {
   CrumbTrailComponent,
   Icon,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 
 @Component({
   selector: "app-bcp-notebook",
@@ -17,6 +18,7 @@ export class BcpNotebookComponent implements OnInit {
 
   constructor(
     private nbs: NotebookService,
+    private bcpVcs: BcpVcsService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -48,5 +50,9 @@ export class BcpNotebookComponent implements OnInit {
         title: this.notebook.title + " (BCP)",
       },
     ];
+  }
+
+  test(): void {
+    this.bcpVcs.test();
   }
 }
