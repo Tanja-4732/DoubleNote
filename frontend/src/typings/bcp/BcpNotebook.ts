@@ -9,16 +9,17 @@ export interface BcpNotebook extends BaseNotebook {
   type: "BCP";
 
   objects?: {
-    /**
-     * The branches of this notebook
-     */
     branches: {
-      [
-        /**
-         * The name of the branch
-         */
-        name: string
-      ]: BcpCommit;
+      [name: string]: BcpCommit;
     };
+
+    head: BcpCommit;
+
+    /**
+     * The working tree
+     *
+     * This is the root tree node of the working tree
+     */
+    workingTree: CategoryTree;
   };
 }

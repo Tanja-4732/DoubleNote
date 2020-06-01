@@ -44,14 +44,13 @@ export class BcpVcsService {
   }
 
   /**
-   * Creates a new commit on a branch of a BCP notebook,
-   * committing the current state of the
-   * selected branch to the selected branch
+   * Creates a commit of the specified BCP notebook on its HEAD branch
+   * copying its object-representation working tree into the commit to be
+   * used as its root tree.
    *
-   * @param notebook The notebook of which to create a commit
-   * @param branch The name of the branch to be committed to (must exist already)
+   * @param notebook The notebook to be committed
    */
-  commitNotebook(notebook: BcpNotebook, branch: string): void {}
+  commitNotebook(notebook: BcpNotebook): void {}
 
   /**
    * Creates a new branch with a specified name
@@ -59,6 +58,8 @@ export class BcpVcsService {
    *
    * This process does not create a new commit. Instead, the new branch
    * will point to the specified commit hash directly.
+   *
+   * The new branch will be checked out automatically.
    *
    * @param notebook The notebook for which a branch should be created
    * @param name The name of the branch to be created (may not exist already)
@@ -84,6 +85,50 @@ export class BcpVcsService {
 
     // Persist the new branch
     this.persistNotebooks();
+  }
+
+  /**
+   * Checks out a specified branch in a specified notebook
+   *
+   * This moves the HEAD to the specified branch.
+   * The branch must exist in the notebook.
+   *
+   * If the working tree contains uncommitted changes,
+   * the checkout will fail with an error, expect for when
+   * the force flag is set, which may lead to data loss.
+   *
+   * @param notebook The notebook to be updated
+   * @param branch The name of the branch to be checked out
+   * @param force Whether to force the checkout process (may result in data loss)
+   */
+  checkoutBranch(notebook: BcpNotebook, branch: string, force = false): void {
+    // Check if the branch exists
+    if (!notebook.strings.branches.hasOwnProperty(branch)) {
+      throw new Error("The specified branch does not exist");
+    }
+
+    // Prevent unwanted data loss
+    if (
+      !force &&
+      this.commits[notebook.strings.head].strings.rootCategory !==
+        notebook.strings.workingTree
+    ) {
+      throw new Error(
+        "The working tree contains uncommitted changes and the force flag was not set"
+      );
+    }
+
+    // Move the HEAD to the specified branch
+    notebook.strings.head = notebook.strings.branches[branch];
+    notebook.objects.head = notebook.objects.branches[branch];
+
+    // Copy the working tree
+    this.updateWorkingTree(notebook);
+  }
+
+  persistWorkingTree(notebook: BcpNotebook): void {
+    throw new Error("Not implemented");
+    // TODO Recursively add all the
   }
 
   /**
@@ -115,7 +160,11 @@ export class BcpVcsService {
       name,
       uuid: v4(),
       type: "BCP",
-      strings: { branches: { master: commitHash } },
+      strings: {
+        branches: { master: commitHash },
+        head: commitHash,
+        workingTree: treeHash,
+      },
     };
 
     // Insert everything into memory
@@ -128,40 +177,65 @@ export class BcpVcsService {
     this.persistCommits();
     this.persistNotebooks();
 
+    // Initialize the notebook
+    this.initNotebook(notebook);
+
     // Return the new notebook
     return notebook;
   }
 
-  private initNotebooks(): void {
-    // For every notebook
-    for (const notebook of this.notebooks) {
+  private updateWorkingTree(notebook: BcpNotebook): void {
+    // TODO
+  }
+
+  /**
+   * Prepares all BCP notebooks
+   */
+  private initNotebooks = (): void => this.notebooks.forEach(this.initNotebook);
+
+  /**
+   * Prepares a notebook's object representation
+   *
+   * This method loads data from the string-representation
+   * into the object-representation of the specified notebook.
+   *
+   * This procedure also updates the working tree of the notebook.
+   *
+   * @param notebook The notebook to prepare
+   */
+  private initNotebook(notebook: BcpNotebook) {
+    // Prepare the target data structure
+    notebook.objects = { branches: {}, head: null, workingTree: null };
+
+    // Initialize every branch
+    for (const [branchName, latestCommitHash] of Object.entries(
+      notebook.strings.branches
+    )) {
+      // Get the last commit
+      notebook.objects.branches[branchName] = this.commits[latestCommitHash];
+
       // Prepare the target data structure
-      notebook.objects = { branches: {} };
+      notebook.objects.branches[branchName].objects = {
+        previous: null,
+        rootCategory: null,
+      };
 
-      // Initialize every branch
-      for (const [branchName, latestCommitHash] of Object.entries(
-        notebook.strings.branches
-      )) {
-        // Get the last commit
-        notebook.objects.branches[branchName] = this.commits[latestCommitHash];
+      // Set the root category
+      notebook.objects.branches[branchName].objects.rootCategory = this.trees[
+        notebook.objects.branches[branchName].strings.rootCategory
+      ];
 
-        // Prepare the target data structure
-        notebook.objects.branches[branchName].objects = {
-          previous: null,
-          rootCategory: null,
-        };
-
-        // Set the root category
-        notebook.objects.branches[branchName].objects.rootCategory = this.trees[
-          notebook.objects.branches[branchName].strings.rootCategory
-        ];
-
-        // Load the branch tree
-        this.initCategory(
-          notebook.objects.branches[branchName].objects.rootCategory
-        );
-      }
+      // Load the branch tree
+      this.initCategory(
+        notebook.objects.branches[branchName].objects.rootCategory
+      );
     }
+
+    // Set the head
+    notebook.objects.head = this.commits[notebook.strings.head];
+
+    // Prepare the working tree
+    this.updateWorkingTree(notebook);
   }
 
   /**
