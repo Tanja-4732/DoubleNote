@@ -43,9 +43,47 @@ export class BcpVcsService {
     this.initNotebooks();
   }
 
-  commitNotebook(notebook: BcpNotebook) {
-    // TODO implement
-    throw new Error("Not implemented");
+  /**
+   * Creates a new commit on a branch of a BCP notebook,
+   * committing the current state of the
+   * selected branch to the selected branch
+   *
+   * @param notebook The notebook of which to create a commit
+   * @param branch The name of the branch to be committed to (must exist already)
+   */
+  commitNotebook(notebook: BcpNotebook, branch: string): void {}
+
+  /**
+   * Creates a new branch with a specified name
+   * for a BCP notebook, based on the specified commit.
+   *
+   * This process does not create a new commit. Instead, the new branch
+   * will point to the specified commit hash directly.
+   *
+   * @param notebook The notebook for which a branch should be created
+   * @param name The name of the branch to be created (may not exist already)
+   * @param source The hash of the parent commit on which the branch should be based on
+   */
+  createBranch(notebook: BcpNotebook, name: string, source: string): void {
+    // Check if the branch exists already
+    if (notebook.strings.branches.hasOwnProperty(name)) {
+      throw new Error("Branch exists already");
+    }
+
+    // Get the source commit
+    const commit = this.commits[source];
+
+    // Make sure the specified commit exists
+    if (commit == null) {
+      throw new Error("The specified commit does not exist");
+    }
+
+    // Create the new branch
+    notebook.strings.branches[name] = source;
+    notebook.objects.branches[name] = commit;
+
+    // Persist the new branch
+    this.persistNotebooks();
   }
 
   /**
