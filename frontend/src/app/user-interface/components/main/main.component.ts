@@ -6,20 +6,20 @@ import { map, shareReplay } from "rxjs/operators";
 @Component({
   selector: "app-main",
   templateUrl: "./main.component.html",
-  styleUrls: ["./main.component.scss"]
+  styleUrls: ["./main.component.scss"],
 })
 export class MainComponent {
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
     .pipe(
-      map(result => result.matches),
+      map((result) => result.matches),
       shareReplay()
     );
 
   constructor(private breakpointObserver: BreakpointObserver) {}
 
   get sideNavOpened(): boolean {
-    switch (window.localStorage.getItem("sideNavOpened")) {
+    switch (window.localStorage.getItem("dn.sideNavOpened")) {
       case "true":
         return true;
       case "false":
@@ -31,6 +31,6 @@ export class MainComponent {
   }
 
   set sideNavOpened(value: boolean) {
-    window.localStorage.setItem("sideNavOpened", value + "");
+    window.localStorage.setItem("dn.sideNavOpened", value + "");
   }
 }

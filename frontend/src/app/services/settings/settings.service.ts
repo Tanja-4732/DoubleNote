@@ -23,14 +23,14 @@ export class SettingsService {
    * Reads the settings from localStorage
    */
   private loadSettings() {
-    this.settings = JSON.parse(localStorage.getItem("settings")) ?? {};
+    this.settings = JSON.parse(localStorage.getItem("dn.settings")) ?? {};
   }
 
   /**
    * Persist the settings to localStorage
    */
   private saveData() {
-    localStorage.setItem("settings", JSON.stringify(this.settings));
+    localStorage.setItem("dn.settings", JSON.stringify(this.settings));
   }
 
   get offlineMode(): boolean {
