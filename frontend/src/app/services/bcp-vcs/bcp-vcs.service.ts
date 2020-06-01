@@ -6,6 +6,7 @@ import { BoxCanvasPage } from "src/typings/bcp/BoxCanvasPage";
 import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { BcpCommit } from "src/typings/bcp/BcpCommit";
 import { TextBox } from "src/typings/bcp/TextBox";
+import { cloneDeep } from "lodash";
 
 @Injectable({
   providedIn: "root",
@@ -40,7 +41,7 @@ export class BcpVcsService {
    * - Persist data to localStorage
    */
   constructor() {
-    this.initNotebooks();
+    this.notebooks.forEach((n) => this.prepareNotebook(n));
   }
 
   /**
@@ -50,7 +51,9 @@ export class BcpVcsService {
    *
    * @param notebook The notebook to be committed
    */
-  commitNotebook(notebook: BcpNotebook): void {}
+  commitNotebook(notebook: BcpNotebook): void {
+    // TODO commitNotebook
+  }
 
   /**
    * Creates a new branch with a specified name
@@ -123,12 +126,12 @@ export class BcpVcsService {
     notebook.objects.head = notebook.objects.branches[branch];
 
     // Copy the working tree
-    this.updateWorkingTree(notebook);
+    this.replaceWorkingTreeWithHeadCopy(notebook);
   }
 
   persistWorkingTree(notebook: BcpNotebook): void {
     throw new Error("Not implemented");
-    // TODO Recursively add all the
+    // TODO persistWorkingTree
   }
 
   /**
@@ -144,7 +147,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the tree
-    const treeHash: string = sha256(JSON.stringify(tree));
+    const treeHash: string = sha256(JSON.stringify(tree, this.fieldHider));
 
     // Create a new commit
     const commit: BcpCommit = {
@@ -153,7 +156,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the commit
-    const commitHash: string = sha256(JSON.stringify(commit));
+    const commitHash: string = sha256(JSON.stringify(commit, this.fieldHider));
 
     // Create a new notebook
     const notebook: BcpNotebook = {
@@ -178,20 +181,27 @@ export class BcpVcsService {
     this.persistNotebooks();
 
     // Initialize the notebook
-    this.initNotebook(notebook);
+    this.prepareNotebook(notebook);
 
     // Return the new notebook
     return notebook;
   }
 
-  private updateWorkingTree(notebook: BcpNotebook): void {
-    // TODO
-  }
-
   /**
-   * Prepares all BCP notebooks
+   * Replaces the working tree object-representation
+   * with a copy of the HEAD root tree
+   *
+   * @param notebook The notebook of which to replace the working tree
    */
-  private initNotebooks = (): void => this.notebooks.forEach(this.initNotebook);
+  private replaceWorkingTreeWithHeadCopy(notebook: BcpNotebook): void {
+    // Make a deep clone of the HEAD's root tree
+    notebook.objects.workingTree = cloneDeep(
+      notebook.objects.head.objects.rootCategory
+    );
+
+    // Since the tree didn't change, its hash stays the same as well
+    notebook.strings.workingTree = notebook.objects.head.strings.rootCategory;
+  }
 
   /**
    * Prepares a notebook's object representation
@@ -203,7 +213,7 @@ export class BcpVcsService {
    *
    * @param notebook The notebook to prepare
    */
-  private initNotebook(notebook: BcpNotebook) {
+  private prepareNotebook(notebook: BcpNotebook) {
     // Prepare the target data structure
     notebook.objects = { branches: {}, head: null, workingTree: null };
 
@@ -235,7 +245,7 @@ export class BcpVcsService {
     notebook.objects.head = this.commits[notebook.strings.head];
 
     // Prepare the working tree
-    this.updateWorkingTree(notebook);
+    this.replaceWorkingTreeWithHeadCopy(notebook);
   }
 
   /**
