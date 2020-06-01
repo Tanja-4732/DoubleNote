@@ -168,9 +168,23 @@ export class BcpVcsService {
     this.replaceWorkingTreeWithHeadCopy(notebook);
   }
 
+  /**
+   * Saves the uncommitted changes without committing them
+   *
+   * You must call this method before creating a commit.
+   *
+   * @param notebook The notebook of which to save the working tree
+   */
   persistWorkingTree(notebook: BcpNotebook): void {
-    throw new Error("Not implemented");
-    // TODO persistWorkingTree
+    const hash = this.saveTree(notebook.objects.workingTree);
+    notebook.strings.workingTree = hash;
+
+    // Persist everything
+    // Saving the working tree does not produce a commit
+    this.persistBoxes();
+    this.persistPages();
+    this.persistTrees();
+    this.persistNotebooks();
   }
 
   /**
@@ -292,9 +306,7 @@ export class BcpVcsService {
       ];
 
       // Load the branch tree
-      this.initCategory(
-        notebook.objects.branches[branchName].objects.rootCategory
-      );
+      this.loadTree(notebook.objects.branches[branchName].objects.rootCategory);
     }
 
     // Set the head
@@ -306,7 +318,7 @@ export class BcpVcsService {
    *
    * @param category The category to be initialized
    */
-  private initCategory(category: CategoryTree): void {
+  private loadTree(category: CategoryTree): void {
     // Prepare the target data structure
     category.objects = { pages: [], children: [] };
 
@@ -327,8 +339,38 @@ export class BcpVcsService {
     // Recursively initialize all child categories
     for (const treeHash of category.strings.children) {
       category.objects.children.push(this.trees[treeHash]);
-      this.initCategory(this.trees[treeHash]);
+      this.loadTree(this.trees[treeHash]);
     }
+  }
+
+  /**
+   * Persists a category recursively to memory
+   *
+   * @param category The category to be persisted
+   * @return The hash of this category
+   */
+  private saveTree(category: CategoryTree): string {
+    // Iterate over all pages of teh category
+    for (const page of category.objects.pages) {
+      // Iterate over all boxes of teh page
+      for (const box of page.objects.boxes) {
+        const boxHash = sha256(JSON.stringify(box, this.fieldHider));
+        this.boxes[boxHash] = box;
+        page.strings.boxes.push(boxHash);
+      }
+
+      const pageHash = sha256(JSON.stringify(page, this.fieldHider));
+      this.pages[pageHash] = page;
+      category.strings.pages.push(pageHash);
+    }
+
+    for (const tree of category.objects.children) {
+      category.strings.children.push(this.saveTree(tree));
+    }
+
+    const hash = sha256(JSON.stringify(category, this.fieldHider));
+    this.trees[hash] = category;
+    return hash;
   }
 
   /**
