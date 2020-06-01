@@ -27,7 +27,17 @@ export class BcpVcsService {
     JSON.parse(window.localStorage.getItem("dn.bcp.boxes")) ?? {};
 
   /**
-   * # Box Canvas Page version control system
+   * ## Box Canvas Page version control system
+   *
+   * A utility class managing the state of BCP notebooks
+   *
+   * ### Goals
+   *
+   * - Create new BCP notebooks
+   * - Save the state of a BCP notebook as a commit
+   * - De-duplicate all data
+   * - Read data from localStorage
+   * - Persist data to localStorage
    */
   constructor() {
     this.initNotebooks();
