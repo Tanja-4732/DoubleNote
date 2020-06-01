@@ -1,6 +1,35 @@
-<p>bcp-vcs works!</p>
 <div class="card-grid">
-  <mat-card></mat-card>
+  <mat-card>
+    <mat-card-title>Status</mat-card-title>
+    <mat-card-content>
+      Head at commit <code>{{ notebook.strings.head | slice: 0:7 }}</code>
+      <br />
+      Root tree at head:
+      <code>{{ notebook.objects.head.strings.rootCategory | slice: 0:7 }}</code>
+      <br />
+      Working tree: <code>{{ notebook.strings.workingTree | slice: 0:7 }}</code>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="onCreateBranch()" [disabled]="disableCommit">
+        {{ commitText }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-title>Branches</mat-card-title>
+    <mat-card-content>
+      <ul>
+        <li *ngFor="let branch of notebook.objects.branches | keyvalue">
+          {{ branch.key }}: <code>{{ branch.value | hash | slice: 0:7 }}</code>
+        </li>
+      </ul>
+      <p>Selected branch: {{ notebook.strings.selectedBranch }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="onCreateBranch()">Create branch</button>
+    </mat-card-actions>
+  </mat-card>
 
   <!-- (span>lorem)*100 -->
 </div>

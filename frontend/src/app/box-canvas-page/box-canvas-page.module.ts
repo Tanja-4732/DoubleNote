@@ -7,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { BcpNotebookComponent } from "./components/bcp-notebook/bcp-notebook.component";
 import { BcpVcsComponent } from "./components/bcp-vcs/bcp-vcs.component";
 import { AngularMaterialModule } from "../angular-material/angular-material.module";
+import { PipesModule } from "../pipes/pipes.module";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,6 @@ import { AngularMaterialModule } from "../angular-material/angular-material.modu
     BcpNotebookComponent,
     BcpVcsComponent,
   ],
-  imports: [CommonModule, FormsModule, AngularMaterialModule],
+  imports: [CommonModule, FormsModule, AngularMaterialModule, PipesModule],
 })
 export class BoxCanvasPageModule {}

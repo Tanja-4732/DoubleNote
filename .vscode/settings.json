@@ -6,6 +6,7 @@
     "Matcha",
     "UUIDs",
     "editorconfig",
+    "keyvalue",
     "ngsw",
     "peerjs",
     "prestart",
