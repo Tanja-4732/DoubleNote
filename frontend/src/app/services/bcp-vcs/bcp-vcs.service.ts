@@ -200,7 +200,7 @@ export class BcpVcsService {
   private persistNotebooks(): void {
     window.localStorage.setItem(
       "dn.bcp.notebooks",
-      JSON.stringify(this.notebooks)
+      JSON.stringify(this.notebooks, this.fieldHider)
     );
   }
 
@@ -208,27 +208,46 @@ export class BcpVcsService {
    * Persists the commits to localStorage
    */
   private persistCommits(): void {
-    window.localStorage.setItem("dn.bcp.commits", JSON.stringify(this.commits));
+    window.localStorage.setItem(
+      "dn.bcp.commits",
+      JSON.stringify(this.commits, this.fieldHider)
+    );
   }
 
   /**
    * Persists the trees to localStorage
    */
   private persistTrees(): void {
-    window.localStorage.setItem("dn.bcp.trees", JSON.stringify(this.trees));
+    window.localStorage.setItem(
+      "dn.bcp.trees",
+      JSON.stringify(this.trees, this.fieldHider)
+    );
   }
 
   /**
    * Persists the pages to localStorage
    */
   private persistPages(): void {
-    window.localStorage.setItem("dn.bcp.pages", JSON.stringify(this.pages));
+    window.localStorage.setItem(
+      "dn.bcp.pages",
+      JSON.stringify(this.pages, this.fieldHider)
+    );
   }
 
   /**
    * Persists the boxes to localStorage
    */
   private persistBoxes(): void {
-    window.localStorage.setItem("dn.bcp.boxes", JSON.stringify(this.boxes));
+    window.localStorage.setItem(
+      "dn.bcp.boxes",
+      JSON.stringify(this.boxes, this.fieldHider)
+    );
   }
+
+  /**
+   * Excludes the object representations of
+   * the data from entering the stringified JSON
+   */
+  private fieldHider = <T>(key: string, value: T): T | undefined =>
+    key === "objects" ? undefined : value;
 }
