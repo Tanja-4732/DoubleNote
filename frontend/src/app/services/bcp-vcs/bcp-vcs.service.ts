@@ -49,10 +49,43 @@ export class BcpVcsService {
    * copying its object-representation working tree into the commit to be
    * used as its root tree.
    *
+   * This method assumes that the working tree has already been persisted
+   *
    * @param notebook The notebook to be committed
    */
   commitNotebook(notebook: BcpNotebook): void {
-    // TODO commitNotebook
+    const commit: BcpCommit = {
+      timestamp: new Date().toISOString(),
+      strings: {
+        previous: notebook.strings.head,
+        rootCategory: notebook.strings.workingTree,
+      },
+      objects: {
+        previous: notebook.objects.head,
+        rootCategory: notebook.objects.workingTree,
+      },
+    };
+
+    // Calculate the hash of the commit
+    const commitHash = sha256(JSON.stringify(commit, this.fieldHider));
+
+    // Save the commit
+    this.commits[commitHash] = commit;
+
+    // Update teh
+    notebook.strings.selectedBranch = name;
+
+    // Update the active branch
+    const selectedBranch = notebook.strings.selectedBranch;
+    notebook.strings.branches[selectedBranch] = notebook.strings.head;
+    notebook.objects.branches[selectedBranch] = notebook.objects.head;
+
+    // Persist everything
+    this.persistNotebooks();
+    this.persistCommits();
+
+    // Get the working tree ready
+    this.replaceWorkingTreeWithHeadCopy(notebook);
   }
 
   /**
@@ -85,6 +118,9 @@ export class BcpVcsService {
     // Create the new branch
     notebook.strings.branches[name] = source;
     notebook.objects.branches[name] = commit;
+
+    // Set the active branch
+    notebook.strings.selectedBranch = name;
 
     // Persist the new branch
     this.persistNotebooks();
@@ -125,6 +161,9 @@ export class BcpVcsService {
     notebook.strings.head = notebook.strings.branches[branch];
     notebook.objects.head = notebook.objects.branches[branch];
 
+    // Set the active branch
+    notebook.strings.selectedBranch = name;
+
     // Copy the working tree
     this.replaceWorkingTreeWithHeadCopy(notebook);
   }
@@ -143,7 +182,10 @@ export class BcpVcsService {
     // Create a tree to be used as root
     const tree: CategoryTree = {
       name: "root",
-      strings: { pages: [], children: [] },
+      strings: {
+        pages: [],
+        children: [],
+      },
     };
 
     // Calculate the hash of the tree
@@ -152,7 +194,10 @@ export class BcpVcsService {
     // Create a new commit
     const commit: BcpCommit = {
       timestamp: new Date().toISOString(),
-      strings: { previous: "root", rootCategory: treeHash },
+      strings: {
+        previous: "root",
+        rootCategory: treeHash,
+      },
     };
 
     // Calculate the hash of the commit
@@ -164,9 +209,12 @@ export class BcpVcsService {
       uuid: v4(),
       type: "BCP",
       strings: {
-        branches: { master: commitHash },
+        branches: {
+          master: commitHash,
+        },
         head: commitHash,
         workingTree: treeHash,
+        selectedBranch: "master",
       },
     };
 
@@ -175,13 +223,16 @@ export class BcpVcsService {
     this.commits[commitHash] = commit;
     this.notebooks.push(notebook);
 
+    // Initialize the notebook
+    this.prepareNotebook(notebook);
+
+    // Prepare the working tree
+    this.replaceWorkingTreeWithHeadCopy(notebook);
+
     // Persist everything
     this.persistTrees();
     this.persistCommits();
     this.persistNotebooks();
-
-    // Initialize the notebook
-    this.prepareNotebook(notebook);
 
     // Return the new notebook
     return notebook;
@@ -190,6 +241,8 @@ export class BcpVcsService {
   /**
    * Replaces the working tree object-representation
    * with a copy of the HEAD root tree
+   *
+   * This method automatically persists the new working tree.
    *
    * @param notebook The notebook of which to replace the working tree
    */
@@ -201,6 +254,9 @@ export class BcpVcsService {
 
     // Since the tree didn't change, its hash stays the same as well
     notebook.strings.workingTree = notebook.objects.head.strings.rootCategory;
+
+    // Persist the new working tree
+    this.persistWorkingTree(notebook);
   }
 
   /**
@@ -243,9 +299,6 @@ export class BcpVcsService {
 
     // Set the head
     notebook.objects.head = this.commits[notebook.strings.head];
-
-    // Prepare the working tree
-    this.replaceWorkingTreeWithHeadCopy(notebook);
   }
 
   /**

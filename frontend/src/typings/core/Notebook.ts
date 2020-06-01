@@ -34,6 +34,11 @@ export interface BaseNotebook {
      * This is the hash root tree node of the working tree
      */
     workingTree: string;
+
+    /**
+     * The name of the active branch
+     */
+    selectedBranch: string;
   };
 
   objects?: {
