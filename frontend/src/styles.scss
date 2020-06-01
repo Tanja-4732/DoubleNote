@@ -10,7 +10,7 @@ body {
   margin: 0;
   // font-family: "system-ui" !important;
   // font-variant-ligatures: common-ligatures !important;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "system-ui", Roboto, "Helvetica Neue", sans-serif;
   // background-color: matcha.$bg_color;
 }
 
@@ -31,4 +31,13 @@ The css-grid for card layouts
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "system-ui", Roboto, "Helvetica Neue", sans-serif !important;
 }
