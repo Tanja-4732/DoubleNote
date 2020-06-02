@@ -65,7 +65,9 @@ export class BcpVcsComponent implements OnInit {
     }
   }
 
-  onCommit(): void {}
+  onCommit(): void {
+    this.vcs.commitNotebook(this.notebook);
+  }
 
   debug(): string {
     const text = JSON.stringify(this.notebook, null, 2);

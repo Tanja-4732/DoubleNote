@@ -49,11 +49,16 @@ export class BcpVcsService {
    * copying its object-representation working tree into the commit to be
    * used as its root tree.
    *
-   * This method assumes that the working tree has already been persisted
+   * This method will persist the working tree before
+   * committing unless the opposite is specified.
    *
    * @param notebook The notebook to be committed
    */
-  commitNotebook(notebook: BcpNotebook): void {
+  commitNotebook(notebook: BcpNotebook, persistWorkingTree = true): void {
+    if (persistWorkingTree) {
+      this.persistWorkingTree(notebook);
+    }
+
     const commit: BcpCommit = {
       timestamp: new Date().toISOString(),
       strings: {
