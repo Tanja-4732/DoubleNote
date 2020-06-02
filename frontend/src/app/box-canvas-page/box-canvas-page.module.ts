@@ -8,6 +8,7 @@ import { BcpNotebookComponent } from "./components/bcp-notebook/bcp-notebook.com
 import { BcpVcsComponent } from "./components/bcp-vcs/bcp-vcs.component";
 import { AngularMaterialModule } from "../angular-material/angular-material.module";
 import { PipesModule } from "../pipes/pipes.module";
+import { CreateBranchComponent } from './components/create-branch/create-branch.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { PipesModule } from "../pipes/pipes.module";
     DrawComponent,
     BcpNotebookComponent,
     BcpVcsComponent,
+    CreateBranchComponent,
   ],
   imports: [CommonModule, FormsModule, AngularMaterialModule, PipesModule],
 })
