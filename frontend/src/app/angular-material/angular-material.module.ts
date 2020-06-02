@@ -1,5 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 
 import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
@@ -19,6 +21,10 @@ import { MatToolbarModule } from "@angular/material/toolbar";
   imports: [],
 
   exports: [
+    FormsModule,
+    ReactiveFormsModule,
+    DragDropModule,
+
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,

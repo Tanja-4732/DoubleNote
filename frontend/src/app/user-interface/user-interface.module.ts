@@ -1,7 +1,5 @@
-import { DragDropModule } from "@angular/cdk/drag-drop";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AngularMaterialModule } from "../angular-material/angular-material.module";
 import { BoxCanvasPageModule } from "../box-canvas-page/box-canvas-page.module";
 import { AppRoutingModule } from "../routes/app-routing.module";
@@ -28,14 +26,7 @@ import { WelcomeComponent } from "./components/welcome/welcome.component";
     SideNavComponent,
     PageNotFoundComponent,
   ],
-  imports: [
-    CommonModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DragDropModule,
-    AngularMaterialModule,
-  ],
+  imports: [CommonModule, AppRoutingModule, AngularMaterialModule],
   exports: [MainComponent, BoxCanvasPageModule, SequentialBlockPageModule],
 })
 export class UserInterfaceModule {}
