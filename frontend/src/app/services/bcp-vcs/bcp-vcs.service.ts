@@ -162,7 +162,7 @@ export class BcpVcsService {
     notebook.objects.head = notebook.objects.branches[branch];
 
     // Set the active branch
-    notebook.strings.selectedBranch = name;
+    notebook.strings.selectedBranch = branch;
 
     // Copy the working tree
     this.replaceWorkingTreeWithHeadCopy(notebook);
