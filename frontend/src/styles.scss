@@ -41,3 +41,7 @@ h5,
 h6 {
   font-family: "system-ui", Roboto, "Helvetica Neue", sans-serif !important;
 }
+
+div.mat-dialog-content {
+  overflow: unset;
+}
