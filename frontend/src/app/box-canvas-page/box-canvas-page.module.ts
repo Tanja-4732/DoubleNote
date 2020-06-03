@@ -8,8 +8,9 @@ import { BcpNotebookComponent } from "./components/bcp-notebook/bcp-notebook.com
 import { BcpVcsComponent } from "./components/bcp-vcs/bcp-vcs.component";
 import { AngularMaterialModule } from "../angular-material/angular-material.module";
 import { PipesModule } from "../pipes/pipes.module";
-import { CreateBranchComponent } from './components/create-branch/create-branch.component';
-import { BcpTreeComponent } from './components/bcp-tree/bcp-tree.component';
+import { CreateBranchComponent } from "./components/create-branch/create-branch.component";
+import { BcpTreeComponent } from "./components/bcp-tree/bcp-tree.component";
+import { CategoryDialogComponent } from "./components/category-dialog/category-dialog.component";
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { BcpTreeComponent } from './components/bcp-tree/bcp-tree.component';
     BcpVcsComponent,
     CreateBranchComponent,
     BcpTreeComponent,
+    CategoryDialogComponent,
   ],
   imports: [CommonModule, FormsModule, AngularMaterialModule, PipesModule],
 })
