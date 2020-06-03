@@ -16,6 +16,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatMenuModule } from "@angular/material/menu";
+import { MatTreeModule } from "@angular/material/tree";
 
 @NgModule({
   declarations: [],
@@ -40,6 +41,7 @@ import { MatMenuModule } from "@angular/material/menu";
     MatRadioModule,
     MatCardModule,
     MatMenuModule,
+    MatTreeModule,
   ],
 })
 export class AngularMaterialModule {}
