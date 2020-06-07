@@ -8,9 +8,14 @@ import {
   MatTreeNestedDataSource,
   MatTreeFlatDataSource,
 } from "@angular/material/tree";
-import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { BoxCanvasPage } from "src/typings/bcp/BoxCanvasPage";
-import { CategoryDialogComponent } from "../category-dialog/category-dialog.component";
+import {
+  CategoryDialogComponent,
+  CategoryDialogInput,
+  CategoryDialogOutput,
+} from "../category-dialog/category-dialog.component";
+import { TreeNode } from "src/typings/bcp/TreeNode";
+import { CategoryTree } from "src/typings/bcp/CategoryTree";
 
 @Component({
   selector: "app-bcp-tree",
@@ -21,23 +26,23 @@ export class BcpTreeComponent implements OnInit {
   @Input()
   notebook: BcpNotebook;
 
-  treeControl = new NestedTreeControl<CategoryTree>(
-    (node) => node.objects.children
+  treeControl = new NestedTreeControl<TreeNode>((node) =>
+    "name" in node ? node.objects.children : null
   );
 
-  dataSource = new MatTreeNestedDataSource<CategoryTree>();
+  dataSource = new MatTreeNestedDataSource<TreeNode>();
 
   constructor(
-    private cvs: BcpVcsService,
+    private vcs: BcpVcsService,
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog
   ) {}
 
-  hasChild = (_: number, node: CategoryTree) =>
-    !!node.objects.children && node.objects.children.length > 0;
+  hasChild = (_: number, node: TreeNode) =>
+    "name" in node && node.objects.children.length > 0;
 
-  async ngOnInit() {
+  ngOnInit() {
     this.setData();
   }
 
@@ -46,33 +51,50 @@ export class BcpTreeComponent implements OnInit {
     this.dataSource.data = null;
 
     // Set the data of the data source to the categories projection
-    this.dataSource.data = this.notebook.objects.workingTree.objects.children;
+    this.dataSource.data = this.notebook.objects.workingTree.objects.children.concat(
+      this.notebook.objects.workingTree.objects.pages as any
+    );
   }
 
-  openCreateDialog(node?: CategoryTree): void {
+  /**
+   * Opens a dialog to create a new category given a parent category
+   *
+   * @param target The parent of the node to be created
+   */
+  openCreateDialog(target?: CategoryTree): void {
     // When creating a new root category ...
-    if (node === null) {
+    if (target === null) {
       // ... provide the root category
-      node = this.notebook.objects.workingTree;
+      target = this.notebook.objects.workingTree;
     }
+
+    const data: CategoryDialogInput = {
+      target,
+      opcode: "Create",
+      takenNames: target.objects.children.map((child) => child.name),
+    };
 
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
       // width: "250px",
-      data: node,
+      data,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: CategoryDialogOutput) => {
       // Only create a category when a name was provided
-      if (result !== undefined) {
-        const category: CategoryTree = {
-          name: result.name,
-          objects: { pages: [], children: [] },
-        };
+      if (result !== undefined && result.create) {
+        if (result.takenNames.includes(result.name)) {
+          throw new Error("Category name already taken");
+        } else {
+          const category: CategoryTree = {
+            name: result.name,
+            objects: { pages: [], children: [] },
+          };
 
-        result.target.objects.push(category);
+          result.target.objects.children.push(category);
 
-        this.cvs.persistWorkingTree(this.notebook);
-        this.setData();
+          this.vcs.persistWorkingTree(this.notebook);
+          this.setData();
+        }
       }
     });
   }

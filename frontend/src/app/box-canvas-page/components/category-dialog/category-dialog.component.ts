@@ -76,6 +76,11 @@ export interface CategoryDialogInput {
    * The target under which to insert
    */
   target: CategoryTree;
+
+  /**
+   * The operation to perform
+   */
+  opcode: "Create" | "Update";
 }
 
 export interface CategoryDialogOutput {
