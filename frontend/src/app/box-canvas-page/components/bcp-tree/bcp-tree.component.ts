@@ -80,8 +80,7 @@ export class BcpTreeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result: CategoryDialogOutput) => {
-      // Only create a category when a name was provided
-      if (result !== undefined && result.create) {
+      if (result !== undefined && result.confirmed) {
         if (result.takenNames.includes(result.name)) {
           throw new Error("Category name already taken");
         } else {
@@ -99,24 +98,29 @@ export class BcpTreeComponent implements OnInit {
     });
   }
 
-  openEditDialog(node: CategoryTree): void {
+  openEditDialog(target: CategoryTree): void {
+    // When creating a new root category ...
+    if (target === this.notebook.objects.workingTree) {
+      // ... throw an error
+      throw new Error("Cannot update the root category");
+    }
+
+    const data: CategoryDialogInput = {
+      target,
+      opcode: "Update",
+      takenNames: [], // TODO Provide a list of taken names
+    };
+
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
       // width: "250px",
-      data: node,
+      data,
     });
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-      // Ignore cancel
-      if (result !== undefined) {
-        await this.cs.ready;
+    dialogRef.afterClosed().subscribe((result: CategoryDialogOutput) => {
+      if (result !== undefined && result.confirmed) {
+        target.name = result.name;
 
-        if (result.wantsToDelete) {
-          await this.cs.deleteCategory(node, this.inventoryUuid);
-        } else {
-          node.name = result.childName;
-          await this.cs.updateCategory(node, this.inventoryUuid);
-        }
-
+        this.vcs.persistWorkingTree(this.notebook);
         this.setData();
       }
     });

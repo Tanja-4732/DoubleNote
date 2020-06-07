@@ -48,13 +48,13 @@ export class CategoryDialogComponent implements OnInit {
   ngOnInit(): void {}
 
   onNoClick(): void {
-    this.dialogRef.close({ create: false } as CategoryDialogOutput);
+    this.dialogRef.close({ confirmed: false } as CategoryDialogOutput);
   }
 
   onSubmit(): void {
     this.dialogRef.close({
       // Prodded with creation
-      create: true,
+      confirmed: true,
 
       // The chosen name
       name: this.formGroup.value.name,
@@ -84,7 +84,7 @@ export interface CategoryDialogInput {
 }
 
 export interface CategoryDialogOutput {
-  create: boolean;
+  confirmed: boolean;
 
   /**
    * The chosen name
