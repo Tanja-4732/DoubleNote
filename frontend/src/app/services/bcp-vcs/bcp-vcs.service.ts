@@ -317,9 +317,6 @@ export class BcpVcsService {
 
     // Set the head
     notebook.objects.head = this.commits[notebook.strings.head];
-
-    // Set up the working tree
-    notebook.objects.workingTree = notebook.objects.head.objects.rootCategory;
   }
 
   /**
