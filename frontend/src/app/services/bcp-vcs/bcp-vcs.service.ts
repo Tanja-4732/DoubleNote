@@ -78,7 +78,7 @@ export class BcpVcsService {
     // Save the commit
     this.commits[commitHash] = commit;
 
-    // Update teh
+    // Update the
     notebook.strings.selectedBranch = name;
 
     // Update the active branch
@@ -323,6 +323,9 @@ export class BcpVcsService {
     notebook.objects.head = this.commits[notebook.strings.head];
 
     // Get the working tree ready
+    notebook.objects.workingTree = cloneDeep(
+      this.trees[notebook.strings.workingTree]
+    );
     this.loadWorkingTree(notebook.objects.workingTree);
   }
 
@@ -397,9 +400,15 @@ export class BcpVcsService {
    * @return The hash of this category
    */
   private saveTree(category: CategoryTree): string {
-    // Iterate over all pages of teh category
+    // Prepare the target data structure
+    category.strings = { children: [], pages: [] };
+
+    // Iterate over all pages of the category
     for (const page of category.objects.pages) {
-      // Iterate over all boxes of teh page
+      // Prepare the target data structure
+      page.strings = { boxes: [] };
+
+      // Iterate over all boxes of the page
       for (const box of page.objects.boxes) {
         const boxHash = sha256(JSON.stringify(box, fieldHider));
         this.boxes[boxHash] = box;

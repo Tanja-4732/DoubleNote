@@ -47,6 +47,8 @@ export class BcpTreeComponent implements OnInit {
   }
 
   private setData() {
+    console.log(this.notebook.objects.workingTree);
+
     // Reset the data (workaround for an Angular bug)
     this.dataSource.data = null;
 

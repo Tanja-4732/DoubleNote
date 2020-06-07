@@ -1,5 +1,9 @@
 <p>bcp-tree works!</p>
 
+<button mat-stroked-button (click)="openCreateDialog(null)">
+  Create new category
+</button>
+
 <mat-tree
   [dataSource]="dataSource"
   [treeControl]="treeControl"
