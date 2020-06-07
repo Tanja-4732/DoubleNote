@@ -7,6 +7,7 @@ import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { BcpCommit } from "src/typings/bcp/BcpCommit";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { cloneDeep } from "lodash";
+import { fieldHider } from "src/functions/functions";
 
 @Injectable({
   providedIn: "root",
@@ -72,7 +73,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the commit
-    const commitHash = sha256(JSON.stringify(commit, this.fieldHider));
+    const commitHash = sha256(JSON.stringify(commit, fieldHider));
 
     // Save the commit
     this.commits[commitHash] = commit;
@@ -208,7 +209,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the tree
-    const treeHash: string = sha256(JSON.stringify(tree, this.fieldHider));
+    const treeHash: string = sha256(JSON.stringify(tree, fieldHider));
 
     // Create a new commit
     const commit: BcpCommit = {
@@ -220,7 +221,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the commit
-    const commitHash: string = sha256(JSON.stringify(commit, this.fieldHider));
+    const commitHash: string = sha256(JSON.stringify(commit, fieldHider));
 
     // Create a new notebook
     const notebook: BcpNotebook = {
@@ -359,12 +360,12 @@ export class BcpVcsService {
     for (const page of category.objects.pages) {
       // Iterate over all boxes of teh page
       for (const box of page.objects.boxes) {
-        const boxHash = sha256(JSON.stringify(box, this.fieldHider));
+        const boxHash = sha256(JSON.stringify(box, fieldHider));
         this.boxes[boxHash] = box;
         page.strings.boxes.push(boxHash);
       }
 
-      const pageHash = sha256(JSON.stringify(page, this.fieldHider));
+      const pageHash = sha256(JSON.stringify(page, fieldHider));
       this.pages[pageHash] = page;
       category.strings.pages.push(pageHash);
     }
@@ -373,7 +374,7 @@ export class BcpVcsService {
       category.strings.children.push(this.saveTree(tree));
     }
 
-    const hash = sha256(JSON.stringify(category, this.fieldHider));
+    const hash = sha256(JSON.stringify(category, fieldHider));
     this.trees[hash] = category;
     return hash;
   }
@@ -384,7 +385,7 @@ export class BcpVcsService {
   private persistNotebooks(): void {
     window.localStorage.setItem(
       "dn.bcp.notebooks",
-      JSON.stringify(this.notebooks, this.fieldHider)
+      JSON.stringify(this.notebooks, fieldHider)
     );
   }
 
@@ -394,7 +395,7 @@ export class BcpVcsService {
   private persistCommits(): void {
     window.localStorage.setItem(
       "dn.bcp.commits",
-      JSON.stringify(this.commits, this.fieldHider)
+      JSON.stringify(this.commits, fieldHider)
     );
   }
 
@@ -404,7 +405,7 @@ export class BcpVcsService {
   private persistTrees(): void {
     window.localStorage.setItem(
       "dn.bcp.trees",
-      JSON.stringify(this.trees, this.fieldHider)
+      JSON.stringify(this.trees, fieldHider)
     );
   }
 
@@ -414,7 +415,7 @@ export class BcpVcsService {
   private persistPages(): void {
     window.localStorage.setItem(
       "dn.bcp.pages",
-      JSON.stringify(this.pages, this.fieldHider)
+      JSON.stringify(this.pages, fieldHider)
     );
   }
 
@@ -424,14 +425,7 @@ export class BcpVcsService {
   private persistBoxes(): void {
     window.localStorage.setItem(
       "dn.bcp.boxes",
-      JSON.stringify(this.boxes, this.fieldHider)
+      JSON.stringify(this.boxes, fieldHider)
     );
   }
-
-  /**
-   * Excludes the object representations of
-   * the data from entering the stringified JSON
-   */
-  private fieldHider = <T>(key: string, value: T): T | undefined =>
-    key === "objects" ? undefined : value;
 }
