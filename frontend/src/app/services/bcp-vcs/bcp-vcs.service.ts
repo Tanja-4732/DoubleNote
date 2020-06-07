@@ -291,7 +291,11 @@ export class BcpVcsService {
    */
   private prepareNotebook(notebook: BcpNotebook) {
     // Prepare the target data structure
-    notebook.objects = { branches: {}, head: null, workingTree: null };
+    notebook.objects = {
+      branches: {},
+      head: null,
+      workingTree: null,
+    };
 
     // Initialize every branch
     for (const [branchName, latestCommitHash] of Object.entries(
@@ -317,6 +321,41 @@ export class BcpVcsService {
 
     // Set the head
     notebook.objects.head = this.commits[notebook.strings.head];
+
+    // Get the working tree ready
+    this.loadWorkingTree(notebook.objects.workingTree);
+  }
+
+  /**
+   * Initializes a category; ie it recursively loads its data into memory
+   *
+   * @param category The category to be initialized
+   */
+  private loadWorkingTree(category: CategoryTree): void {
+    // Prepare the target data structure
+    category.objects = { pages: [], children: [] };
+
+    // Load the pages
+    for (const pageHash of category.strings.pages) {
+      const page = cloneDeep(this.pages[pageHash]);
+      category.objects.pages.push(page);
+
+      // Prepare the target data structure
+      page.objects = { boxes: [] };
+
+      // Initialize the page
+      for (const boxHash of page.strings.boxes) {
+        const box = cloneDeep(this.boxes[boxHash]);
+        page.objects.boxes.push(box);
+      }
+    }
+
+    // Recursively initialize all child categories
+    for (const treeHash of category.strings.children) {
+      const child = cloneDeep(this.trees[treeHash]);
+      category.objects.children.push(child);
+      this.loadWorkingTree(child);
+    }
   }
 
   /**
@@ -338,14 +377,16 @@ export class BcpVcsService {
 
       // Initialize the page
       for (const boxHash of page.strings.boxes) {
-        page.objects.boxes.push(this.boxes[boxHash]);
+        const box = this.boxes[boxHash];
+        page.objects.boxes.push(box);
       }
     }
 
     // Recursively initialize all child categories
     for (const treeHash of category.strings.children) {
-      category.objects.children.push(this.trees[treeHash]);
-      this.loadTree(this.trees[treeHash]);
+      const child = this.trees[treeHash];
+      category.objects.children.push(child);
+      this.loadTree(child);
     }
   }
 
