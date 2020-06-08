@@ -22,6 +22,12 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>DoubleNote</span>
+      <ng-container *ngIf="isDevMode">
+        &nbsp; &nbsp;
+        <button mat-raised-button color="warn" (click)="deleteAll()">
+          Delete all data
+        </button>
+      </ng-container>
     </mat-toolbar>
 
     <div class="defaultMargin">

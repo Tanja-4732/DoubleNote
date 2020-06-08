@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, isDevMode } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
@@ -17,8 +17,21 @@ export class MainComponent {
       shareReplay()
     );
 
+  get isDevMode(): boolean {
+    return isDevMode();
+  }
+
   constructor(
     public settings: SettingsService,
     private breakpointObserver: BreakpointObserver
   ) {}
+
+  deleteAll(): void {
+    window.localStorage.removeItem("dn.bcp.notebooks");
+    window.localStorage.removeItem("dn.bcp.commits");
+    window.localStorage.removeItem("dn.bcp.trees");
+    window.localStorage.removeItem("dn.bcp.pages");
+    window.localStorage.removeItem("dn.bcp.boxes");
+    window.location.reload();
+  }
 }
