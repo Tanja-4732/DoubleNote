@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, isDevMode } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
+import { SettingsService } from "src/app/services/settings/settings.service";
 
 @Component({
   selector: "app-main",
@@ -16,21 +17,21 @@ export class MainComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
-
-  get sideNavOpened(): boolean {
-    switch (window.localStorage.getItem("dn.sideNavOpened")) {
-      case "true":
-        return true;
-      case "false":
-        return false;
-      case null:
-        this.sideNavOpened = true;
-        return true;
-    }
+  get isDevMode(): boolean {
+    return isDevMode();
   }
 
-  set sideNavOpened(value: boolean) {
-    window.localStorage.setItem("dn.sideNavOpened", value + "");
+  constructor(
+    public settings: SettingsService,
+    private breakpointObserver: BreakpointObserver
+  ) {}
+
+  deleteAll(): void {
+    window.localStorage.removeItem("dn.bcp.notebooks");
+    window.localStorage.removeItem("dn.bcp.commits");
+    window.localStorage.removeItem("dn.bcp.trees");
+    window.localStorage.removeItem("dn.bcp.pages");
+    window.localStorage.removeItem("dn.bcp.boxes");
+    window.location.reload();
   }
 }

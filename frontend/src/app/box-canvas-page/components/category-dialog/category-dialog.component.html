@@ -1,0 +1,33 @@
+<p>category-dialog works!</p>
+
+<h1 mat-dialog-title *ngIf="this.input.opcode === 'Create'">Create category</h1>
+<h1 mat-dialog-title *ngIf="this.input.opcode === 'Update'">Update category</h1>
+
+<p>At: {{ this.input.target.name }}</p>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="My category"
+        required
+        cdkFocusInitial
+      />
+      <mat-error *ngIf="formGroup.invalid">
+        <!-- A name must be provided -->
+        An unused name must be provided
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">
+      Cancel
+    </button>
+    <button mat-button [disabled]="formGroup.invalid" type="submit">
+      Confirm
+    </button>
+  </div>
+</form>

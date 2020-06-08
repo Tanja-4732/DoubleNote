@@ -7,6 +7,7 @@ import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { BcpCommit } from "src/typings/bcp/BcpCommit";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { cloneDeep } from "lodash";
+import { fieldHider } from "src/functions/functions";
 
 @Injectable({
   providedIn: "root",
@@ -72,12 +73,12 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the commit
-    const commitHash = sha256(JSON.stringify(commit, this.fieldHider));
+    const commitHash = sha256(JSON.stringify(commit, fieldHider));
 
     // Save the commit
     this.commits[commitHash] = commit;
 
-    // Update teh
+    // Update the
     notebook.strings.selectedBranch = name;
 
     // Update the active branch
@@ -208,7 +209,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the tree
-    const treeHash: string = sha256(JSON.stringify(tree, this.fieldHider));
+    const treeHash: string = sha256(JSON.stringify(tree, fieldHider));
 
     // Create a new commit
     const commit: BcpCommit = {
@@ -220,7 +221,7 @@ export class BcpVcsService {
     };
 
     // Calculate the hash of the commit
-    const commitHash: string = sha256(JSON.stringify(commit, this.fieldHider));
+    const commitHash: string = sha256(JSON.stringify(commit, fieldHider));
 
     // Create a new notebook
     const notebook: BcpNotebook = {
@@ -290,7 +291,11 @@ export class BcpVcsService {
    */
   private prepareNotebook(notebook: BcpNotebook) {
     // Prepare the target data structure
-    notebook.objects = { branches: {}, head: null, workingTree: null };
+    notebook.objects = {
+      branches: {},
+      head: null,
+      workingTree: null,
+    };
 
     // Initialize every branch
     for (const [branchName, latestCommitHash] of Object.entries(
@@ -316,10 +321,52 @@ export class BcpVcsService {
 
     // Set the head
     notebook.objects.head = this.commits[notebook.strings.head];
+
+    // Get the working tree ready
+    notebook.objects.workingTree = cloneDeep(
+      this.trees[notebook.strings.workingTree]
+    );
+    this.loadWorkingTree(notebook.objects.workingTree);
   }
 
   /**
    * Initializes a category; ie it recursively loads its data into memory
+   * by creating copies of existing data in memory, thus avoiding mutations
+   *
+   * @param category The category to be initialized
+   */
+  private loadWorkingTree(category: CategoryTree): void {
+    // Prepare the target data structure
+    category.objects = { pages: [], children: [] };
+
+    // Load the pages
+    for (const pageHash of category.strings.pages) {
+      const page = cloneDeep(this.pages[pageHash]);
+      category.objects.pages.push(page);
+
+      // Prepare the target data structure
+      page.objects = { boxes: [] };
+
+      // Initialize the page
+      for (const boxHash of page.strings.boxes) {
+        const box = cloneDeep(this.boxes[boxHash]);
+        page.objects.boxes.push(box);
+      }
+    }
+
+    // Recursively initialize all child categories
+    for (const treeHash of category.strings.children) {
+      // This operation is not very expensive, as the
+      // object-representations in the children aren't loaded yet
+      const child = cloneDeep(this.trees[treeHash]);
+      category.objects.children.push(child);
+      this.loadWorkingTree(child);
+    }
+  }
+
+  /**
+   * Initializes a category; ie it recursively loads its data into memory
+   * by referencing existing data in memory, possibly leading to mutations
    *
    * @param category The category to be initialized
    */
@@ -337,14 +384,16 @@ export class BcpVcsService {
 
       // Initialize the page
       for (const boxHash of page.strings.boxes) {
-        page.objects.boxes.push(this.boxes[boxHash]);
+        const box = this.boxes[boxHash];
+        page.objects.boxes.push(box);
       }
     }
 
     // Recursively initialize all child categories
     for (const treeHash of category.strings.children) {
-      category.objects.children.push(this.trees[treeHash]);
-      this.loadTree(this.trees[treeHash]);
+      const child = this.trees[treeHash];
+      category.objects.children.push(child);
+      this.loadTree(child);
     }
   }
 
@@ -355,16 +404,22 @@ export class BcpVcsService {
    * @return The hash of this category
    */
   private saveTree(category: CategoryTree): string {
-    // Iterate over all pages of teh category
+    // Prepare the target data structure
+    category.strings = { children: [], pages: [] };
+
+    // Iterate over all pages of the category
     for (const page of category.objects.pages) {
-      // Iterate over all boxes of teh page
+      // Prepare the target data structure
+      page.strings = { boxes: [] };
+
+      // Iterate over all boxes of the page
       for (const box of page.objects.boxes) {
-        const boxHash = sha256(JSON.stringify(box, this.fieldHider));
+        const boxHash = sha256(JSON.stringify(box, fieldHider));
         this.boxes[boxHash] = box;
         page.strings.boxes.push(boxHash);
       }
 
-      const pageHash = sha256(JSON.stringify(page, this.fieldHider));
+      const pageHash = sha256(JSON.stringify(page, fieldHider));
       this.pages[pageHash] = page;
       category.strings.pages.push(pageHash);
     }
@@ -373,7 +428,7 @@ export class BcpVcsService {
       category.strings.children.push(this.saveTree(tree));
     }
 
-    const hash = sha256(JSON.stringify(category, this.fieldHider));
+    const hash = sha256(JSON.stringify(category, fieldHider));
     this.trees[hash] = category;
     return hash;
   }
@@ -384,7 +439,7 @@ export class BcpVcsService {
   private persistNotebooks(): void {
     window.localStorage.setItem(
       "dn.bcp.notebooks",
-      JSON.stringify(this.notebooks, this.fieldHider)
+      JSON.stringify(this.notebooks, fieldHider)
     );
   }
 
@@ -394,7 +449,7 @@ export class BcpVcsService {
   private persistCommits(): void {
     window.localStorage.setItem(
       "dn.bcp.commits",
-      JSON.stringify(this.commits, this.fieldHider)
+      JSON.stringify(this.commits, fieldHider)
     );
   }
 
@@ -404,7 +459,7 @@ export class BcpVcsService {
   private persistTrees(): void {
     window.localStorage.setItem(
       "dn.bcp.trees",
-      JSON.stringify(this.trees, this.fieldHider)
+      JSON.stringify(this.trees, fieldHider)
     );
   }
 
@@ -414,7 +469,7 @@ export class BcpVcsService {
   private persistPages(): void {
     window.localStorage.setItem(
       "dn.bcp.pages",
-      JSON.stringify(this.pages, this.fieldHider)
+      JSON.stringify(this.pages, fieldHider)
     );
   }
 
@@ -424,14 +479,7 @@ export class BcpVcsService {
   private persistBoxes(): void {
     window.localStorage.setItem(
       "dn.bcp.boxes",
-      JSON.stringify(this.boxes, this.fieldHider)
+      JSON.stringify(this.boxes, fieldHider)
     );
   }
-
-  /**
-   * Excludes the object representations of
-   * the data from entering the stringified JSON
-   */
-  private fieldHider = <T>(key: string, value: T): T | undefined =>
-    key === "objects" ? undefined : value;
 }

@@ -7,6 +7,7 @@ import {
   DialogData,
   DialogResult,
 } from "../create-branch/create-branch.component";
+import { log } from "src/functions/functions";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -71,7 +72,7 @@ export class BcpVcsComponent implements OnInit {
 
   debug(): string {
     const text = JSON.stringify(this.notebook, null, 2);
-    console.log(this.notebook);
+    log(this.notebook);
     return text;
   }
 }
