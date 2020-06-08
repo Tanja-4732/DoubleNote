@@ -7,7 +7,8 @@
       Root tree at head:
       <code>{{ notebook.objects.head.strings.rootCategory | slice: 0:7 }}</code>
       <br />
-      Working tree: <code>{{ notebook.strings.workingTree | slice: 0:7 }}</code>
+      Working tree:
+      <code>{{ notebook.objects.workingTree | hash | slice: 0:7 }}</code>
     </mat-card-content>
     <mat-card-actions>
       <button mat-button (click)="onCommit()" [disabled]="disableCommit">

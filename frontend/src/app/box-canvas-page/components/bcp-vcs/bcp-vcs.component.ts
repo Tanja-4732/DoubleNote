@@ -25,8 +25,8 @@ export class BcpVcsComponent implements OnInit {
 
   get disableCommit(): boolean {
     return (
-      hash(this.notebook.objects.head.strings.rootCategory) ===
-      hash(this.notebook.strings.workingTree)
+      this.notebook.objects.head.strings.rootCategory ===
+      this.notebook.strings.workingTree
     );
   }
 
@@ -74,6 +74,21 @@ export class BcpVcsComponent implements OnInit {
   debug(): string {
     const text = JSON.stringify(this.notebook, null, 2);
     log(this.notebook);
+
+    log("Root category");
+    log(this.notebook.strings.head);
+
+    log("Root tree at head commit");
+    log(this.notebook.objects.head.objects.rootCategory);
+    log(hash(this.notebook.objects.head.objects.rootCategory));
+
+    log("Working tree");
+    log(this.notebook.objects.workingTree);
+    log(hash(this.notebook.objects.workingTree));
+
+    log("Disable the commit button?");
+    log(this.disableCommit);
+
     return text;
   }
 }
