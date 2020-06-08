@@ -14,7 +14,7 @@ export function fieldHider<T>(key: string, value: T): T | undefined {
  * @param message The message to be logged
  * @param args Arguments to be passed
  */
-export function log(message: any, ...args: any): void {
+function oldLog(message: any, ...args: any): void {
   if (isDevMode()) {
     console.groupCollapsed(message, ...args);
 
@@ -25,10 +25,10 @@ export function log(message: any, ...args: any): void {
   }
 }
 
-// log = function() {
-//     var context = "My Descriptive Logger Prefix:";
+class _helper {
+  static get log() {
+    return isDevMode() ? console.log : (...nothing) => {};
+  }
+}
 
-//     return Function.prototype.bind.call(console.log, console, context);
-// }();
-
-// log("This is a test...");
+export const log = _helper.log;
