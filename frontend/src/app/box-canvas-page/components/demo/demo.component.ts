@@ -9,6 +9,7 @@ import {
   CrumbTrailComponent,
   Icon,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
+import { log } from "src/functions/functions";
 
 @Component({
   selector: "app-demo",
@@ -48,7 +49,7 @@ export class DemoComponent implements OnInit, OnDestroy {
     this.subscription = this.mbs.messageStream
       .pipe(filter((m: Message) => m.messageType === "DemoTextMessage"))
       .subscribe((message: DemoTextMessage) => {
-        console.log(message);
+        log(message);
 
         this.otherPeerMessage = message.text;
         this.cdr.detectChanges();

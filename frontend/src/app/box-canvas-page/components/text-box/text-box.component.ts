@@ -13,6 +13,7 @@ import { MdomNode } from "src/typings/markdown/MDOM";
 import { Message } from "src/typings/core/Message";
 import { v4 } from "uuid";
 import { TextBoxMessage } from "../../../../typings/core/Message";
+import { log } from "src/functions/functions";
 
 @Component({
   selector: "app-text-box",
@@ -88,7 +89,7 @@ export class TextBoxComponent implements OnInit {
 
   private handleIncomingMessage(message: TextBoxMessage) {
     // Log the incoming message
-    console.log(message.mdom);
+    log(message.mdom);
 
     // Update the markdown object model
     this.mdom = message.mdom;

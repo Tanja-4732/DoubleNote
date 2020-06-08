@@ -16,6 +16,7 @@ import {
 } from "../category-dialog/category-dialog.component";
 import { TreeNode } from "src/typings/bcp/TreeNode";
 import { CategoryTree } from "src/typings/bcp/CategoryTree";
+import { log } from "src/functions/functions";
 
 @Component({
   selector: "app-bcp-tree",
@@ -47,7 +48,7 @@ export class BcpTreeComponent implements OnInit {
   }
 
   private setData() {
-    console.log(this.notebook.objects.workingTree);
+    log(this.notebook.objects.workingTree);
 
     // Reset the data (workaround for an Angular bug)
     this.dataSource.data = null;
