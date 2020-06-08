@@ -405,7 +405,7 @@ export class BcpVcsService {
    */
   private saveTree(category: CategoryTree): string {
     // Prepare the target data structure
-    category.strings = { children: [], pages: [] };
+    category.strings = { pages: [], children: [] };
 
     // Iterate over all pages of the category
     for (const page of category.objects.pages) {
