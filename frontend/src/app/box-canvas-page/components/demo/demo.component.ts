@@ -9,7 +9,7 @@ import {
   CrumbTrailComponent,
   Icon,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
-import { log } from "src/functions/functions";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-demo",

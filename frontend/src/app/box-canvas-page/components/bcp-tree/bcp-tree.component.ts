@@ -16,7 +16,7 @@ import {
 } from "../category-dialog/category-dialog.component";
 import { TreeNode } from "src/typings/bcp/TreeNode";
 import { CategoryTree } from "src/typings/bcp/CategoryTree";
-import { log } from "src/functions/functions";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-bcp-tree",

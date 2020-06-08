@@ -7,7 +7,8 @@ import {
   DialogData,
   DialogResult,
 } from "../create-branch/create-branch.component";
-import { log } from "src/functions/functions";
+import { hash } from "src/functions/functions";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -24,8 +25,8 @@ export class BcpVcsComponent implements OnInit {
 
   get disableCommit(): boolean {
     return (
-      this.notebook.objects.head.strings.rootCategory ===
-      this.notebook.strings.workingTree
+      hash(this.notebook.objects.head.strings.rootCategory) ===
+      hash(this.notebook.strings.workingTree)
     );
   }
 

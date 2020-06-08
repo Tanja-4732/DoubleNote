@@ -13,7 +13,7 @@ import { MdomNode } from "src/typings/markdown/MDOM";
 import { Message } from "src/typings/core/Message";
 import { v4 } from "uuid";
 import { TextBoxMessage } from "../../../../typings/core/Message";
-import { log } from "src/functions/functions";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-text-box",
