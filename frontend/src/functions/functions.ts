@@ -16,6 +16,19 @@ export function fieldHider<T>(key: string, value: T): T | undefined {
  */
 export function log(message: any, ...args: any): void {
   if (isDevMode()) {
-    console.log(message, ...args);
+    console.groupCollapsed(message, ...args);
+
+    // tslint:disable-next-line: no-console
+    console.trace();
+
+    console.groupEnd();
   }
 }
+
+// log = function() {
+//     var context = "My Descriptive Logger Prefix:";
+
+//     return Function.prototype.bind.call(console.log, console, context);
+// }();
+
+// log("This is a test...");
