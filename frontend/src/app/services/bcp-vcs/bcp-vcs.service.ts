@@ -331,6 +331,7 @@ export class BcpVcsService {
 
   /**
    * Initializes a category; ie it recursively loads its data into memory
+   * by creating copies of existing data in memory, thus avoiding mutations
    *
    * @param category The category to be initialized
    */
@@ -355,6 +356,8 @@ export class BcpVcsService {
 
     // Recursively initialize all child categories
     for (const treeHash of category.strings.children) {
+      // This operation is not very expensive, as the
+      // object-representations in the children aren't loaded yet
       const child = cloneDeep(this.trees[treeHash]);
       category.objects.children.push(child);
       this.loadWorkingTree(child);
@@ -363,6 +366,7 @@ export class BcpVcsService {
 
   /**
    * Initializes a category; ie it recursively loads its data into memory
+   * by referencing existing data in memory, possibly leading to mutations
    *
    * @param category The category to be initialized
    */
