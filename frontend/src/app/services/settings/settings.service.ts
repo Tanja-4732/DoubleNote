@@ -41,6 +41,15 @@ export class SettingsService {
     this.settings.enableOfflineMode = value;
     this.saveData();
   }
+
+  get sideNavOpened(): boolean {
+    return this.settings.sideNavOpened ?? true;
+  }
+
+  set sideNavOpened(value: boolean) {
+    this.settings.sideNavOpened = value;
+    this.saveData();
+  }
 }
 
 /**
@@ -48,4 +57,5 @@ export class SettingsService {
  */
 interface Settings {
   enableOfflineMode: boolean;
+  sideNavOpened: boolean;
 }

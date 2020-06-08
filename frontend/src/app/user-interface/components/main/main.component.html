@@ -5,7 +5,7 @@
     fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [(opened)]="sideNavOpened"
+    [(opened)]="settings.sideNavOpened"
   >
     <app-side-nav></app-side-nav>
   </mat-sidenav>

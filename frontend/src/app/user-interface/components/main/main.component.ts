@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
+import { SettingsService } from "src/app/services/settings/settings.service";
 
 @Component({
   selector: "app-main",
@@ -16,21 +17,8 @@ export class MainComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
-
-  get sideNavOpened(): boolean {
-    switch (window.localStorage.getItem("dn.sideNavOpened")) {
-      case "true":
-        return true;
-      case "false":
-        return false;
-      case null:
-        this.sideNavOpened = true;
-        return true;
-    }
-  }
-
-  set sideNavOpened(value: boolean) {
-    window.localStorage.setItem("dn.sideNavOpened", value + "");
-  }
+  constructor(
+    public settings: SettingsService,
+    private breakpointObserver: BreakpointObserver
+  ) {}
 }
