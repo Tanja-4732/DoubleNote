@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, isDevMode } from "@angular/core";
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { MatDialog } from "@angular/material/dialog";
@@ -18,6 +18,10 @@ import { log } from "src/functions/console";
 export class BcpVcsComponent implements OnInit {
   @Input()
   notebook: BcpNotebook;
+
+  get isDevMode(): boolean {
+    return isDevMode();
+  }
 
   constructor(public vcs: BcpVcsService, public dialog: MatDialog) {}
 
