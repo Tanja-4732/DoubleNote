@@ -9,6 +9,7 @@ import {
   DialogData,
   DialogResult,
 } from "../create-branch/create-branch.component";
+import { hash } from "src/functions/functions";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -77,12 +78,28 @@ export class BcpVcsComponent implements OnInit {
 
   debug(): void {
     log("Root tree at head commit");
+    log(hash(this.notebook.objects.head.objects.rootCategory));
     log(this.notebook.objects.head.objects.rootCategory);
-    // log(hash(this.notebook.objects.head.objects.rootCategory));
+    log("");
 
     log("Working tree");
+    log(hash(this.notebook.objects.workingTree));
     log(this.notebook.objects.workingTree);
-    // log(hash(this.notebook.objects.workingTree));
+    log("");
+
+    log("Root tree == working tree");
+    log(
+      this.notebook.objects.head.objects.rootCategory ==
+        this.notebook.objects.workingTree
+    );
+    log("");
+
+    log("Root tree === working tree");
+    log(
+      this.notebook.objects.head.objects.rootCategory ===
+        this.notebook.objects.workingTree
+    );
+    log("");
 
     log("Disable the commit button?");
     log(this.disableCommit);

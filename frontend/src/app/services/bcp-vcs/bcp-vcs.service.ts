@@ -179,6 +179,7 @@ export class BcpVcsService {
    * @param notebook The notebook of which to save the working tree
    */
   persistWorkingTree(notebook: BcpNotebook): void {
+    notebook.objects.workingTree = cloneDeep(notebook.objects.workingTree);
     const hash = this.saveTree(notebook.objects.workingTree);
     notebook.strings.workingTree = hash;
 
