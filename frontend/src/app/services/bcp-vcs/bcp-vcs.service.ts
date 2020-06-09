@@ -78,9 +78,6 @@ export class BcpVcsService {
     // Save the commit
     this.commits[commitHash] = commit;
 
-    // Update the
-    notebook.strings.selectedBranch = name;
-
     // Update the active branch
     const selectedBranch = notebook.strings.selectedBranch;
     notebook.strings.branches[selectedBranch] = notebook.strings.head;

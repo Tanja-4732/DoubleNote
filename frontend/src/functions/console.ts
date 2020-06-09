@@ -1,7 +1,8 @@
-import { isDevMode } from "@angular/core";
-class _helper {
+import { environment } from "src/environments/environment";
+
+class helper {
   static get log() {
-    return isDevMode() ? console.log : (...nothing) => { };
+    return !environment.production ? console.log : (...nothing) => {};
   }
 }
-export const log = _helper.log;
+export const log = helper.log;

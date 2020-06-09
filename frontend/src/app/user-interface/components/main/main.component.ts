@@ -1,8 +1,9 @@
-import { Component, isDevMode } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { Component } from "@angular/core";
 import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 import { SettingsService } from "src/app/services/settings/settings.service";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-main",
@@ -18,7 +19,7 @@ export class MainComponent {
     );
 
   get isDevMode(): boolean {
-    return isDevMode();
+    return !environment.production;
   }
 
   constructor(

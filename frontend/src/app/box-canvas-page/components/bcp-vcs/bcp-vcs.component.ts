@@ -1,14 +1,14 @@
-import { Component, OnInit, Input, isDevMode } from "@angular/core";
-import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
-import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { Component, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { environment } from "src/environments/environment";
+import { log } from "src/functions/console";
+import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import {
   CreateBranchComponent,
   DialogData,
   DialogResult,
 } from "../create-branch/create-branch.component";
-import { hash } from "src/functions/functions";
-import { log } from "src/functions/console";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -20,7 +20,7 @@ export class BcpVcsComponent implements OnInit {
   notebook: BcpNotebook;
 
   get isDevMode(): boolean {
-    return isDevMode();
+    return !environment.production;
   }
 
   constructor(public vcs: BcpVcsService, public dialog: MatDialog) {}
@@ -75,24 +75,16 @@ export class BcpVcsComponent implements OnInit {
     this.vcs.commitNotebook(this.notebook);
   }
 
-  debug(): string {
-    const text = JSON.stringify(this.notebook, null, 2);
-    log(this.notebook);
-
-    log("Root category");
-    log(this.notebook.strings.head);
-
+  debug(): void {
     log("Root tree at head commit");
     log(this.notebook.objects.head.objects.rootCategory);
-    log(hash(this.notebook.objects.head.objects.rootCategory));
+    // log(hash(this.notebook.objects.head.objects.rootCategory));
 
     log("Working tree");
     log(this.notebook.objects.workingTree);
-    log(hash(this.notebook.objects.workingTree));
+    // log(hash(this.notebook.objects.workingTree));
 
     log("Disable the commit button?");
     log(this.disableCommit);
-
-    return text;
   }
 }
