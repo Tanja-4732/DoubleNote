@@ -10,6 +10,7 @@ import {
   DialogResult,
 } from "../create-branch/create-branch.component";
 import { hash } from "src/functions/functions";
+import { BcpTreeComponent } from "../bcp-tree/bcp-tree.component";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -45,6 +46,7 @@ export class BcpVcsComponent implements OnInit {
 
   onCheckoutBranch(name: string): void {
     this.vcs.checkoutBranch(this.notebook, name);
+    BcpTreeComponent.setDataObs.next();
   }
 
   onCreateBranch(): void {

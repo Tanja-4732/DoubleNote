@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, OnDestroy } from "@angular/core";
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
@@ -17,13 +17,18 @@ import {
 import { TreeNode } from "src/typings/bcp/TreeNode";
 import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { log } from "src/functions/console";
+import { Subject, Subscription } from "rxjs";
 
 @Component({
   selector: "app-bcp-tree",
   templateUrl: "./bcp-tree.component.html",
   styleUrls: ["./bcp-tree.component.scss"],
 })
-export class BcpTreeComponent implements OnInit {
+export class BcpTreeComponent implements OnInit, OnDestroy {
+  public static setDataObs = new Subject<void>();
+
+  private sub: Subscription;
+
   @Input()
   notebook: BcpNotebook;
 
@@ -45,6 +50,11 @@ export class BcpTreeComponent implements OnInit {
 
   ngOnInit() {
     this.setData();
+    this.sub = BcpTreeComponent.setDataObs.subscribe(() => this.setData());
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   private setData() {
