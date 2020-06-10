@@ -1,1 +1,30 @@
-<p>page-dialog works!</p>
+<h1 mat-dialog-title>Create page</h1>
+
+<p>Parent category: {{ this.input.target.name }}</p>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input
+        matInput
+        formControlName="title"
+        placeholder="My page"
+        required
+        cdkFocusInitial
+      />
+      <mat-error *ngIf="formGroup.invalid">
+        <!-- A title must be provided -->
+        An unused title must be provided
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" type="button">
+      Cancel
+    </button>
+    <button mat-button [disabled]="formGroup.invalid" type="submit">
+      Confirm
+    </button>
+  </div>
+</form>

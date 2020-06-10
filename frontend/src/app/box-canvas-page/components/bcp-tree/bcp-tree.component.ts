@@ -19,6 +19,12 @@ import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { log } from "src/functions/console";
 import { Subject, Subscription } from "rxjs";
 import { environment } from "src/environments/environment";
+import {
+  PageDialogComponent,
+  PageDialogInput,
+  PageDialogOutput,
+} from "../page-dialog/page-dialog.component";
+import { v4 } from "uuid";
 
 @Component({
   selector: "app-bcp-tree",
@@ -45,7 +51,9 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
   notebook: BcpNotebook;
 
   treeControl = new NestedTreeControl<TreeNode>((node) =>
-    "name" in node ? node.objects.children : []
+    "name" in node
+      ? node.objects.children.concat(node.objects.pages as any)
+      : []
   );
 
   dataSource = new MatTreeNestedDataSource<TreeNode>();
@@ -62,7 +70,12 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
   ) {}
 
   hasChild = (_: number, node: TreeNode) =>
-    "name" in node && node.objects.children.length > 0;
+    "name" in node &&
+    (node.objects.children.length > 0 || node.objects.pages.length > 0);
+
+  isCategory(node: TreeNode) {
+    return "name" in node;
+  }
 
   ngOnInit() {
     this.setData();
@@ -93,6 +106,18 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
     this.treeControl.expandAll();
   }
 
+  // TODO delete this
+  // private makeList(tree: CategoryTree): TreeNode[] {
+  //   // for (let i = 0; i < tree.objects.children.length; i++) {
+  //   //   const child = tree.objects.children[i];
+
+  //   // for (const child of tree.objects.children) {
+  //   //   child.objects.children = this.makeList(child) as any;
+  //   // }
+
+  //   return tree.objects.children.concat(tree.objects.pages as any);
+  // }
+
   debug() {}
 
   /**
@@ -100,7 +125,9 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
    *
    * @param target The parent of the node to be created
    */
-  openCreateDialog(target?: CategoryTree): void {
+  openCreateCategoryDialog(target?: CategoryTree): void {
+    log("Create category dialog");
+
     // When creating a new root category ...
     if (target === null) {
       // ... provide the root category
@@ -137,7 +164,8 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditDialog(target: CategoryTree): void {
+  openEditCategoryDialog(target: CategoryTree): void {
+    log("Edit category dialog");
     // When creating a new root category ...
     if (target === this.notebook.objects.workingTree) {
       // ... throw an error
@@ -161,6 +189,52 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
 
         this.vcs.persistWorkingTree(this.notebook);
         this.setData();
+      }
+    });
+  }
+
+  /**
+   * Opens a dialog to create a new page given a parent category
+   *
+   * @param target The parent of the page to be created
+   */
+  openCreatePageDialog(target?: CategoryTree): void {
+    log("Create page dialog");
+    // When creating a new root category ...
+    if (target === null) {
+      // ... provide the root category
+      target = this.notebook.objects.workingTree;
+    }
+
+    // TODO
+    const data: PageDialogInput = {
+      target,
+      opcode: "Create",
+      takenTitles: target.objects.pages.map((page) => page.title),
+    };
+
+    const dialogRef = this.dialog.open(PageDialogComponent, {
+      // width: "250px",
+      data,
+    });
+
+    // TODO
+    dialogRef.afterClosed().subscribe((result: PageDialogOutput) => {
+      if (result !== undefined && result.confirmed) {
+        if (result.takenNames.includes(result.title)) {
+          throw new Error("Category name already taken");
+        } else {
+          const page: BoxCanvasPage = {
+            title: result.title,
+            uuid: v4(),
+            objects: { boxes: [] },
+          };
+
+          result.target.objects.pages.push(page);
+
+          this.vcs.persistWorkingTree(this.notebook);
+          this.setData();
+        }
       }
     });
   }

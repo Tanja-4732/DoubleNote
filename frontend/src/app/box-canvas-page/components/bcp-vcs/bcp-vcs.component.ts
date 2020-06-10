@@ -89,21 +89,21 @@ export class BcpVcsComponent implements OnInit {
     log(this.notebook.objects.workingTree);
     log("");
 
-    log("Root tree == working tree");
-    log(
-      this.notebook.objects.head.objects.rootCategory ==
-        this.notebook.objects.workingTree
-    );
-    log("");
+    // log("Root tree == working tree");
+    // log(
+    //   this.notebook.objects.head.objects.rootCategory ==
+    //     this.notebook.objects.workingTree
+    // );
+    // log("");
 
-    log("Root tree === working tree");
-    log(
-      this.notebook.objects.head.objects.rootCategory ===
-        this.notebook.objects.workingTree
-    );
-    log("");
+    // log("Root tree === working tree");
+    // log(
+    //   this.notebook.objects.head.objects.rootCategory ===
+    //     this.notebook.objects.workingTree
+    // );
+    // log("");
 
-    log("Disable the commit button?");
-    log(this.disableCommit);
+    // log("Disable the commit button?");
+    // log(this.disableCommit);
   }
 }

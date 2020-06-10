@@ -6,7 +6,13 @@ export interface BoxCanvasPage {
    */
   title: string;
 
-  strings: {
+  /**
+   * The UUID of this page which
+   * stays the same between edits
+   */
+  uuid: string;
+
+  strings?: {
     /**
      * The hashes of the boxes of this page
      */
