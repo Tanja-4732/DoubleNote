@@ -8,6 +8,9 @@ import {
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import { Notebook } from "src/typings/core/Notebook";
 import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
+import { BoxCanvasPage } from "src/typings/bcp/BoxCanvasPage";
+import { CategoryTree } from "src/typings/bcp/CategoryTree";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -16,6 +19,9 @@ import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
 })
 export class BoxCanvasPageComponent implements OnInit {
   notebook: BcpNotebook;
+  page: BoxCanvasPage;
+
+  workingTitle: string;
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -38,10 +44,66 @@ export class BoxCanvasPageComponent implements OnInit {
         this.router.navigateByUrl("/notebooks");
         return;
     }
+
+    const retrievedPage = this.getPageByUuid(
+      route.snapshot.params.pageUuid,
+      this.notebook.objects.workingTree
+    );
+
+    if (retrievedPage === undefined) {
+      this.router.navigateByUrl("/notebooks/sbp/" + this.notebook.uuid);
+    } else {
+      this.page = retrievedPage;
+    }
+
+    this.workingTitle = this.page.title;
+
+    log(this.page);
+  }
+
+  /**
+   * Recursively searches for a page
+   * with a specified UUID in a given tree
+   *
+   * @param uuid The UUID to search for
+   * @param tree The tree to search in
+   */
+  private getPageByUuid(
+    uuid: string,
+    tree: CategoryTree
+  ): BoxCanvasPage | undefined {
+    // Try all local pages
+    for (const page of tree.objects.pages) {
+      // Check for a match
+      if (page.uuid === uuid) {
+        return page;
+      }
+    }
+
+    // Try all children recursively
+    for (const child of tree.objects.children) {
+      return this.getPageByUuid(uuid, child);
+    }
+
+    // If nothing was found, return undefined
+    return undefined;
   }
 
   get notebooks(): Notebook[] {
     return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
+  }
+
+  get disableCommit(): boolean {
+    return (
+      this.notebook.objects.head.strings.rootCategory ===
+      this.notebook.strings.workingTree
+    );
+  }
+
+  get commitText(): string {
+    return this.disableCommit
+      ? "Nothing to commit"
+      : "Commit to " + this.notebook.strings.selectedBranch;
   }
 
   ngOnInit(): void {
@@ -54,7 +116,20 @@ export class BoxCanvasPageComponent implements OnInit {
       {
         icon: Icon.Notebook,
         title: this.notebook.name + " (BCP)",
+        routerLink: "/notebooks/bcp/" + this.notebook.uuid,
       },
+      { icon: Icon.Page, title: this.page.title },
     ];
+  }
+
+  onSaveChanges(): void {
+    log("Saving changes");
+    this.page.title = this.workingTitle;
+    this.bcpVcs.persistWorkingTree(this.notebook);
+    this.ngOnInit();
+  }
+
+  onCommit(): void {
+    this.bcpVcs.commitNotebook(this.notebook);
   }
 }

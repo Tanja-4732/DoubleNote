@@ -40,6 +40,11 @@ export enum Icon {
   OpenInNewTab = "open_in_new",
   SourceCode = "code",
   License = "gavel",
+  Page = "insert_drive_file",
+  OpenPage = "open_in_browser",
+  CreatePage = "note_add",
+  CreateCategory = "create_new_folder",
+  Edit = "edit",
 }
 
 /**

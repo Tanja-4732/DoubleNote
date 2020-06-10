@@ -19,15 +19,15 @@
           (click)="openCreatePageDialog(node)"
           class="first"
         >
-          <mat-icon>note_add</mat-icon>
+          <mat-icon> {{ icons.CreatePage }} </mat-icon>
         </button>
 
         <button mat-icon-button (click)="openCreateCategoryDialog(node)">
-          <mat-icon>create_new_folder</mat-icon>
+          <mat-icon> {{ icons.CreateCategory }} </mat-icon>
         </button>
 
         <button mat-icon-button (click)="openEditCategoryDialog(node)">
-          <mat-icon>edit</mat-icon>
+          <mat-icon> {{ icons.Edit }} </mat-icon>
         </button>
       </ng-container>
 
@@ -38,7 +38,7 @@
           routerLink="pages/{{ node.uuid }}"
           class="first"
         >
-          <mat-icon>edit</mat-icon>
+          <mat-icon> {{ icons.OpenPage }} </mat-icon>
         </button>
       </ng-container>
     </li>
@@ -65,15 +65,15 @@
           (click)="openCreatePageDialog(node)"
           class="first"
         >
-          <mat-icon>note_add</mat-icon>
+          <mat-icon> {{ icons.CreatePage }} </mat-icon>
         </button>
 
         <button mat-icon-button (click)="openCreateCategoryDialog(node)">
-          <mat-icon>create_new_folder</mat-icon>
+          <mat-icon> {{ icons.CreateCategory }} </mat-icon>
         </button>
 
         <button mat-icon-button (click)="openEditCategoryDialog(node)">
-          <mat-icon>edit</mat-icon>
+          <mat-icon> {{ icons.Edit }} </mat-icon>
         </button>
       </ng-container>
 
@@ -84,7 +84,7 @@
           routerLink="pages/{{ node.uuid }}"
           class="first"
         >
-          <mat-icon>edit</mat-icon>
+          <mat-icon> {{ icons.OpenPage }} </mat-icon>
         </button>
       </ng-container>
 

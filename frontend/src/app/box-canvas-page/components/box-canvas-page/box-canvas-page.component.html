@@ -1,1 +1,19 @@
-<p>box-canvas-page works!</p>
+<mat-form-field class="example-full-width">
+  <mat-label>Page title</mat-label>
+  <input matInput placeholder="My page" [(ngModel)]="workingTitle" />
+</mat-form-field>
+
+&nbsp;
+<button mat-stroked-button color="accent" (click)="onSaveChanges()">
+  Save changes
+</button>
+
+&nbsp;
+<button
+  mat-stroked-button
+  color="accent"
+  [disabled]="disableCommit"
+  (click)="onCommit()"
+>
+  {{ commitText }}
+</button>
