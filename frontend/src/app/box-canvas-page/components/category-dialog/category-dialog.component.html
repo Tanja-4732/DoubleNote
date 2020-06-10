@@ -1,7 +1,12 @@
 <h1 mat-dialog-title *ngIf="this.input.opcode === 'Create'">Create category</h1>
 <h1 mat-dialog-title *ngIf="this.input.opcode === 'Update'">Update category</h1>
 
-<p>At: {{ this.input.target.name }}</p>
+<p *ngIf="this.input.opcode === 'Create'">
+  Parent category: {{ this.input.target.name }}
+</p>
+<p *ngIf="this.input.opcode === 'Update'">
+  Previous name: {{ this.input.target.name }}
+</p>
 
 <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
   <div mat-dialog-content>
