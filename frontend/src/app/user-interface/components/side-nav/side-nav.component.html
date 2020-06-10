@@ -1,17 +1,17 @@
 <mat-toolbar>Menu</mat-toolbar>
 <mat-nav-list>
   <a mat-list-item routerLink="welcome">
-    <mat-icon>home</mat-icon>
+    <mat-icon> {{ icons.Welcome }} </mat-icon>
     &nbsp; Welcome
   </a>
 
   <a mat-list-item routerLink="notebooks">
-    <mat-icon>book</mat-icon>
+    <mat-icon> {{ icons.Notebooks }} </mat-icon>
     &nbsp; Notebooks
   </a>
 
   <a mat-list-item routerLink="settings">
-    <mat-icon>settings</mat-icon>
+    <mat-icon> {{ icons.Settings }} </mat-icon>
     &nbsp; Settings
   </a>
 
@@ -22,24 +22,24 @@
     target="_blank"
     href="https://github.com/Bernd-L/DoubleNote#readme"
   >
-    <mat-icon>code</mat-icon>
+    <mat-icon> {{ icons.SourceCode }} </mat-icon>
     &nbsp; Sources
-    <mat-icon class="icon-right">open_in_new</mat-icon>
+    <mat-icon class="icon-right"> {{ icons.OpenInNewTab }} </mat-icon>
   </a>
   <a
     mat-list-item
     target="_blank"
     href="https://github.com/Bernd-L/DoubleNote/blob/master/LICENSE.md"
   >
-    <mat-icon>gavel</mat-icon>
-    &nbsp; Licence
-    <mat-icon class="icon-right">open_in_new</mat-icon>
+    <mat-icon> {{ icons.License }} </mat-icon>
+    &nbsp; License
+    <mat-icon class="icon-right"> {{ icons.OpenInNewTab }} </mat-icon>
   </a>
 
   <mat-divider></mat-divider>
 
   <a mat-list-item routerLink="demo">
-    <mat-icon>bug_report</mat-icon>
+    <mat-icon> {{ icons.Demo }} </mat-icon>
     &nbsp; Demo
   </a>
 </mat-nav-list>

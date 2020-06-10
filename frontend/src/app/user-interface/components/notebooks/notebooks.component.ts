@@ -27,7 +27,7 @@ export class NotebooksComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Notebook,
+        icon: Icon.Notebooks,
         title: "Notebooks",
       },
     ];

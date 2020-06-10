@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Icon } from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-side-nav",
@@ -6,6 +7,10 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./side-nav.component.scss"],
 })
 export class SideNavComponent implements OnInit {
+  get icons() {
+    return Icon;
+  }
+
   constructor() {}
 
   ngOnInit(): void {}

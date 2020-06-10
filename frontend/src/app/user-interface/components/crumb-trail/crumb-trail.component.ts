@@ -36,6 +36,10 @@ export enum Icon {
   Settings = "settings",
   Demo = "bug_report",
   Error = "error",
+  Notebooks = "collections_bookmark",
+  OpenInNewTab = "open_in_new",
+  SourceCode = "code",
+  License = "gavel",
 }
 
 /**
