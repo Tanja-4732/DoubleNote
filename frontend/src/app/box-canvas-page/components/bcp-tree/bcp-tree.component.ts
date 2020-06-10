@@ -18,6 +18,7 @@ import { TreeNode } from "src/typings/bcp/TreeNode";
 import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { log } from "src/functions/console";
 import { Subject, Subscription } from "rxjs";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-bcp-tree",
@@ -49,6 +50,10 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTreeNestedDataSource<TreeNode>();
 
+  get isDevMode(): boolean {
+    return !environment.production;
+  }
+
   constructor(
     private vcs: BcpVcsService,
     private route: ActivatedRoute,
@@ -76,11 +81,19 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
     // Reset the data (workaround for an Angular bug)
     this.dataSource.data = null;
 
-    // Set the data of the data source to the categories projection
-    this.dataSource.data = this.notebook.objects.workingTree.objects.children.concat(
+    const nodes = this.notebook.objects.workingTree.objects.children.concat(
       this.notebook.objects.workingTree.objects.pages as any
     );
+
+    // Set the data of the data source to the categories projection
+    this.dataSource.data = nodes;
+    this.treeControl.dataNodes = nodes;
+
+    // Expand everything
+    this.treeControl.expandAll();
   }
+
+  debug() {}
 
   /**
    * Opens a dialog to create a new category given a parent category

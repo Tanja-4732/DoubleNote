@@ -13,17 +13,14 @@
       <button mat-icon-button disabled></button>
       {{ node.name }}
 
-      &nbsp;
-      <button mat-icon-button (click)="openCreateDialog(node)">
+      <button mat-icon-button (click)="openCreateDialog(node)" class="first">
         <mat-icon>note_add</mat-icon>
       </button>
 
-      &nbsp;
       <button mat-icon-button (click)="openCreateDialog(node)">
         <mat-icon>create_new_folder</mat-icon>
       </button>
 
-      <!-- &nbsp; -->
       <button mat-icon-button (click)="openEditDialog(node)">
         <mat-icon>edit</mat-icon>
       </button>
@@ -33,36 +30,41 @@
   <!-- This is the tree node template for expandable nodes -->
   <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
     <li>
-      <div class="mat-tree-node">
-        <button
-          mat-icon-button
-          matTreeNodeToggle
-          [attr.aria-label]="'toggle ' + node.name"
-        >
-          <mat-icon class="mat-icon-rtl-mirror">
-            {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
-          </mat-icon>
-        </button>
-        {{ node.name }}
+      <!-- <div class="mat-tree-node"> -->
+      <button
+        mat-icon-button
+        matTreeNodeToggle
+        [attr.aria-label]="'toggle ' + node.name"
+      >
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+        </mat-icon>
+      </button>
+      {{ node.name }}
 
-        &nbsp;
-        <button mat-icon-button (click)="openCreateDialog(node)">
-          <mat-icon>note_add</mat-icon>
-        </button>
+      <button mat-icon-button (click)="openCreateDialog(node)" class="first">
+        <mat-icon>note_add</mat-icon>
+      </button>
 
-        &nbsp;
-        <button mat-icon-button (click)="openCreateDialog(node)">
-          <mat-icon>create_new_folder</mat-icon>
-        </button>
+      <button mat-icon-button (click)="openCreateDialog(node)">
+        <mat-icon>create_new_folder</mat-icon>
+      </button>
 
-        <!-- &nbsp; -->
-        <button mat-icon-button (click)="openEditDialog(node)">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
+      <button mat-icon-button (click)="openEditDialog(node)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <!-- </div> -->
       <ul *ngIf="treeControl.isExpanded(node)">
         <ng-container matTreeNodeOutlet></ng-container>
       </ul>
     </li>
   </mat-nested-tree-node>
 </mat-tree>
+
+<ng-container *ngIf="isDevMode">
+  <br />
+  <button mat-raised-button (click)="debug()" color="primary">
+    Expand all
+  </button>
+  <br />
+</ng-container>
