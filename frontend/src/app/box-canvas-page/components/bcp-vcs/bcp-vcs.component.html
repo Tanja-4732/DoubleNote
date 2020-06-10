@@ -2,12 +2,12 @@
   <mat-card>
     <mat-card-title>Status</mat-card-title>
     <mat-card-content>
-      Head at commit: <code>{{ notebook.strings.head | slice: 0:7 }}</code>
+      Commit hash at head: <code>{{ notebook.strings.head | slice: 0:7 }}</code>
       <br />
-      Root tree at head:
+      Root tree at head commit:
       <code>{{ notebook.objects.head.strings.rootCategory | slice: 0:7 }}</code>
       <br />
-      Working tree:
+      Working tree hash:
       <code>{{ notebook.strings.workingTree | slice: 0:7 }}</code>
     </mat-card-content>
     <mat-card-actions>
