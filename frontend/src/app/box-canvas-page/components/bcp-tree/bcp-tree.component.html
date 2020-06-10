@@ -33,7 +33,11 @@
 
       <ng-container *ngIf="!isCategory(node)">
         {{ node.title }}
-        <button mat-icon-button routerLink="pages/node.uuid" class="first">
+        <button
+          mat-icon-button
+          routerLink="pages/{{ node.uuid }}"
+          class="first"
+        >
           <mat-icon>edit</mat-icon>
         </button>
       </ng-container>
@@ -75,7 +79,11 @@
 
       <ng-container *ngIf="!isCategory(node)">
         {{ node.title }}
-        <button mat-icon-button routerLink="pages/node.uuid" class="first">
+        <button
+          mat-icon-button
+          routerLink="pages/{{ node.uuid }}"
+          class="first"
+        >
           <mat-icon>edit</mat-icon>
         </button>
       </ng-container>

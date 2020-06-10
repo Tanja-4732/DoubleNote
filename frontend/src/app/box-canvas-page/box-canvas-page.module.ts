@@ -11,7 +11,9 @@ import { PipesModule } from "../pipes/pipes.module";
 import { CreateBranchComponent } from "./components/create-branch/create-branch.component";
 import { BcpTreeComponent } from "./components/bcp-tree/bcp-tree.component";
 import { CategoryDialogComponent } from "./components/category-dialog/category-dialog.component";
-import { PageDialogComponent } from './components/page-dialog/page-dialog.component';
+import { PageDialogComponent } from "./components/page-dialog/page-dialog.component";
+import { BoxCanvasPageComponent } from "./components/box-canvas-page/box-canvas-page.component";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,14 @@ import { PageDialogComponent } from './components/page-dialog/page-dialog.compon
     BcpTreeComponent,
     CategoryDialogComponent,
     PageDialogComponent,
+    BoxCanvasPageComponent,
   ],
-  imports: [CommonModule, FormsModule, AngularMaterialModule, PipesModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AngularMaterialModule,
+    PipesModule,
+    RouterModule,
+  ],
 })
 export class BoxCanvasPageModule {}

@@ -7,6 +7,7 @@ import { DemoComponent } from "../box-canvas-page/components/demo/demo.component
 import { SbpNotebookComponent } from "../sequential-block-page/components/sbp-notebook/sbp-notebook.component";
 import { BcpNotebookComponent } from "../box-canvas-page/components/bcp-notebook/bcp-notebook.component";
 import { PageNotFoundComponent } from "../user-interface/components/page-not-found/page-not-found.component";
+import { BoxCanvasPageComponent } from "../box-canvas-page/components/box-canvas-page/box-canvas-page.component";
 
 const routes: Routes = [
   // Welcome component
@@ -20,7 +21,13 @@ const routes: Routes = [
     path: "notebooks",
     children: [
       { path: "", component: NotebooksComponent },
-      { path: "bcp/:notebookUuid", component: BcpNotebookComponent },
+      {
+        path: "bcp/:notebookUuid",
+        children: [
+          { path: "", component: BcpNotebookComponent },
+          { path: "pages/:pageUuid", component: BoxCanvasPageComponent },
+        ],
+      },
       { path: "sbp/:notebookUuid", component: SbpNotebookComponent },
     ],
   },
