@@ -11,6 +11,7 @@ import { PipesModule } from "../pipes/pipes.module";
 import { CreateBranchComponent } from "./components/create-branch/create-branch.component";
 import { BcpTreeComponent } from "./components/bcp-tree/bcp-tree.component";
 import { CategoryDialogComponent } from "./components/category-dialog/category-dialog.component";
+import { PageDialogComponent } from './components/page-dialog/page-dialog.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { CategoryDialogComponent } from "./components/category-dialog/category-d
     CreateBranchComponent,
     BcpTreeComponent,
     CategoryDialogComponent,
+    PageDialogComponent,
   ],
   imports: [CommonModule, FormsModule, AngularMaterialModule, PipesModule],
 })
