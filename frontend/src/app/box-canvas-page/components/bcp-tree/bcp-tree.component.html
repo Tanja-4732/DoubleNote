@@ -60,7 +60,7 @@
           <mat-icon>edit</mat-icon>
         </button>
       </div>
-      <ul [class.tree-invisible]="!treeControl.isExpanded(node)">
+      <ul *ngIf="treeControl.isExpanded(node)">
         <ng-container matTreeNodeOutlet></ng-container>
       </ul>
     </li>
