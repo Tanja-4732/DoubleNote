@@ -45,3 +45,17 @@ h6 {
 div.mat-dialog-content {
   overflow: unset;
 }
+
+mat-card {
+  display: flex !important;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+mat-card-actions {
+  margin-top: auto;
+}
+
+mat-card-content {
+  overflow: hidden;
+}
