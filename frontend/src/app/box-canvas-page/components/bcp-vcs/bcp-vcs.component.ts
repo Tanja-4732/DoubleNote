@@ -46,7 +46,7 @@ export class BcpVcsComponent implements OnInit {
 
   onCheckoutBranch(name: string): void {
     this.vcs.checkoutBranch(this.notebook, name);
-    BcpTreeComponent.setDataObs.next();
+    BcpTreeComponent.setDataSub.next();
   }
 
   onCreateBranch(): void {

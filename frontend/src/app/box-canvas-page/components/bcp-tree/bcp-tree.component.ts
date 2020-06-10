@@ -25,15 +25,26 @@ import { Subject, Subscription } from "rxjs";
   styleUrls: ["./bcp-tree.component.scss"],
 })
 export class BcpTreeComponent implements OnInit, OnDestroy {
-  public static setDataObs = new Subject<void>();
+  /**
+   * Used to notify the component that the data needs to be refreshed
+   *
+   * Call the `next()` method on this Subject to notify the component.
+   */
+  public static setDataSub = new Subject<void>();
 
+  /**
+   * The subscription to the `setDataSUb` Subject
+   */
   private sub: Subscription;
 
+  /**
+   * The notebook to be displayed as a tree
+   */
   @Input()
   notebook: BcpNotebook;
 
   treeControl = new NestedTreeControl<TreeNode>((node) =>
-    "name" in node ? node.objects.children : null
+    "name" in node ? node.objects.children : []
   );
 
   dataSource = new MatTreeNestedDataSource<TreeNode>();
@@ -50,11 +61,13 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setData();
-    this.sub = BcpTreeComponent.setDataObs.subscribe(() => this.setData());
+    this.sub = BcpTreeComponent.setDataSub.subscribe(() => this.setData());
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    try {
+      this.sub.unsubscribe();
+    } catch (err) {}
   }
 
   private setData() {
