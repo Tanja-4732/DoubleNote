@@ -47,11 +47,12 @@ export class BcpNotebookComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Notebook,
+        icon: Icon.Notebooks,
         title: "Notebooks",
         routerLink: "/notebooks",
       },
       {
+        icon: Icon.Notebook,
         title: this.notebook.name + " (BCP)",
       },
     ];
