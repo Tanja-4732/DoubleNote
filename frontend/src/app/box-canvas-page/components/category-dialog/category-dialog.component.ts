@@ -41,7 +41,6 @@ export class CategoryDialogComponent implements OnInit {
           })(this.input.takenNames),
         ],
       ],
-      type: ["BCP"],
     });
   }
 
