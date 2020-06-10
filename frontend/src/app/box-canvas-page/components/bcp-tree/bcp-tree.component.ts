@@ -106,18 +106,6 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
     this.treeControl.expandAll();
   }
 
-  // TODO delete this
-  // private makeList(tree: CategoryTree): TreeNode[] {
-  //   // for (let i = 0; i < tree.objects.children.length; i++) {
-  //   //   const child = tree.objects.children[i];
-
-  //   // for (const child of tree.objects.children) {
-  //   //   child.objects.children = this.makeList(child) as any;
-  //   // }
-
-  //   return tree.objects.children.concat(tree.objects.pages as any);
-  // }
-
   debug() {}
 
   /**
