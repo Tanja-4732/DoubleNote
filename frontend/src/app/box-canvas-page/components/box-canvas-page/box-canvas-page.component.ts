@@ -61,6 +61,7 @@ export class BoxCanvasPageComponent implements OnInit {
     log(this.page);
   }
 
+  // #region Setup
   /**
    * Recursively searches for a page
    * with a specified UUID in a given tree
@@ -92,7 +93,9 @@ export class BoxCanvasPageComponent implements OnInit {
   get notebooks(): Notebook[] {
     return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
   }
+  // #endregion
 
+  // #region Commit
   get disableCommit(): boolean {
     return (
       this.notebook.objects.head.strings.rootCategory ===
@@ -105,6 +108,7 @@ export class BoxCanvasPageComponent implements OnInit {
       ? "Nothing to commit"
       : "Commit to " + this.notebook.strings.selectedBranch;
   }
+  // #endregion
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
