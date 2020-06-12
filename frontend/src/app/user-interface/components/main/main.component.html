@@ -30,12 +30,14 @@
       </ng-container>
     </mat-toolbar>
 
-    <div class="defaultMargin">
-      <!-- The CrumbTrail -->
+    <!-- The CrumbTrail -->
+    <div class="sticky">
       <app-crumb-trail></app-crumb-trail>
       <mat-divider></mat-divider>
-      <br />
+    </div>
 
+    <br />
+    <div class="defaultMargin">
       <!-- Main app content -->
       <router-outlet></router-outlet>
     </div>
