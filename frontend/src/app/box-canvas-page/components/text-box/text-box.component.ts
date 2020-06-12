@@ -5,6 +5,7 @@ import {
   OnInit,
   ViewChild,
   Input,
+  OnDestroy,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -16,14 +17,15 @@ import { v4 } from "uuid";
 import { TextBoxMessage } from "../../../../typings/core/Message";
 import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
+import { CdkDragEnd } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "app-text-box",
   templateUrl: "./text-box.component.html",
   styleUrls: ["./text-box.component.scss"],
 })
-export class TextBoxComponent implements OnInit {
-  @Input() box: TextBox;
+export class TextBoxComponent implements OnInit, OnDestroy {
+  @Input() readonly box: TextBox;
 
   @ViewChild("wysiwyg")
   wysiwygEditor: ElementRef;
@@ -33,40 +35,13 @@ export class TextBoxComponent implements OnInit {
 
   subscription: Subscription;
 
+  public dragPosition: { x: number; y: number } = { x: 0, y: 0 };
+
   constructor(
     public mb: MessageBusService,
     private me: MarkdownEngineService,
     private cdr: ChangeDetectorRef
   ) {}
-
-  /**
-   * Cycles the editor(s) displayed in the text box
-   */
-  cycleModes() {
-    switch (this.box.state) {
-      case "both":
-        this.box.state = "markdown";
-        break;
-      case "markdown":
-        this.box.state = "wysiwyg";
-        break;
-      case "wysiwyg":
-        this.box.state = "both";
-        break;
-    }
-  }
-
-  get dragPosition() {
-    return {
-      x: this.box.x,
-      y: this.box.y,
-    };
-  }
-
-  set dragPosition(position: { x: number; y: number }) {
-    this.box.x = position.x;
-    this.box.y = position.y;
-  }
 
   ngOnInit(): void {
     // Get the message bus observable
@@ -84,6 +59,45 @@ export class TextBoxComponent implements OnInit {
       .subscribe((message: TextBoxMessage) =>
         this.handleIncomingMessage(message)
       );
+
+    this.setBoxPosition();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private setBoxPosition() {
+    this.dragPosition = {
+      x: this.box.x,
+      y: this.box.y,
+    };
+  }
+
+  public onDragEnded(event: CdkDragEnd): void {
+    const position = event.source.getFreeDragPosition();
+
+    this.box.x = position.x;
+    this.box.y = position.y;
+
+    this.setBoxPosition();
+  }
+
+  /**
+   * Cycles the editor(s) displayed in the text box
+   */
+  cycleModes() {
+    switch (this.box.state) {
+      case "both":
+        this.box.state = "markdown";
+        break;
+      case "markdown":
+        this.box.state = "wysiwyg";
+        break;
+      case "wysiwyg":
+        this.box.state = "both";
+        break;
+    }
   }
 
   private handleIncomingMessage(message: TextBoxMessage) {

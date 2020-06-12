@@ -8,6 +8,7 @@ import { BcpCommit } from "src/typings/bcp/BcpCommit";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { cloneDeep } from "lodash";
 import { fieldHider } from "src/functions/functions";
+import { log } from "src/functions/console";
 
 @Injectable({
   providedIn: "root",
@@ -183,7 +184,8 @@ export class BcpVcsService {
    * @param notebook The notebook of which to save the working tree
    */
   persistWorkingTree(notebook: BcpNotebook): void {
-    notebook.objects.workingTree = cloneDeep(notebook.objects.workingTree);
+    // TODO move cloneDeep somewhere else; it severs connections in the working tree
+    // notebook.objects.workingTree = cloneDeep(notebook.objects.workingTree);
     const hash = this.saveTree(notebook.objects.workingTree);
     notebook.strings.workingTree = hash;
 

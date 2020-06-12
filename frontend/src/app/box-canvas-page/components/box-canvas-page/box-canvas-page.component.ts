@@ -13,6 +13,7 @@ import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { v4 } from "uuid";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -59,8 +60,6 @@ export class BoxCanvasPageComponent implements OnInit {
     }
 
     this.workingTitle = this.page.title;
-
-    log(this.page);
   }
 
   // #region Setup
@@ -113,6 +112,10 @@ export class BoxCanvasPageComponent implements OnInit {
   // #endregion
 
   ngOnInit(): void {
+    this.setCrumbTrail();
+  }
+
+  private setCrumbTrail() {
     CrumbTrailComponent.crumbs = [
       {
         icon: Icon.Notebooks,
@@ -128,11 +131,19 @@ export class BoxCanvasPageComponent implements OnInit {
     ];
   }
 
+  debug() {
+    log(this.page);
+  }
+
+  get isDevMode(): boolean {
+    return !environment.production;
+  }
+
   onSaveChanges(): void {
     log("Saving changes");
     this.page.title = this.workingTitle;
     this.bcpVcs.persistWorkingTree(this.notebook);
-    this.ngOnInit();
+    this.setCrumbTrail();
   }
 
   onCommit(): void {

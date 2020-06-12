@@ -18,6 +18,15 @@
   {{ commitText }}
 </button>
 
+<ng-container *ngIf="isDevMode">
+  &nbsp;
+  <button mat-raised-button (click)="debug()" color="primary">Debug</button>
+
+  {{ page.objects.boxes[0].x }}
+  &nbsp;
+  {{ page.objects.boxes[0].y }}
+</ng-container>
+
 <div class="text-box-boundary">
   <app-text-box
     *ngFor="let box of page.objects.boxes; trackBy: trackByBox"

@@ -3,6 +3,7 @@
   cdkDragBoundary=".text-box-boundary"
   cdkDrag
   [cdkDragFreeDragPosition]="dragPosition"
+  (cdkDragEnded)="onDragEnded($event)"
 >
   <div class="editor-container">
     <div class="editor-bar">
