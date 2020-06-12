@@ -31,24 +31,7 @@ export class TextBoxComponent implements OnInit {
   @ViewChild("markdown")
   markdownEditor: ElementRef;
 
-  /**
-   * Which editor(s) to display in the text box
-   */
-  state: "both" | "markdown" | "wysiwyg" = "markdown";
-
-  /**
-   * The MarkDown Object Model representation of the content of this text box
-   */
-  mdom: MdomNode[];
-
   subscription: Subscription;
-
-  /**
-   * The UUID of the text box
-   *
-   * Used to separate messages from multiple text boxes
-   */
-  uuid = v4();
 
   constructor(
     public mb: MessageBusService,
@@ -60,17 +43,29 @@ export class TextBoxComponent implements OnInit {
    * Cycles the editor(s) displayed in the text box
    */
   cycleModes() {
-    switch (this.state) {
+    switch (this.box.state) {
       case "both":
-        this.state = "markdown";
+        this.box.state = "markdown";
         break;
       case "markdown":
-        this.state = "wysiwyg";
+        this.box.state = "wysiwyg";
         break;
       case "wysiwyg":
-        this.state = "both";
+        this.box.state = "both";
         break;
     }
+  }
+
+  get dragPosition() {
+    return {
+      x: this.box.x,
+      y: this.box.y,
+    };
+  }
+
+  set dragPosition(position: { x: number; y: number }) {
+    this.box.x = position.x;
+    this.box.y = position.y;
   }
 
   ngOnInit(): void {
@@ -83,7 +78,7 @@ export class TextBoxComponent implements OnInit {
         filter((m: Message) => m.messageType === "TextBoxMessage"),
 
         // Filter for messages about this TextBox only
-        filter((m: TextBoxMessage) => m.uuid === this.uuid)
+        filter((m: TextBoxMessage) => m.uuid === this.box.uuid)
       )
       // Handle incoming messages
       .subscribe((message: TextBoxMessage) =>
@@ -96,7 +91,7 @@ export class TextBoxComponent implements OnInit {
     log(message.mdom);
 
     // Update the markdown object model
-    this.mdom = message.mdom;
+    this.box.mdom = message.mdom;
 
     // Get Angular to re-render the view
     this.cdr.detectChanges();
@@ -112,7 +107,7 @@ export class TextBoxComponent implements OnInit {
       authorUuid: this.mb.myUuid,
       creationDate: new Date().toISOString(),
       mdom,
-      uuid: this.uuid,
+      uuid: this.box.uuid,
     });
   }
 }

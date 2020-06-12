@@ -11,6 +11,8 @@ import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
 import { BoxCanvasPage } from "src/typings/bcp/BoxCanvasPage";
 import { CategoryTree } from "src/typings/bcp/CategoryTree";
 import { log } from "src/functions/console";
+import { TextBox } from "src/typings/bcp/TextBox";
+import { v4 } from "uuid";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -137,8 +139,20 @@ export class BoxCanvasPageComponent implements OnInit {
     this.bcpVcs.commitNotebook(this.notebook);
   }
 
+  trackByBox = (_: number, box: TextBox) => box.uuid;
+
   createNewBox(event: any): void {
     log("Creating new box");
     log(event);
+
+    this.page.objects.boxes.push({
+      uuid: v4(),
+      width: 500,
+      height: 300,
+      mdom: [],
+      x: event.offsetX,
+      y: event.offsetY,
+      state: "both",
+    });
   }
 }

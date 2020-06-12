@@ -1,8 +1,13 @@
-<div class="editor-box" cdkDragBoundary=".text-box-boundary" cdkDrag>
+<div
+  class="editor-box"
+  cdkDragBoundary=".text-box-boundary"
+  cdkDrag
+  [cdkDragFreeDragPosition]="dragPosition"
+>
   <div class="editor-container">
     <div class="editor-bar">
       <div class="editor-state" (click)="cycleModes()">
-        {{ state }}
+        {{ box.state }}
       </div>
 
       <div cdkDragHandle class="editor-handle">
@@ -12,7 +17,7 @@
 
     <div
       #markdown
-      *ngIf="state === 'both' || state === 'markdown'"
+      *ngIf="box.state === 'both' || box.state === 'markdown'"
       class="editor-markdown"
       contenteditable="true"
       (keyup)="onKeyUp($event)"
@@ -23,7 +28,7 @@
 
     <div
       #wysiwyg
-      *ngIf="state === 'both' || state === 'wysiwyg'"
+      *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
       class="editor-wysiwyg"
       contenteditable="true"
     >
