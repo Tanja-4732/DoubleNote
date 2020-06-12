@@ -1,4 +1,9 @@
 .crumb-trail {
   display: flex;
   align-items: center;
+  min-width: min-content;
+}
+
+.wrap {
+  overflow-x: auto;
 }
