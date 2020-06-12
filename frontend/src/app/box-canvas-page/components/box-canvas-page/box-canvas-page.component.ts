@@ -136,4 +136,9 @@ export class BoxCanvasPageComponent implements OnInit {
   onCommit(): void {
     this.bcpVcs.commitNotebook(this.notebook);
   }
+
+  createNewBox(event: any): void {
+    log("Creating new box");
+    log(event);
+  }
 }

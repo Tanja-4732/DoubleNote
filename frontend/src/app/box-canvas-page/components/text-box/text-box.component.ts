@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
+  Input,
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -14,6 +15,7 @@ import { Message } from "src/typings/core/Message";
 import { v4 } from "uuid";
 import { TextBoxMessage } from "../../../../typings/core/Message";
 import { log } from "src/functions/console";
+import { TextBox } from "src/typings/bcp/TextBox";
 
 @Component({
   selector: "app-text-box",
@@ -21,6 +23,8 @@ import { log } from "src/functions/console";
   styleUrls: ["./text-box.component.scss"],
 })
 export class TextBoxComponent implements OnInit {
+  @Input() box: TextBox;
+
   @ViewChild("wysiwyg")
   wysiwygEditor: ElementRef;
 
