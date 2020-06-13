@@ -93,7 +93,7 @@ export class BcpVcsService {
     this.persistCommits();
 
     // Get the working tree ready
-    this.replaceWorkingTreeWithHeadCopy(notebook);
+    // this.replaceHeadWithWorkingTreeCopy(notebook);
   }
 
   /**
@@ -173,7 +173,7 @@ export class BcpVcsService {
     notebook.strings.selectedBranch = branch;
 
     // Copy the working tree
-    this.replaceWorkingTreeWithHeadCopy(notebook);
+    this.replaceHeadWithWorkingTreeCopy(notebook);
   }
 
   /**
@@ -184,8 +184,6 @@ export class BcpVcsService {
    * @param notebook The notebook of which to save the working tree
    */
   persistWorkingTree(notebook: BcpNotebook): void {
-    // TODO move cloneDeep somewhere else; it severs connections in the working tree
-    // notebook.objects.workingTree = cloneDeep(notebook.objects.workingTree);
     const hash = this.saveTree(notebook.objects.workingTree);
     notebook.strings.workingTree = hash;
 
@@ -251,7 +249,7 @@ export class BcpVcsService {
     this.prepareNotebook(notebook);
 
     // Prepare the working tree
-    this.replaceWorkingTreeWithHeadCopy(notebook);
+    this.replaceHeadWithWorkingTreeCopy(notebook);
 
     // Persist everything
     this.persistTrees();
@@ -263,14 +261,14 @@ export class BcpVcsService {
   }
 
   /**
-   * Replaces the working tree object-representation
-   * with a copy of the HEAD root tree
+   * Replaces the HEAD object-representation
+   * with a copy of the working tree
    *
-   * This method automatically persists the new working tree.
+   * This method automatically persists the new HEAD.
    *
-   * @param notebook The notebook of which to replace the working tree
+   * @param notebook The notebook of which to replace the HEAD
    */
-  private replaceWorkingTreeWithHeadCopy(notebook: BcpNotebook): void {
+  private replaceHeadWithWorkingTreeCopy(notebook: BcpNotebook): void {
     // Make a deep clone of the HEAD's root tree
     notebook.objects.workingTree = cloneDeep(
       notebook.objects.head.objects.rootCategory
@@ -408,16 +406,25 @@ export class BcpVcsService {
    * @return The hash of this category
    */
   private saveTree(category: CategoryTree): string {
+    // Since this method id recursive, a shallow clone should be sufficient
+    category = Object.assign({}, category);
+
     // Prepare the target data structure
     category.strings = { pages: [], children: [] };
 
     // Iterate over all pages of the category
-    for (const page of category.objects.pages) {
+    for (let page of category.objects.pages) {
+      // Perform a shallow clone on the page
+      page = Object.assign({}, page);
+
       // Prepare the target data structure
       page.strings = { boxes: [] };
 
       // Iterate over all boxes of the page
-      for (const box of page.objects.boxes) {
+      for (let box of page.objects.boxes) {
+        // Perform a shallow clone on the box
+        box = Object.assign({}, box);
+
         const boxHash = sha256(JSON.stringify(box, fieldHider));
         this.boxes[boxHash] = box;
         page.strings.boxes.push(boxHash);
@@ -429,6 +436,8 @@ export class BcpVcsService {
     }
 
     for (const tree of category.objects.children) {
+      // Cloning isn't required here, as this is a recursive method call
+      // and this method clones the object in question as its first action anyway
       category.strings.children.push(this.saveTree(tree));
     }
 
