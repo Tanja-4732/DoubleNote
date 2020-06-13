@@ -1,8 +1,14 @@
 import { environment } from "src/environments/environment";
 
-class helper {
+class Helper {
   static get log() {
     return !environment.production ? console.log : (...nothing) => {};
   }
+
+  static get error() {
+    return !environment.production ? console.error : (...nothing) => {};
+  }
 }
-export const log = helper.log;
+
+export const log = Helper.log;
+export const error = Helper.error;
