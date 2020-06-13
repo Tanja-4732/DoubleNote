@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from "@angular/core";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
@@ -14,15 +14,22 @@ import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { v4 } from "uuid";
 import { environment } from "src/environments/environment";
+import { Subscription } from "rxjs";
+import { Message, BcpMessage } from "src/typings/core/Message";
+import { filter } from "rxjs/operators";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 
 @Component({
   selector: "app-box-canvas-page",
   templateUrl: "./box-canvas-page.component.html",
   styleUrls: ["./box-canvas-page.component.scss"],
 })
-export class BoxCanvasPageComponent implements OnInit {
+export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   notebook: BcpNotebook;
   page: BoxCanvasPage;
+  boxes: TextBox[];
+
+  private subscription: Subscription;
 
   workingTitle: string;
 
@@ -30,7 +37,9 @@ export class BoxCanvasPageComponent implements OnInit {
     private bcpVcs: BcpVcsService,
     private sbpVcs: SbpVcsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private mbs: MessageBusService
   ) {
     const retrievedNotebook = this.notebooks.find(
       (notebook) => notebook.uuid === route.snapshot.params.notebookUuid
@@ -60,9 +69,27 @@ export class BoxCanvasPageComponent implements OnInit {
     }
 
     this.workingTitle = this.page.title;
+    this.boxes = this.page.objects.boxes;
   }
 
   // #region Setup
+
+  ngOnInit(): void {
+    this.setCrumbTrail();
+
+    this.subscription = this.mbs.messageStream
+      .pipe(
+        filter(
+          (m: Message) => m.messageType === "BcpMessage" // && m.uuid === this.page.uuid
+        )
+      )
+      .subscribe((message: BcpMessage) => this.handleMessage(message));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   /**
    * Recursively searches for a page
    * with a specified UUID in a given tree
@@ -111,10 +138,6 @@ export class BoxCanvasPageComponent implements OnInit {
   }
   // #endregion
 
-  ngOnInit(): void {
-    this.setCrumbTrail();
-  }
-
   private setCrumbTrail() {
     CrumbTrailComponent.crumbs = [
       {
@@ -129,6 +152,37 @@ export class BoxCanvasPageComponent implements OnInit {
       },
       { icon: Icons.Page, title: this.page.title },
     ];
+  }
+
+  private handleMessage(message: BcpMessage) {
+    log(message);
+
+    const index = this.boxes.findIndex((b) => b.uuid === message.box.uuid);
+
+    switch (message.operation) {
+      case "create":
+        this.boxes.push({
+          uuid: message.box.uuid,
+          state: message.box.state,
+          x: message.box.x,
+          y: message.box.y,
+          width: message.box.width,
+          height: message.box.height,
+          mdom: [],
+        });
+        break;
+
+      case "update":
+        delete message.box.mdom;
+        Object.assign(this.boxes[index], message.box);
+        break;
+
+      case "delete":
+        this.boxes[index] = undefined;
+        break;
+    }
+
+    this.cdr.detectChanges();
   }
 
   debug() {
@@ -156,14 +210,22 @@ export class BoxCanvasPageComponent implements OnInit {
     log("Creating new box");
     log(event);
 
-    this.page.objects.boxes.push({
-      uuid: v4(),
-      width: 500,
-      height: 300,
-      mdom: [],
-      x: event.offsetX,
-      y: event.offsetY,
-      state: "both",
+    this.mbs.dispatchMessage({
+      messageType: "BcpMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      uuid: this.page.uuid,
+      operation: "create",
+      box: {
+        uuid: v4(),
+        state: "both",
+        x: event.offsetX,
+        y: event.offsetY,
+        width: 500,
+        height: 300,
+        mdom: undefined,
+      },
     });
   }
 }

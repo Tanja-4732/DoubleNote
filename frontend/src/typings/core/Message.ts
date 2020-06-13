@@ -8,7 +8,7 @@ import { MdomNode } from "../markdown/MDOM";
  *
  * Messages come in multiple forms, but all derive from the same base interface.
  */
-export type Message = DemoTextMessage | TextBoxMessage;
+export type Message = DemoTextMessage | TextBoxMessage | BcpMessage;
 
 /**
  * The base interface all Message interfaces derive from
@@ -29,7 +29,7 @@ interface BaseMessage {
   /**
    * The type of the message
    */
-  messageType: "DemoTextMessage" | "TextBoxMessage";
+  messageType: "DemoTextMessage" | "TextBoxMessage" | "BcpMessage";
 }
 
 export interface DemoTextMessage extends BaseMessage {
@@ -49,4 +49,60 @@ export interface TextBoxMessage extends BaseMessage {
    * The UUID of the text box this message applies to
    */
   uuid: string;
+}
+
+export interface BcpMessage extends BaseMessage {
+  messageType: "BcpMessage";
+
+  /**
+   * The UUID of the Box Canvas Page this message applies to
+   */
+  uuid: string;
+
+  /**
+   * The type of operation to perform on the box
+   */
+  operation: "create" | "update" | "delete";
+
+  /**
+   * The box to be affected by this message
+   */
+  box: {
+    /**
+     * The UUID of the box
+     */
+    uuid: string;
+
+    /**
+     * The state of the box
+     */
+    state?: "both" | "markdown" | "wysiwyg";
+
+    /**
+     * The x coordinate of the box
+     */
+    x?: number;
+
+    /**
+     * The y coordinate of the box
+     */
+    y?: number;
+
+    /**
+     * The width of the box
+     */
+    width?: number;
+
+    /**
+     * The height of the box
+     */
+    height?: number;
+
+    /**
+     * This field must always be undefined.
+     *
+     * Use TextBoxMessage instead
+     */
+    mdom: undefined;
+  };
 }
