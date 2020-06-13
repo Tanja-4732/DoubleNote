@@ -74,13 +74,6 @@ export class DemoComponent implements OnInit, OnDestroy {
   }
 
   get allIcons() {
-    for (const icon in Icons) {
-      if (Icons.hasOwnProperty(icon)) {
-        const element = Icons[icon];
-        log(icon);
-      }
-    }
-
     return Icons;
   }
 }
