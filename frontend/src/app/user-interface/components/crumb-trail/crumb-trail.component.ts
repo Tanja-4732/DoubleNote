@@ -55,6 +55,7 @@ export enum Icons {
   MultiUser3 = "rss_feed",
   MultiUser4 = "alt_route",
   MultiUser5 = "multiple_stop",
+  MultiUser6 = "group",
   NoMultiUser = "voice_over_off",
   NoMultiUser2 = "leak_remove",
 }
