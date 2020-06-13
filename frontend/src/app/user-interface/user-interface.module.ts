@@ -13,6 +13,7 @@ import { PageNotFoundComponent } from "./components/page-not-found/page-not-foun
 import { SettingsComponent } from "./components/settings/settings.component";
 import { SideNavComponent } from "./components/side-nav/side-nav.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
+import { ConnectionsComponent } from './components/connections/connections.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { WelcomeComponent } from "./components/welcome/welcome.component";
     NotebookCardComponent,
     SideNavComponent,
     PageNotFoundComponent,
+    ConnectionsComponent,
   ],
   imports: [CommonModule, AppRoutingModule, AngularMaterialModule],
   exports: [MainComponent, BoxCanvasPageModule, SequentialBlockPageModule],

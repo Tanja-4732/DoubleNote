@@ -8,6 +8,7 @@ import { SbpNotebookComponent } from "../sequential-block-page/components/sbp-no
 import { BcpNotebookComponent } from "../box-canvas-page/components/bcp-notebook/bcp-notebook.component";
 import { PageNotFoundComponent } from "../user-interface/components/page-not-found/page-not-found.component";
 import { BoxCanvasPageComponent } from "../box-canvas-page/components/box-canvas-page/box-canvas-page.component";
+import { ConnectionsComponent } from "../user-interface/components/connections/connections.component";
 
 const routes: Routes = [
   // Welcome component
@@ -15,6 +16,14 @@ const routes: Routes = [
 
   // Settings component
   { path: "settings", component: SettingsComponent },
+
+  {
+    path: "connections",
+    children: [
+      { path: "", component: ConnectionsComponent },
+      { path: "new/:remoteUuid", component: ConnectionsComponent },
+    ],
+  },
 
   // Notebooks component
   {

@@ -4,6 +4,7 @@ import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
 import { Message } from "../../../typings/core/Message";
 import { SettingsService } from "../settings/settings.service";
+import { Contact } from "src/typings/core/contact";
 
 /**
  * # MessageBusService
@@ -47,11 +48,44 @@ export class MessageBusService {
   private static readonly peerConnections: DataConnection[] = [];
 
   /**
-   * The UUID my this client used to connect to other peers
+   * My own contact
+   *
+   * This represents the contact of the user
    */
+  private readonly me = MessageBusService.prepareMe();
+
+  public get myName(): string {
+    return this.me.name;
+  }
+
+  public set myName(name: string) {
+    this.me.name = name;
+    localStorage.setItem("dn.contacts.me", JSON.stringify(this.me));
+  }
+
   public get myUuid(): string {
-    // Check if the application is running in offline mode
-    return this.settings.offlineMode ? "offline" : MessageBusService.myself.id;
+    return this.me.uuid;
+  }
+
+  /**
+   * A list of all known contacts
+   */
+  public contacts: Contact[] =
+    JSON.parse(localStorage.getItem("dn.contacts.others")) ?? [];
+
+  private static prepareMe(): Contact {
+    let me: Contact = JSON.parse(localStorage.getItem("dn.contacts.me"));
+
+    if (me === null) {
+      me = { uuid: v4(), name: "" };
+      localStorage.setItem("dn.contacts.me", JSON.stringify(me));
+    }
+
+    return me;
+  }
+
+  public persistContacts(): void {
+    localStorage.setItem("dn.contacts.others", JSON.stringify(this.contacts));
   }
 
   /**
@@ -64,7 +98,7 @@ export class MessageBusService {
   constructor(private settings: SettingsService) {
     if (!this.settings.offlineMode && MessageBusService.myself == null) {
       // Create a peer representing myself
-      MessageBusService.myself = new Peer(v4());
+      MessageBusService.myself = new Peer(this.me.uuid);
 
       // Handle disconnects by attempting to reconnect
       MessageBusService.myself.on("disconnected", () =>

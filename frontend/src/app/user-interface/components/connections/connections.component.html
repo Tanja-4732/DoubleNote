@@ -1,0 +1,60 @@
+<div class="contacts">
+  <!-- Headings -->
+  <h1>Name</h1>
+  <h1>UUID</h1>
+  <h1>Actions</h1>
+
+  <!-- Me -->
+  <mat-form-field appearance="outline">
+    <mat-label>My name</mat-label>
+    <input matInput placeholder="Someone" [(ngModel)]="myName" required />
+  </mat-form-field>
+  <code> {{ myUuid }} </code>
+  <button
+    mat-stroked-button
+    (click)="persistMyName()"
+    [disabled]="myName === '' || myName === mbs.myName"
+  >
+    Save
+  </button>
+
+  <!-- Add contact -->
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput placeholder="Someone" [(ngModel)]="name" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>UUID</mat-label>
+    <input
+      matInput
+      placeholder="d5fc0052-4f0d-4421-b929-dbc43ff80cc7"
+      [(ngModel)]="uuid"
+      class="code"
+    />
+  </mat-form-field>
+  <div>
+    <button
+      mat-stroked-button
+      (click)="createContact()"
+      [disabled]="name === '' || uuid === ''"
+    >
+      Add contact
+    </button>
+  </div>
+
+  <!-- Contacts -->
+  <ng-container *ngFor="let contact of contacts">
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Someone" [(ngModel)]="contact.name" />
+    </mat-form-field>
+    <code> {{ contact.uuid }} </code>
+    <button
+      mat-stroked-button
+      (click)="connectToPeer(contact.uuid)"
+      [disabled]="false"
+    >
+      Connect
+    </button>
+  </ng-container>
+</div>
