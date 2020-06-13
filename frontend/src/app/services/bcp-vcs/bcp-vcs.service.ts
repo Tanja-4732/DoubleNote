@@ -262,6 +262,28 @@ export class BcpVcsService {
   }
 
   /**
+   * Assigns a name to a specified notebook
+   *
+   * @param notebook The notebook to be renamed
+   * @param name The new name for the notebook
+   */
+  renameNotebook(notebook: BcpNotebook, name: string): void {
+    // Find the notebook
+    const index = this.notebooks.findIndex((n) => n.uuid === notebook.uuid);
+
+    // Check for the existence of the notebook
+    if (index === -1) {
+      throw new Error("Notebook not found");
+    }
+
+    // Update the name
+    this.notebooks[index].name = name;
+
+    // Persist the changes
+    this.persistNotebooks();
+  }
+
+  /**
    * Replaces the HEAD object-representation
    * with a copy of the working tree
    *

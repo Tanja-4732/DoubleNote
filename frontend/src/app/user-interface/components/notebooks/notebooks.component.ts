@@ -5,9 +5,10 @@ import {
   Icon,
 } from "../crumb-trail/crumb-trail.component";
 import {
-  CreateNotebookComponent,
-  DialogResult,
-} from "../create-notebook/create-notebook.component";
+  NotebookDialogComponent,
+  NotebookDialogOutput,
+  NotebookDialogInput,
+} from "../notebook-dialog/notebook-dialog.component";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
 import { Notebook } from "src/typings/core/Notebook";
@@ -37,8 +38,8 @@ export class NotebooksComponent implements OnInit {
     return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
   }
 
-  private handleResult(result: DialogResult) {
-    if (result?.create && result.name) {
+  private handleCreate(result: NotebookDialogOutput) {
+    if (result?.confirmed && result.name) {
       switch (result?.type) {
         case "BCP":
           this.bcpVcs.createNotebook(result.name);
@@ -54,12 +55,13 @@ export class NotebooksComponent implements OnInit {
   }
 
   openDialog(type: string): void {
-    const dialogRef = this.dialog.open(CreateNotebookComponent, {
-      width: "350px",
+    const data: NotebookDialogInput = { type, operation: "create" };
 
-      data: { type },
+    const dialogRef = this.dialog.open(NotebookDialogComponent, {
+      width: "350px",
+      data,
     });
 
-    dialogRef.afterClosed().subscribe((result) => this.handleResult(result));
+    dialogRef.afterClosed().subscribe((result) => this.handleCreate(result));
   }
 }

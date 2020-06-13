@@ -4,7 +4,7 @@ import { AngularMaterialModule } from "../angular-material/angular-material.modu
 import { BoxCanvasPageModule } from "../box-canvas-page/box-canvas-page.module";
 import { AppRoutingModule } from "../routes/app-routing.module";
 import { SequentialBlockPageModule } from "../sequential-block-page/sequential-block-page.module";
-import { CreateNotebookComponent } from "./components/create-notebook/create-notebook.component";
+import { NotebookDialogComponent } from "./components/notebook-dialog/notebook-dialog.component";
 import { CrumbTrailComponent } from "./components/crumb-trail/crumb-trail.component";
 import { MainComponent } from "./components/main/main.component";
 import { NotebookCardComponent } from "./components/notebook-card/notebook-card.component";
@@ -21,7 +21,7 @@ import { WelcomeComponent } from "./components/welcome/welcome.component";
     SettingsComponent,
     NotebooksComponent,
     CrumbTrailComponent,
-    CreateNotebookComponent,
+    NotebookDialogComponent,
     NotebookCardComponent,
     SideNavComponent,
     PageNotFoundComponent,

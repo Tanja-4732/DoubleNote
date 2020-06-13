@@ -12,17 +12,17 @@ import {
 } from "@angular/forms";
 
 @Component({
-  selector: "app-create-notebook",
-  templateUrl: "./create-notebook.component.html",
-  styleUrls: ["./create-notebook.component.scss"],
+  selector: "app-notebook-dialog",
+  templateUrl: "./notebook-dialog.component.html",
+  styleUrls: ["./notebook-dialog.component.scss"],
 })
-export class CreateNotebookComponent implements OnInit {
+export class NotebookDialogComponent implements OnInit {
   formGroup: FormGroup;
 
   constructor(
     formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<CreateNotebookComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    public dialogRef: MatDialogRef<NotebookDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public input: NotebookDialogInput
   ) {
     this.formGroup = formBuilder.group({
       name: ["", Validators.required],
@@ -33,25 +33,27 @@ export class CreateNotebookComponent implements OnInit {
   ngOnInit(): void {}
 
   onNoClick(): void {
-    this.dialogRef.close({ create: false } as DialogResult);
+    this.dialogRef.close({ confirmed: false } as NotebookDialogOutput);
   }
 
   onSubmit(): void {
     this.dialogRef.close({
-      create: true,
+      confirmed: true,
       name: this.formGroup.value.name,
       type: this.formGroup.value.type,
-    } as DialogResult);
+    } as NotebookDialogOutput);
   }
 }
 
-export interface DialogData {
-  type: string;
-  name: string;
+export interface NotebookDialogInput {
+  type?: string;
+  name?: string;
+
+  operation: "create" | "update";
 }
 
-export interface DialogResult {
-  create: boolean;
+export interface NotebookDialogOutput {
+  confirmed: boolean;
   name: string;
-  type: "SBP" | "BCP";
+  type?: "SBP" | "BCP";
 }

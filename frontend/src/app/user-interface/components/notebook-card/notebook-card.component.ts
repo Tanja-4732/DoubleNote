@@ -1,5 +1,13 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { Notebook } from "src/typings/core/Notebook";
+import { MatDialog } from "@angular/material/dialog";
+import {
+  NotebookDialogInput,
+  NotebookDialogOutput,
+  NotebookDialogComponent,
+} from "../notebook-dialog/notebook-dialog.component";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
 
 @Component({
   selector: "app-notebook-card",
@@ -10,7 +18,11 @@ export class NotebookCardComponent implements OnInit {
   @Input()
   notebook: Notebook;
 
-  constructor() {}
+  constructor(
+    private bcpVcs: BcpVcsService,
+    private sbpVcs: SbpVcsService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {}
 
@@ -28,6 +40,32 @@ export class NotebookCardComponent implements OnInit {
   }
 
   onEdit(): void {
-    // TODO open a dialog
+    const data: NotebookDialogInput = {
+      operation: "update",
+      name: this.notebook.name,
+    };
+
+    const dialogRef = this.dialog.open(NotebookDialogComponent, {
+      width: "350px",
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => this.handleUpdate(result));
+  }
+
+  private handleUpdate(result: NotebookDialogOutput) {
+    if (result?.confirmed && result.name) {
+      switch (this.notebook.type) {
+        case "BCP":
+          this.bcpVcs.renameNotebook(this.notebook, result.name);
+          break;
+
+        case "SBP":
+          throw new Error("Not implemented yet");
+
+        case undefined:
+          throw new Error("Something went wrong");
+      }
+    }
   }
 }

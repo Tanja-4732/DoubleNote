@@ -1,0 +1,43 @@
+<h1 *ngIf="input.operation === 'create'">Create a notebook</h1>
+<h1 *ngIf="input.operation === 'update'">Rename notebook</h1>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <div mat-dialog-content>
+    <ng-container *ngIf="input.operation === 'update'">
+      <p>Previous name: {{ input.name }}</p>
+    </ng-container>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="My notes"
+        required
+        cdkFocusInitial
+      />
+      <mat-error *ngIf="formGroup.invalid">A name must be provided</mat-error>
+    </mat-form-field>
+
+    <ng-container *ngIf="input.operation === 'create'">
+      <br />
+      <br />
+      <mat-label>Notebook type</mat-label> <br />
+      <mat-radio-group formControlName="type">
+        <mat-radio-button value="BCP">Box canvas page</mat-radio-button>
+        <br />
+        <mat-radio-button value="SBP" disabled
+          >Sequential block page</mat-radio-button
+        >
+      </mat-radio-group>
+    </ng-container>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" type="button">
+      Cancel
+    </button>
+    <button mat-button [disabled]="formGroup.invalid" type="submit">
+      Confirm
+    </button>
+  </div>
+</form>
