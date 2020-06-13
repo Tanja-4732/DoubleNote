@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{ input.heading }}</h1>
+
+<div mat-dialog-content *ngIf="input.body">
+  <p>{{ input.body }}</p>
+</div>
+<div mat-dialog-actions>
+  <button
+    mat-button
+    (click)="onNoClick()"
+    [color]="input.cancel.color"
+    cdkFocusInitial
+  >
+    {{ input.cancel.text }}
+  </button>
+
+  <button mat-button (click)="onSubmit()" [color]="input.confirm.color">
+    {{ input.confirm.text }}
+  </button>
+</div>

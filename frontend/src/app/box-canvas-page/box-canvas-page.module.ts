@@ -14,6 +14,7 @@ import { CategoryDialogComponent } from "./components/category-dialog/category-d
 import { PageDialogComponent } from "./components/page-dialog/page-dialog.component";
 import { BoxCanvasPageComponent } from "./components/box-canvas-page/box-canvas-page.component";
 import { RouterModule } from "@angular/router";
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { RouterModule } from "@angular/router";
     CategoryDialogComponent,
     PageDialogComponent,
     BoxCanvasPageComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,

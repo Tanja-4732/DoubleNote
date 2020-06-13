@@ -10,6 +10,9 @@ import { cloneDeep } from "lodash";
 import { fieldHider } from "src/functions/functions";
 import { log } from "src/functions/console";
 
+export const WORKING_TREE_DIRTY =
+  "The working tree contains uncommitted changes and the force flag was not set";
+
 @Injectable({
   providedIn: "root",
 })
@@ -160,9 +163,7 @@ export class BcpVcsService {
       this.commits[notebook.strings.head].strings.rootCategory !==
         notebook.strings.workingTree
     ) {
-      throw new Error(
-        "The working tree contains uncommitted changes and the force flag was not set"
-      );
+      throw new Error(WORKING_TREE_DIRTY);
     }
 
     // Move the HEAD to the specified branch

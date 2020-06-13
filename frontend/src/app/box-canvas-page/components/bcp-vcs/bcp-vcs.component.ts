@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import {
+  BcpVcsService,
+  WORKING_TREE_DIRTY,
+} from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { environment } from "src/environments/environment";
-import { log } from "src/functions/console";
+import { log, error } from "src/functions/console";
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import {
   CreateBranchComponent,
@@ -11,6 +14,12 @@ import {
 } from "../create-branch/create-branch.component";
 import { hash } from "src/functions/functions";
 import { BcpTreeComponent } from "../bcp-tree/bcp-tree.component";
+import { filter } from "rxjs/operators";
+import {
+  ConfirmDialogOutput,
+  ConfirmDialogInput,
+  ConfirmDialogComponent,
+} from "../confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -45,8 +54,42 @@ export class BcpVcsComponent implements OnInit {
   }
 
   onCheckoutBranch(name: string): void {
-    this.vcs.checkoutBranch(this.notebook, name);
-    BcpTreeComponent.setDataSub.next();
+    try {
+      this.vcs.checkoutBranch(this.notebook, name);
+      BcpTreeComponent.setDataSub.next();
+    } catch (err) {
+      if ((err as Error).message === WORKING_TREE_DIRTY) {
+        const data: ConfirmDialogInput = {
+          heading: "Force checkout?",
+          body:
+            "There are uncommitted changes in the working tree.\nA checkout to " +
+            name +
+            " would lead to the loss of this data.\n\nAre you sure you want to continue?",
+          cancel: {
+            color: "primary",
+            text: "Cancel",
+          },
+          confirm: {
+            color: "warn",
+            text: "Force checkout",
+          },
+        };
+
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: "350px",
+          data,
+        });
+
+        dialogRef.afterClosed().subscribe((result: ConfirmDialogOutput) => {
+          if (result?.result) {
+            this.vcs.checkoutBranch(this.notebook, name, true);
+            BcpTreeComponent.setDataSub.next();
+          }
+        });
+      } else {
+        error(err);
+      }
+    }
   }
 
   onCreateBranch(): void {
