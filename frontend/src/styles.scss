@@ -1,6 +1,17 @@
 // @use "matcha";
 /* You can add global styles to this file, and also import other style files */
 
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Quicksand:wght@400;500&family=Raleway&display=swap");
+
+* {
+  font-family: "Raleway", "system-ui", Roboto, "Helvetica Neue", sans-serif;
+}
+
+code,
+code * {
+  font-family: "Fira Code", monospace, ui-monospace, sans-serif !important;
+}
+
 html,
 body {
   height: 100%;
@@ -10,7 +21,6 @@ body {
   margin: 0;
   // font-family: "system-ui" !important;
   // font-variant-ligatures: common-ligatures !important;
-  font-family: "system-ui", Roboto, "Helvetica Neue", sans-serif;
   // background-color: matcha.$bg_color;
 }
 
@@ -38,8 +48,17 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-  font-family: "system-ui", Roboto, "Helvetica Neue", sans-serif !important;
+h6,
+mat-card-title,
+mat-toolbar > span,
+mat-toolbar {
+  font-family: "Quicksand", "system-ui", Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+mat-toolbar > span {
+  font-weight: 600;
+  font-weight: 500;
+  font-weight: medium;
 }
 
 div.mat-dialog-content {
