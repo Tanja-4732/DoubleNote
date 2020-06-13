@@ -34,3 +34,18 @@
 <br />
 
 <app-draw [width]="width" [height]="height"></app-draw>
+
+<br />
+<br />
+
+<h1>
+  Icons
+</h1>
+
+<div *ngFor="let icon of allIcons | keyvalue">
+  <span>
+    {{ icon.key }}
+  </span>
+
+  <mat-icon> {{ icon.value }}</mat-icon>
+</div>

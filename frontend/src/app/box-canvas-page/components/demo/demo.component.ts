@@ -72,4 +72,15 @@ export class DemoComponent implements OnInit, OnDestroy {
   connectToPeer() {
     this.mbs.connectToPeer(this.peerId);
   }
+
+  get allIcons() {
+    for (const icon in Icons) {
+      if (Icons.hasOwnProperty(icon)) {
+        const element = Icons[icon];
+        log(icon);
+      }
+    }
+
+    return Icons;
+  }
 }
