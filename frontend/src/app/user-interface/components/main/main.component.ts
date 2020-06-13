@@ -5,6 +5,7 @@ import { map, shareReplay } from "rxjs/operators";
 import { SettingsService } from "src/app/services/settings/settings.service";
 import { environment } from "src/environments/environment";
 import { Icons } from "../crumb-trail/crumb-trail.component";
+import { deleteAll } from "src/functions/functions";
 
 @Component({
   selector: "app-main",
@@ -32,12 +33,5 @@ export class MainComponent {
     private breakpointObserver: BreakpointObserver
   ) {}
 
-  deleteAll(): void {
-    window.localStorage.removeItem("dn.bcp.notebooks");
-    window.localStorage.removeItem("dn.bcp.commits");
-    window.localStorage.removeItem("dn.bcp.trees");
-    window.localStorage.removeItem("dn.bcp.pages");
-    window.localStorage.removeItem("dn.bcp.boxes");
-    window.location.reload();
-  }
+  deleteAll = () => deleteAll();
 }
