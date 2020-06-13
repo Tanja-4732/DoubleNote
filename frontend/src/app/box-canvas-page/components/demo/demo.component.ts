@@ -7,7 +7,7 @@ import { DemoTextMessage } from "../../../../typings/core/Message";
 import { SettingsService } from "src/app/services/settings/settings.service";
 import {
   CrumbTrailComponent,
-  Icon,
+  Icons,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
 import { log } from "src/functions/console";
 
@@ -41,7 +41,7 @@ export class DemoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Demo,
+        icon: Icons.Demo,
         title: "Demo",
       },
     ];

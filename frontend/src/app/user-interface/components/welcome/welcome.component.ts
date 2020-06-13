@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import {
   CrumbTrailComponent,
-  Icon,
+  Icons,
 } from "../crumb-trail/crumb-trail.component";
 
 @Component({
@@ -15,7 +15,7 @@ export class WelcomeComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Welcome,
+        icon: Icons.Welcome,
         title: "Welcome",
       },
     ];

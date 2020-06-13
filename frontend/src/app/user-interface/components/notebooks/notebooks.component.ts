@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import {
   CrumbTrailComponent,
-  Icon,
+  Icons,
 } from "../crumb-trail/crumb-trail.component";
 import {
   NotebookDialogComponent,
@@ -28,7 +28,7 @@ export class NotebooksComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Notebooks,
+        icon: Icons.Notebooks,
         title: "Notebooks",
       },
     ];

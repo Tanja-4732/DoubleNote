@@ -4,7 +4,7 @@ import { SettingsService } from "src/app/services/settings/settings.service";
 import { Subscription } from "rxjs";
 import {
   CrumbTrailComponent,
-  Icon,
+  Icons,
 } from "../crumb-trail/crumb-trail.component";
 
 @Component({
@@ -30,7 +30,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Settings,
+        icon: Icons.Settings,
         title: "Settings",
       },
     ];

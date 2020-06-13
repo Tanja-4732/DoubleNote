@@ -3,7 +3,7 @@ import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   CrumbTrailComponent,
-  Icon,
+  Icons,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
 import { Notebook } from "src/typings/core/Notebook";
@@ -118,16 +118,16 @@ export class BoxCanvasPageComponent implements OnInit {
   private setCrumbTrail() {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Notebooks,
+        icon: Icons.Notebooks,
         title: "Notebooks",
         routerLink: "/notebooks",
       },
       {
-        icon: Icon.Notebook,
+        icon: Icons.Notebook,
         title: this.notebook.name + " (BCP)",
         routerLink: "/notebooks/bcp/" + this.notebook.uuid,
       },
-      { icon: Icon.Page, title: this.page.title },
+      { icon: Icons.Page, title: this.page.title },
     ];
   }
 

@@ -26,7 +26,9 @@ export class CrumbTrailComponent implements OnInit {
 /**
  * The icons of the application
  */
-export enum Icon {
+export enum Icons {
+  Menu = "menu",
+  MenuOpen = "menu_open",
   Auth = "vpn_key",
   Scan = "camera",
   Add = "add",
@@ -34,6 +36,7 @@ export enum Icon {
   Category = "local_offer",
   Notebook = "book",
   Settings = "settings",
+  // Settings = "miscellaneous_services",
   Demo = "bug_report",
   Error = "error",
   Notebooks = "collections_bookmark",
@@ -41,10 +44,19 @@ export enum Icon {
   SourceCode = "code",
   License = "gavel",
   Page = "insert_drive_file",
-  OpenPage = "open_in_browser",
+  // OpenPage = "open_in_browser",
+  // OpenPage = "text_snippet",
+  OpenPage = "read_more",
   CreatePage = "note_add",
   CreateCategory = "create_new_folder",
   Edit = "edit",
+  MultiUser = "record_voice_over",
+  // MultiUser = "leak_add",
+  // MultiUser = "rss_feed",
+  // MultiUser = "alt_route",
+  // MultiUser = "multiple_stop",
+  NoMultiUser = "voice_over_off",
+  // NoMultiUser = "leak_remove",
 }
 
 /**
@@ -54,7 +66,7 @@ export interface Crumb {
   /**
    * Determines the icon to be used
    */
-  icon?: Icon;
+  icon?: Icons;
 
   /**
    * The title of the crumb

@@ -25,7 +25,7 @@ import {
   PageDialogOutput,
 } from "../page-dialog/page-dialog.component";
 import { v4 } from "uuid";
-import { Icon } from "../../../user-interface/components/crumb-trail/crumb-trail.component";
+import { Icons } from "../../../user-interface/components/crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-bcp-tree",
@@ -64,7 +64,7 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
   }
 
   get icons() {
-    return Icon;
+    return Icons;
   }
 
   constructor(

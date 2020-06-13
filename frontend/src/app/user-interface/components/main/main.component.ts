@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 import { SettingsService } from "src/app/services/settings/settings.service";
 import { environment } from "src/environments/environment";
+import { Icons } from "../crumb-trail/crumb-trail.component";
 
 @Component({
   selector: "app-main",
@@ -20,6 +21,10 @@ export class MainComponent {
 
   get isDevMode(): boolean {
     return !environment.production;
+  }
+
+  get icons() {
+    return Icons;
   }
 
   constructor(

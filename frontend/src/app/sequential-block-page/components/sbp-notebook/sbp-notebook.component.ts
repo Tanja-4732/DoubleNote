@@ -3,7 +3,7 @@ import { SbpNotebook } from "src/typings/sbp/SbpNotebook";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
   CrumbTrailComponent,
-  Icon,
+  Icons,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
@@ -49,7 +49,7 @@ export class SbpNotebookComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        icon: Icon.Notebook,
+        icon: Icons.Notebook,
         title: "Notebooks",
         routerLink: "/notebooks",
       },
