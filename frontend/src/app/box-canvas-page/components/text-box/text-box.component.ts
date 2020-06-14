@@ -60,6 +60,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
         this.handleIncomingMessage(message)
       );
 
+    this.cdr.detectChanges();
     this.setBoxPosition();
   }
 
