@@ -4,6 +4,7 @@ import {
   CrumbTrailComponent,
   Icons,
 } from "../crumb-trail/crumb-trail.component";
+import { SettingsService } from "src/app/services/settings/settings.service";
 
 @Component({
   selector: "app-connections",
@@ -15,7 +16,10 @@ export class ConnectionsComponent implements OnInit {
   uuid = "";
   myName: string;
 
-  constructor(public mbs: MessageBusService) {}
+  constructor(
+    public mbs: MessageBusService,
+    public settings: SettingsService
+  ) {}
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [

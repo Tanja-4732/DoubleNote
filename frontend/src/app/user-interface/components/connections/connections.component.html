@@ -52,7 +52,7 @@
     <button
       mat-stroked-button
       (click)="connectToPeer(contact.uuid)"
-      [disabled]="false"
+      [disabled]="settings.offlineMode"
     >
       Connect
     </button>
