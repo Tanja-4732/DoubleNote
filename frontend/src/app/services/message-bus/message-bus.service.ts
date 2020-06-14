@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
-import { ReplaySubject, Observable } from "rxjs";
+import { ReplaySubject, Observable, Subscription } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
 import { Message } from "../../../typings/core/Message";
 import { SettingsService } from "../settings/settings.service";
 import { Contact } from "src/typings/core/contact";
+import { log } from "src/functions/console";
 
 /**
  * # MessageBusService
@@ -67,6 +68,8 @@ export class MessageBusService {
     return this.me.uuid;
   }
 
+  private readonly offlineModeSubscription;
+
   /**
    * A list of all known contacts
    */
@@ -84,10 +87,6 @@ export class MessageBusService {
     return me;
   }
 
-  public persistContacts(): void {
-    localStorage.setItem("dn.contacts.others", JSON.stringify(this.contacts));
-  }
-
   /**
    * The observable containing all messages
    */
@@ -96,21 +95,12 @@ export class MessageBusService {
   }
 
   constructor(private settings: SettingsService) {
-    if (!this.settings.offlineMode && MessageBusService.myself == null) {
-      // Create a peer representing myself
-      MessageBusService.myself = new Peer(this.me.uuid);
+    // if (!this.settings.offlineMode && MessageBusService.myself == null) { }
 
-      // Handle disconnects by attempting to reconnect
-      MessageBusService.myself.on("disconnected", () =>
-        // Reconnect to the signaling server
-        MessageBusService.myself.reconnect()
-      );
-
-      // Handle incoming connections
-      MessageBusService.myself.on("connection", (connection) =>
-        MessageBusService.handleIncomingConnection(connection)
-      );
-    }
+    this.offlineModeSubscription = this.settings.observable.subscribe(
+      (offline) =>
+        offline ? this.enableOfflineMode() : this.disableOfflineMode()
+    );
   }
 
   /**
@@ -156,6 +146,37 @@ export class MessageBusService {
     for (const connection of MessageBusService.peerConnections) {
       connection.send(message);
     }
+  }
+
+  private enableOfflineMode() {
+    log("Enabling offline mode");
+
+    MessageBusService.myself?.destroy();
+    MessageBusService.myself = null;
+  }
+
+  private disableOfflineMode() {
+    log("Disabling offline mode");
+
+    // Create a peer representing myself
+    MessageBusService.myself = new Peer(this.me.uuid);
+
+    // Handle disconnects by attempting to reconnect
+    MessageBusService.myself.on("disconnected", () =>
+      // Reconnect to the signaling server
+      MessageBusService.myself.reconnect()
+    );
+
+    // Handle incoming connections
+    MessageBusService.myself.on("connection", (connection) =>
+      MessageBusService.handleIncomingConnection(connection)
+    );
+
+    log("Offline mode disabled");
+  }
+
+  public persistContacts(): void {
+    localStorage.setItem("dn.contacts.others", JSON.stringify(this.contacts));
   }
 
   /**
@@ -206,5 +227,14 @@ export class MessageBusService {
       // Send the message to all connected peers
       MessageBusService.broadcastMessage(message);
     }
+  }
+
+  /**
+   * Checks, if a connection to a given UUID is established
+   *
+   * @param uuid The UUID to check
+   */
+  public isConnected(uuid: string): boolean {
+    return MessageBusService.peerConnections.some((c) => c.label === uuid);
   }
 }

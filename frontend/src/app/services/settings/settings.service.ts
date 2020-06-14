@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -10,8 +11,20 @@ import { Injectable } from "@angular/core";
  * Set and get accessors provide default values and persist the users choices automatically
  */
 export class SettingsService {
+  /**
+   * A subject of the offline mode
+   */
+  private readonly subject: BehaviorSubject<boolean>;
+
+  /**
+   * An observable of the offline mode
+   */
+  public readonly observable: Observable<boolean>;
+
   constructor() {
     this.loadSettings();
+    this.subject = new BehaviorSubject(this.offlineMode);
+    this.observable = this.subject.asObservable();
   }
 
   /**
@@ -40,6 +53,7 @@ export class SettingsService {
   set offlineMode(value: boolean) {
     this.settings.enableOfflineMode = value;
     this.saveData();
+    this.subject.next(value);
   }
 
   get sideNavOpened(): boolean {

@@ -49,12 +49,27 @@
       <input matInput placeholder="Someone" [(ngModel)]="contact.name" />
     </mat-form-field>
     <code> {{ contact.uuid }} </code>
-    <button
-      mat-stroked-button
-      (click)="connectToPeer(contact.uuid)"
-      [disabled]="settings.offlineMode"
-    >
-      Connect
-    </button>
+
+    <!-- Check if offline -->
+    <ng-container *ngIf="!settings.offlineMode; else offlineMode">
+      <!-- If not offline -->
+      <!-- Check if already connected -->
+      <button
+        mat-stroked-button
+        (click)="connectToPeer(contact.uuid)"
+        *ngIf="!mbs.isConnected(contact.uuid); else alreadyConnected"
+      >
+        Connect
+      </button>
+    </ng-container>
+
+    <ng-template #offlineMode>
+      <!-- If offline -->
+      <p><a routerLink="/settings">Offline mode</a> enabled</p>
+    </ng-template>
+
+    <ng-template #alreadyConnected>
+      <p>Peer connected</p>
+    </ng-template>
   </ng-container>
 </div>
