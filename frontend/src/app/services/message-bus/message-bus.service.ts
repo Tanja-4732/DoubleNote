@@ -80,7 +80,7 @@ export class MessageBusService {
     let me: Contact = JSON.parse(localStorage.getItem("dn.contacts.me"));
 
     if (me === null) {
-      me = { uuid: v4(), name: "" };
+      me = { uuid: v4(), name: "Myself" };
       localStorage.setItem("dn.contacts.me", JSON.stringify(me));
     }
 
@@ -156,8 +156,6 @@ export class MessageBusService {
   }
 
   private disableOfflineMode() {
-    log("Disabling offline mode");
-
     // Create a peer representing myself
     MessageBusService.myself = new Peer(this.me.uuid);
 

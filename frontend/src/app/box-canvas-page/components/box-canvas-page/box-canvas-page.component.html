@@ -27,6 +27,8 @@
   <app-text-box
     *ngFor="let box of page.objects.boxes; trackBy: trackByBox"
     [box]="box"
+    [foreignBoxMove]="foreignBoxMove.asObservable()"
+    (boxState)="onBoxStateChanged(box)"
   >
   </app-text-box>
 

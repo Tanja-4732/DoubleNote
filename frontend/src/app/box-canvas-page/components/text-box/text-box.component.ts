@@ -6,8 +6,10 @@ import {
   ViewChild,
   Input,
   OnDestroy,
+  Output,
+  EventEmitter,
 } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Subscription, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 import { MarkdownEngineService } from "src/app/services/markdown-engine/markdown-engine.service";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
@@ -19,13 +21,23 @@ import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { CdkDragEnd } from "@angular/cdk/drag-drop";
 
+export interface Coordinates {
+  x: number;
+  y: number;
+}
+
 @Component({
   selector: "app-text-box",
   templateUrl: "./text-box.component.html",
   styleUrls: ["./text-box.component.scss"],
 })
 export class TextBoxComponent implements OnInit, OnDestroy {
-  @Input() readonly box: TextBox;
+  @Input()
+  readonly box: TextBox;
+
+  @Input()
+  foreignBoxMove: Observable<void>;
+  private fbmSub: Subscription;
 
   @ViewChild("wysiwyg")
   wysiwygEditor: ElementRef;
@@ -35,7 +47,10 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
 
-  public dragPosition: { x: number; y: number } = { x: 0, y: 0 };
+  public dragPosition: Coordinates = { x: 0, y: 0 };
+
+  @Output()
+  boxState = new EventEmitter<void>();
 
   constructor(
     public mb: MessageBusService,
@@ -62,10 +77,13 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
     this.cdr.detectChanges();
     this.setBoxPosition();
+
+    this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.fbmSub.unsubscribe();
   }
 
   private setBoxPosition() {
@@ -82,6 +100,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.box.y = position.y;
 
     this.setBoxPosition();
+    this.boxState.emit();
   }
 
   /**

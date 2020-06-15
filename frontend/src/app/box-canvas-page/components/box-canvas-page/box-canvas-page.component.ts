@@ -14,10 +14,11 @@ import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { v4 } from "uuid";
 import { environment } from "src/environments/environment";
-import { Subscription } from "rxjs";
+import { Subscription, Subject } from "rxjs";
 import { Message, BcpMessage } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
+import { Coordinates } from "../text-box/text-box.component";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -30,6 +31,8 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   boxes: TextBox[];
 
   private subscription: Subscription;
+
+  foreignBoxMove = new Subject<void>();
 
   workingTitle: string;
 
@@ -175,6 +178,7 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
       case "update":
         delete message.box.mdom;
         Object.assign(this.boxes[index], message.box);
+        this.foreignBoxMove.next();
         break;
 
       case "delete":
@@ -202,6 +206,26 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
 
   onCommit(): void {
     this.bcpVcs.commitNotebook(this.notebook);
+  }
+
+  onBoxStateChanged(box: TextBox): void {
+    this.mbs.dispatchMessage({
+      messageType: "BcpMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      uuid: this.page.uuid,
+      operation: "update",
+      box: {
+        uuid: box.uuid,
+        state: box.state,
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        mdom: undefined,
+      },
+    });
   }
 
   trackByBox = (_: number, box: TextBox) => box.uuid;
