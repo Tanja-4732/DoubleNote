@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ReplaySubject, Observable, Subscription } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
 import { Message } from "../../../typings/core/Message";
@@ -36,7 +36,7 @@ export class MessageBusService {
   /**
    * The messages in this subject are either incoming ones or have been broadcast already.
    */
-  private static readonly messageSubject = new ReplaySubject<Message>();
+  private static readonly messageSubject = new Subject<Message>();
 
   /**
    * The observable containing all messages
