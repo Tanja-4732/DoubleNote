@@ -2,7 +2,7 @@
 
 This is a new project; its development status is far away from a beta release.
 
-See the `master` branch deployed here: <https://double-note.bernd-l.vercel.app/>  
+See the `master` branch deployed here: <https://double-note.vercel.app/>  
 Notice: This is only the frontend served statically. Some (planned) features are only available using the backend server.
 
 ## (Planned) Features

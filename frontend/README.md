@@ -6,6 +6,8 @@ It's an [Angular](https://angular.io) single page application written in TypeScr
 
 The goal of the frontend is to provide a fully-featured web application capable of creating, editing, and view notes -- both in Markdown and as free-hand drawings.
 
+You can view a static deployment of the `master` branch at <https://double-note.vercel.app/>.
+
 ## Implementation strategy
 
 This is how I envision DoubleNote to be implemented
