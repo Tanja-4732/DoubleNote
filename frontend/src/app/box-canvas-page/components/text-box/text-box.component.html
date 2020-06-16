@@ -14,26 +14,32 @@
       <div cdkDragHandle class="editor-handle">
         Move
       </div>
+
+      <div class="editor-state" (click)="cycleModes()">
+        Close
+      </div>
     </div>
 
-    <div
-      #markdown
-      *ngIf="box.state === 'both' || box.state === 'markdown'"
-      class="editor-markdown"
-      contenteditable="true"
-      (keyup)="onKeyUp($event)"
-      appMarkdownBox
-    >
-      Hello world!
-    </div>
+    <div class="editor-wrap">
+      <div
+        #markdown
+        *ngIf="box.state === 'both' || box.state === 'markdown'"
+        class="editor-markdown"
+        contenteditable="true"
+        (keyup)="onKeyUp($event)"
+        appMarkdownBox
+      >
+        Hello world!
+      </div>
 
-    <div
-      #wysiwyg
-      *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
-      class="editor-wysiwyg"
-      contenteditable="true"
-    >
-      WYSIWYG editor
+      <div
+        #wysiwyg
+        *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
+        class="editor-wysiwyg"
+        contenteditable="true"
+      >
+        WYSIWYG editor
+      </div>
     </div>
   </div>
 </div>

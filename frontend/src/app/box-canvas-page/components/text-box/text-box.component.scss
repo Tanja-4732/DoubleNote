@@ -26,19 +26,16 @@
   height: 100%;
   width: 100%;
 
-  display: grid;
-
-  grid-template-areas:
-    "bar bar"
-    "markdown wysiwyg";
-
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 20px auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .editor-bar {
-  grid-area: bar;
   display: flex;
+
+  * {
+    padding: 2px;
+  }
 }
 
 .editor-handle {
@@ -53,15 +50,38 @@
   background-color: rgba(204, 204, 204, 0.308);
 }
 
-.editor-markdown {
-  grid-area: markdown;
+.editor-state {
+  width: 85px;
+  text-align: center;
 
+  user-select: none;
+
+  background-color: #e0e0e0;
+
+  cursor: pointer;
+}
+
+.editor-wrap {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  * {
+    width: 100%;
+    height: 100%;
+    padding-top: 2px;
+  }
+}
+
+.editor-markdown {
   overflow: auto;
 }
 
 .editor-wysiwyg {
-  grid-area: wysiwyg;
-
   overflow: auto;
 
   background-color: rgba(236, 236, 236, 0.308);
