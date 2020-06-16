@@ -15,6 +15,7 @@ import { PageDialogComponent } from "./components/page-dialog/page-dialog.compon
 import { BoxCanvasPageComponent } from "./components/box-canvas-page/box-canvas-page.component";
 import { RouterModule } from "@angular/router";
 import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
+import { MarkdownDirective } from './directives/markdown/markdown.directive';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dial
     PageDialogComponent,
     BoxCanvasPageComponent,
     ConfirmDialogComponent,
+    MarkdownDirective,
   ],
   imports: [
     CommonModule,

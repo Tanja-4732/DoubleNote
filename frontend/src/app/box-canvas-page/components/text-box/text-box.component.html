@@ -24,20 +24,16 @@
       <div
         *ngIf="box.state === 'both' || box.state === 'markdown'"
         class="editor-markdown"
-        contenteditable="true"
-        (input)="onMdInput($event.target.innerHTML)"
-        appMarkdownBox
-      >
-        Hello world!
-      </div>
+        (input)="onMdInput($event.target.textContent)"
+        contentEditable
+        appMarkdown
+      ></div>
 
       <div
         *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
         class="editor-wysiwyg"
-        contenteditable="true"
-      >
-        WYSIWYG editor
-      </div>
+        contentEditable
+      ></div>
     </div>
   </div>
 </div>
