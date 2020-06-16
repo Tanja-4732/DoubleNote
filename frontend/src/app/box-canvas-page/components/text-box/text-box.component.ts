@@ -52,6 +52,9 @@ export class TextBoxComponent implements OnInit, OnDestroy {
   @Output()
   boxState = new EventEmitter<void>();
 
+  @Output()
+  boxDeleted = new EventEmitter<void>();
+
   constructor(
     public mb: MessageBusService,
     private me: MarkdownEngineService,
@@ -118,6 +121,10 @@ export class TextBoxComponent implements OnInit, OnDestroy {
         this.box.state = "both";
         break;
     }
+  }
+
+  deleteBox() {
+    this.boxDeleted.emit();
   }
 
   private handleIncomingMessage(message: TextBoxMessage) {

@@ -182,7 +182,7 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
         break;
 
       case "delete":
-        this.boxes[index] = undefined;
+        this.boxes.splice(index, 1);
         break;
     }
 
@@ -223,6 +223,21 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
         y: box.y,
         width: box.width,
         height: box.height,
+        mdom: undefined,
+      },
+    });
+  }
+
+  onBoxDeleted(box: TextBox): void {
+    this.mbs.dispatchMessage({
+      messageType: "BcpMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      uuid: this.page.uuid,
+      operation: "delete",
+      box: {
+        uuid: box.uuid,
         mdom: undefined,
       },
     });

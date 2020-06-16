@@ -29,6 +29,7 @@
     [box]="box"
     [foreignBoxMove]="foreignBoxMove.asObservable()"
     (boxState)="onBoxStateChanged(box)"
+    (boxDeleted)="onBoxDeleted(box)"
   >
   </app-text-box>
 
