@@ -89,6 +89,19 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.fbmSub.unsubscribe();
   }
 
+  get stateText(): string {
+    switch (this.box.state) {
+      case "both":
+        return "Hybrid";
+
+      case "markdown":
+        return "Markdown";
+
+      case "wysiwyg":
+        return "WYSIWYG";
+    }
+  }
+
   private setBoxPosition() {
     this.dragPosition = {
       x: this.box.x,
