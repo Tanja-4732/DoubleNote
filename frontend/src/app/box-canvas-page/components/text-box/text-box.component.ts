@@ -39,12 +39,6 @@ export class TextBoxComponent implements OnInit, OnDestroy {
   foreignBoxMove: Observable<void>;
   private fbmSub: Subscription;
 
-  @ViewChild("wysiwyg")
-  wysiwygEditor: ElementRef;
-
-  @ViewChild("markdown")
-  markdownEditor: ElementRef;
-
   subscription: Subscription;
 
   public dragPosition: Coordinates = { x: 0, y: 0 };
@@ -57,7 +51,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   constructor(
     public mb: MessageBusService,
-    private me: MarkdownEngineService,
+    private engine: MarkdownEngineService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -151,10 +145,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  onKeyUp(event: KeyboardEvent) {
-    const mdom = this.me.parseMarkdown(
-      this.markdownEditor.nativeElement.innerText
-    );
+  onMdInput(innerHtml: string) {
+    const mdom = this.engine.parseMarkdown(innerHtml);
 
     this.mb.dispatchMessage({
       messageType: "TextBoxMessage",

@@ -22,18 +22,16 @@
 
     <div class="editor-wrap">
       <div
-        #markdown
         *ngIf="box.state === 'both' || box.state === 'markdown'"
         class="editor-markdown"
         contenteditable="true"
-        (keyup)="onKeyUp($event)"
+        (input)="onMdInput($event.target.innerHTML)"
         appMarkdownBox
       >
         Hello world!
       </div>
 
       <div
-        #wysiwyg
         *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
         class="editor-wysiwyg"
         contenteditable="true"
