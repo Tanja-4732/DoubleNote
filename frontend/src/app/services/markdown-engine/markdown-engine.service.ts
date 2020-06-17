@@ -7,6 +7,29 @@ import { MdomNode } from "src/typings/markdown/MDOM";
 export class MarkdownEngineService {
   constructor() {}
 
+  /**
+   * Generates a string representation of MDOM tree.
+   *
+   * Parsing the returned string will yield the specified MDOM nodes.
+   * This is essentially a reverse-parsing operation.
+   *
+   * @param mdom The MDOM tree to convert to text
+   */
+  generateMarkdown(mdom: MdomNode[]): string {
+    let temp = "";
+
+    for (const node of mdom) {
+      if (node.nodeType === "text") {
+        temp += node.text;
+        temp += "\n";
+      }
+
+      temp += this.generateMarkdown(node.children);
+    }
+
+    return temp;
+  }
+
   // TODO (re)move "this is a recursive function" in the following JSDoc
 
   /**

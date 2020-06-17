@@ -24,9 +24,9 @@
       <div
         *ngIf="box.state === 'both' || box.state === 'markdown'"
         class="editor-markdown"
-        (input)="onMdInput($event.target.textContent)"
+        (keyEvent)="onMdKeyEvent($event)"
         contentEditable
-        appMarkdown
+        [innerText]="markdownText"
       ></div>
 
       <div

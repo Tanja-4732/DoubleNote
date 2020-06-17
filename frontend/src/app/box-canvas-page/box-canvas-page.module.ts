@@ -16,6 +16,7 @@ import { BoxCanvasPageComponent } from "./components/box-canvas-page/box-canvas-
 import { RouterModule } from "@angular/router";
 import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
 import { MarkdownDirective } from './directives/markdown/markdown.directive';
+import { ContentEditableDirective } from './directives/content-editable/content-editable.directive';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { MarkdownDirective } from './directives/markdown/markdown.directive';
     BoxCanvasPageComponent,
     ConfirmDialogComponent,
     MarkdownDirective,
+    ContentEditableDirective,
   ],
   imports: [
     CommonModule,

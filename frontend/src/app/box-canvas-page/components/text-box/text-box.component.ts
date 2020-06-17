@@ -49,6 +49,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
   @Output()
   boxDeleted = new EventEmitter<void>();
 
+  markdownText = "hello\nworld";
+
   constructor(
     public mb: MessageBusService,
     private engine: MarkdownEngineService,
@@ -141,13 +143,35 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     // Update the markdown object model
     this.box.mdom = message.mdom;
 
+    // Refresh the Markdown string
+    this.markdownText = this.engine.generateMarkdown(this.box.mdom);
+
     // Get Angular to re-render the view
     this.cdr.detectChanges();
   }
 
-  onMdInput(innerHtml: string) {
-    const mdom = this.engine.parseMarkdown(innerHtml);
+  /**
+   * Handles input events in the Markdown box.
+   *
+   * 1. Receive the event (the default has already been prevented)
+   * 2. ???
+   * 3. Get the string representation of the Markdown (including liniebreaks)
+   * 4. Parse the string representation using the MarkdownEngineService
+   * 5. Send the new tree to the MessageBusService
+   */
+  onMdKeyEvent(event: KeyboardEvent) {
+    // 1. Receive the event (the default has already been prevented)
+    log(event);
 
+    // 2. ???
+    this.markdownText += event.key === "Enter" ? "\n" : event.key;
+
+    // 3. Get the string representation of the Markdown (including liniebreaks)
+
+    // 4. Parse the string representation using the MarkdownEngineService
+    const mdom = this.engine.parseMarkdown(this.markdownText);
+
+    // 5. Send the new tree to the MessageBusService
     this.mb.dispatchMessage({
       messageType: "TextBoxMessage",
       authorUuid: this.mb.myUuid,
