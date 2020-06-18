@@ -150,6 +150,10 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  get log() {
+    return log;
+  }
+
   /**
    * Handles input events in the Markdown box.
    *
@@ -160,16 +164,17 @@ export class TextBoxComponent implements OnInit, OnDestroy {
    * 5. Send the new tree to the MessageBusService
    */
   onMdKeyEvent(event: KeyboardEvent) {
-    // 1. Receive the event (the default has already been prevented)
+    /* // 1. Receive the event (the default has already been prevented)
     log(event);
 
     // 2. ???
-    this.markdownText += event.key === "Enter" ? "\n" : event.key;
+    const markdownText =
+      this.markdownText + (event.key === "Enter" ? "\n" : event.key);
 
     // 3. Get the string representation of the Markdown (including liniebreaks)
 
     // 4. Parse the string representation using the MarkdownEngineService
-    const mdom = this.engine.parseMarkdown(this.markdownText);
+    const mdom = this.engine.parseMarkdown(markdownText);
 
     // 5. Send the new tree to the MessageBusService
     this.mb.dispatchMessage({
@@ -178,7 +183,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
       creationDate: new Date().toISOString(),
       mdom,
       uuid: this.box.uuid,
-    });
+    }); */
   }
 }
 
