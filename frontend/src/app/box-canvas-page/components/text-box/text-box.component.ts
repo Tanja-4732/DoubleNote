@@ -150,10 +150,6 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  get log() {
-    return log;
-  }
-
   /**
    * Handles input events in the Markdown box.
    *
@@ -164,6 +160,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
    * 5. Send the new tree to the MessageBusService
    */
   onMdKeyEvent(event: KeyboardEvent) {
+    log(event);
+
     /* // 1. Receive the event (the default has already been prevented)
     log(event);
 
@@ -186,6 +184,31 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     }); */
   }
 }
+
+/*
+
+# Strategic shift
+
+Instead of trying to build a Markdown parser, I'll try to build the WYSIWYG editor itself, followed
+by implementing the Markdown generation algorithm, and implement the Markdown editor and its
+parsing as the last step.
+
+1. Implement the WYSIWYG editor
+2. Implement the Markdown generator
+3. Confirm working real-time collaboration in WYSIWYG
+4. Implement the Markdown editor
+5. Implement the Markdown parser
+6. Think about a redo-undo stack
+
+We might be able to use the Markdown generator in combination with the parser as a formatter.
+
+
+## Further reading
+
+> Swipe-to-type will insert entire words in one go, instead of using keys.
+https://github.com/ianstormtaylor/slate/issues/2062
+
+*/
 
 /*
 

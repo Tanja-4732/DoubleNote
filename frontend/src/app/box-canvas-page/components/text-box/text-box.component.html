@@ -26,7 +26,7 @@
         class="editor-markdown"
         contentEditable
         [innerText]="markdownText"
-        (selectionchange)="log($event)"
+        (selectionchange)="onMdKeyEvent($event)"
       ></div>
 
       <div
