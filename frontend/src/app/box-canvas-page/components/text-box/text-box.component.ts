@@ -188,6 +188,38 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 }
 
 /*
+
+# Thoughts on how to implement the WYSIWYG editor
+
+Searching the internet for articles and videos about the topic, ProseMirror came up quite a lot.
+Perhaps it's possible to gain some inspiration and insight on what events to listen for and on how
+to handle them.
+
+The goal is to use the browsers integrated cursor handling functionality and leverage its rendering
+capabilities, while remaining in control over the DOM at all times. I plan on achieving this using
+event handlers and preventDefault wherever I can. The ProseMirror talk at some JS conference (YT)
+introduced me to the concept of using contentEditable in combination with preventDefault.
+
+Instead of allowing the browser to insert any DOM nodes it wants, we manage the state of the
+Documents (MDOM for WYSIWYG, and a simple array of line for the Markdown code) ourselves.
+
+Since the input event cannot be canceled and the keyDown event doesn't work on mobile, we have to
+get somewhat creative with our approach.
+
+## Implementation strategy
+
+This means that we have to do the following things:
+
+- Keep track of the cursor position
+  - On both desktop & mobile
+  - Use selectionchange to listen to all kinds of selection changes
+- Keep track of the DOM changes
+  - Maybe use DOMCharacterDataModified like ProseMirror?
+  - MDN recommends using a MutationObserver instead
+
+*/
+
+/*
 Use @ViewContainer
 
 https://youtu.be/qWmqiYDrnDc?t=1692
