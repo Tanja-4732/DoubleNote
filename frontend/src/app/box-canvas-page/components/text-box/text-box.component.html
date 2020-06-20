@@ -15,6 +15,10 @@
         Move
       </div>
 
+      <button *ngIf="isDevMode" (click)="debug()">
+        Debug text
+      </button>
+
       <div class="editor-state" (click)="deleteBox()">
         Close
       </div>

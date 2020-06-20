@@ -20,6 +20,7 @@ import { TextBoxMessage } from "../../../../typings/core/Message";
 import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { CdkDragEnd } from "@angular/cdk/drag-drop";
+import { environment } from "src/environments/environment";
 
 export interface Coordinates {
   x: number;
@@ -96,6 +97,10 @@ export class TextBoxComponent implements OnInit, OnDestroy {
       case "wysiwyg":
         return "WYSIWYG";
     }
+  }
+
+  get isDevMode(): boolean {
+    return !environment.production;
   }
 
   private setBoxPosition() {
