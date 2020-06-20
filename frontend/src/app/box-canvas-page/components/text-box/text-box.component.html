@@ -15,7 +15,7 @@
         Move
       </div>
 
-      <button *ngIf="isDevMode" (click)="debug()">
+      <button *ngIf="isDevMode || true" (click)="debug()">
         Debug
       </button>
 
@@ -41,33 +41,158 @@
       >
         <div class="wysiwyg-editor-environment">
           <ng-container
-            *ngFor="let node of box.mdom"
-            [ngSwitch]="node.nodeType"
+            *ngFor="let blockNode of box.mdom"
+            [ngSwitch]="blockNode.nodeType"
           >
-            <h1 *ngSwitchCase="'heading'">{{ node.children[0].text }}</h1>
-            <div *ngSwitchCase="'paragraph'">
-              <ng-template #recursiveList let-list>
-                <ng-container *ngFor="let subNode of list">
-                  <div>{{ subNode.text }}</div>
-                  <ul *ngIf="subNode.children?.length > 0">
-                    <ng-container
-                      *ngTemplateOutlet="
-                        recursiveList;
-                        context: { $implicit: subNode.children }
-                      "
-                    ></ng-container>
-                  </ul>
-                </ng-container>
-              </ng-template>
+            <!-- The heading element -->
+            <ng-container
+              *ngSwitchCase="'heading'"
+              [ngSwitch]="blockNode.level"
+            >
+              <h1 *ngSwitchCase="1">
+                <ng-container
+                  *ngTemplateOutlet="
+                    inlineTextRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </h1>
 
+              <h2 *ngSwitchCase="2">
+                <ng-container
+                  *ngTemplateOutlet="
+                    inlineTextRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </h2>
+
+              <h3 *ngSwitchCase="3">
+                <ng-container
+                  *ngTemplateOutlet="
+                    inlineTextRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </h3>
+
+              <h4 *ngSwitchCase="4">
+                <ng-container
+                  *ngTemplateOutlet="
+                    inlineTextRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </h4>
+
+              <h5 *ngSwitchCase="5">
+                <ng-container
+                  *ngTemplateOutlet="
+                    inlineTextRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </h5>
+
+              <h6 *ngSwitchCase="6">
+                <ng-container
+                  *ngTemplateOutlet="
+                    inlineTextRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </h6>
+            </ng-container>
+
+            <!-- The paragraph element -->
+            <div *ngSwitchCase="'paragraph'">
               <ng-container
                 *ngTemplateOutlet="
-                  recursiveList;
-                  context: { $implicit: node.children }
+                  inlineTextRenderer;
+                  context: { $implicit: blockNode.children }
                 "
               ></ng-container>
             </div>
+
+            <!-- TODO support the image element -->
+            <div *ngSwitchCase="'image'">image</div>
+
+            <!-- TODO support the table element -->
+            <div *ngSwitchCase="'table'">table</div>
+
+            <!-- TODO support the hr element -->
+            <div *ngSwitchCase="'hr'">hr</div>
+
+            <!-- TODO support the blockMath element -->
+            <div *ngSwitchCase="'blockMath'">blockMath</div>
+
+            <!-- TODO support the blockCode element -->
+            <div *ngSwitchCase="'blockCode'">blockCode</div>
+
+            <!-- TODO support the blockQuote element -->
+            <div *ngSwitchCase="'blockQuote'">blockQuote</div>
+
+            <!-- TODO support the indentedCode element -->
+            <div *ngSwitchCase="'indentedCode'">indentedCode</div>
+
+            <!-- The comment element (hidden) -->
+            <ng-container *ngSwitchCase="'comment'"></ng-container>
           </ng-container>
+
+          <!-- Inline text renderer -->
+          <ng-template #inlineTextRenderer let-childNodes>
+            <ng-container
+              *ngFor="let inlineNode of childNodes"
+              [ngSwitch]="inlineNode.nodeType"
+            >
+              <!-- The lineBreak element -->
+              <br *ngSwitchCase="'lineBreak'" />
+
+              <!-- The text element -->
+              <ng-container *ngSwitchCase="'text'">{{
+                inlineNode.text
+              }}</ng-container>
+
+              <!-- The bold element -->
+              <ng-container *ngSwitchCase="'bold'">
+                <b
+                  ><ng-container
+                    *ngTemplateOutlet="
+                      inlineTextRenderer;
+                      context: { $implicit: inlineNode.children }
+                    "
+                  ></ng-container
+                ></b>
+              </ng-container>
+
+              <!-- The italics element -->
+              <ng-container *ngSwitchCase="'italics'">
+                <i
+                  ><ng-container
+                    *ngTemplateOutlet="
+                      inlineTextRenderer;
+                      context: { $implicit: inlineNode.children }
+                    "
+                  ></ng-container
+                ></i>
+              </ng-container>
+
+              <!-- TODO Support the tableCell element -->
+              <ng-container *ngSwitchCase="'tableCell'">
+                tableCell
+              </ng-container>
+
+              <!-- TODO Support the inlineMath element -->
+              <ng-container *ngSwitchCase="'inlineMath'">
+                inlineMath
+              </ng-container>
+
+              <!-- TODO Support the inlineCode element -->
+              <ng-container *ngSwitchCase="'inlineCode'">
+                inlineCode
+              </ng-container>
+            </ng-container>
+          </ng-template>
         </div>
       </div>
       <!-- WYSIWYG end -->

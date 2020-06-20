@@ -258,7 +258,7 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
       operation: "create",
       box: {
         uuid: v4(),
-        state: "both",
+        state: "wysiwyg",
         x: event.offsetX,
         y: event.offsetY,
         width: 500,

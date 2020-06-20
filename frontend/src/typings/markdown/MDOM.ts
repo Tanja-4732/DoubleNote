@@ -17,6 +17,7 @@ export type MdomNode =
   | IndentedCodeNode
 
   // Inline nodes
+  | LineBreakNode
   | TextNode
   | BoldNode
   | ItalicsNode
@@ -41,6 +42,7 @@ interface MdomBaseNode {
     | "indentedCode"
 
     // Inline nodes
+    | "lineBreak"
     | "text"
     | "bold"
     | "italics"
@@ -190,4 +192,8 @@ export interface ParagraphNode extends MdomBaseNode {
 
 export interface IndentedCodeNode extends MdomBaseNode {
   nodeType: "indentedCode";
+}
+
+export interface LineBreakNode extends MdomBaseNode {
+  nodeType: "lineBreak";
 }

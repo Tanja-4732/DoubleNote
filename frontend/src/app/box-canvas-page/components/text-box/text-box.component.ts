@@ -168,15 +168,48 @@ export class TextBoxComponent implements OnInit, OnDestroy {
         children: [
           {
             nodeType: "text",
-            text: "This is an example paragraph with some additional text.",
+            text: "This is an example paragraph with some simple text.",
           },
         ],
+      },
+      {
+        nodeType: "heading",
+        level: 2,
+        children: [{ nodeType: "text", text: "H2" }],
       },
       {
         nodeType: "paragraph",
         children: [
           { nodeType: "text", text: "Hello" },
+          { nodeType: "lineBreak" },
           { nodeType: "text", text: "World" },
+        ],
+      },
+      {
+        nodeType: "paragraph",
+        children: [
+          { nodeType: "text", text: "This paragraph contains some " },
+          {
+            nodeType: "bold",
+            children: [{ nodeType: "text", text: "bold text" }],
+          },
+          { nodeType: "text", text: " as well as some " },
+          {
+            nodeType: "italics",
+            children: [{ nodeType: "text", text: "italic(s) text" }],
+          },
+          { nodeType: "text", text: ", and a " },
+
+          {
+            nodeType: "bold",
+            children: [
+              {
+                nodeType: "italics",
+                children: [{ nodeType: "text", text: "combination of both" }],
+              },
+            ],
+          },
+          { nodeType: "text", text: "." },
         ],
       },
     ];
