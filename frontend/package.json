@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "watch": "ng build --watch"
+    "watch": "ng build --watch",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,9 @@
     "url": "https://github.com/Bernd-L/DoubleNote/issues"
   },
   "homepage": "https://github.com/Bernd-L/DoubleNote#readme",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "@angular/animations": "^9.0.7",
     "@angular/cdk": "^9.2.4",
