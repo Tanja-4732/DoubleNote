@@ -16,7 +16,7 @@
       </div>
 
       <button *ngIf="isDevMode" (click)="debug()">
-        Debug text
+        Debug
       </button>
 
       <div class="editor-state" (click)="deleteBox()">
@@ -33,11 +33,44 @@
         (selectionchange)="onMdKeyEvent($event)"
       ></div>
 
+      <!-- WYSIWYG start -->
       <div
         *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
         class="editor-wysiwyg"
         contentEditable
-      ></div>
+      >
+        <div class="wysiwyg-editor-environment">
+          <ng-container
+            *ngFor="let node of box.mdom"
+            [ngSwitch]="node.nodeType"
+          >
+            <h1 *ngSwitchCase="'heading'">{{ node.children[0].text }}</h1>
+            <div *ngSwitchCase="'paragraph'">
+              <ng-template #recursiveList let-list>
+                <ng-container *ngFor="let subNode of list">
+                  <div>{{ subNode.text }}</div>
+                  <ul *ngIf="subNode.children?.length > 0">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        recursiveList;
+                        context: { $implicit: subNode.children }
+                      "
+                    ></ng-container>
+                  </ul>
+                </ng-container>
+              </ng-template>
+
+              <ng-container
+                *ngTemplateOutlet="
+                  recursiveList;
+                  context: { $implicit: node.children }
+                "
+              ></ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <!-- WYSIWYG end -->
     </div>
   </div>
 </div>

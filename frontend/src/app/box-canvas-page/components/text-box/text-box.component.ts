@@ -155,6 +155,33 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  debug() {
+    // TODO remove this
+    this.box.mdom = [
+      {
+        nodeType: "heading",
+        level: 1,
+        children: [{ nodeType: "text", text: "H1" }],
+      },
+      {
+        nodeType: "paragraph",
+        children: [
+          {
+            nodeType: "text",
+            text: "This is an example paragraph with some additional text.",
+          },
+        ],
+      },
+      {
+        nodeType: "paragraph",
+        children: [
+          { nodeType: "text", text: "Hello" },
+          { nodeType: "text", text: "World" },
+        ],
+      },
+    ];
+  }
+
   /**
    * Handles input events in the Markdown box.
    *

@@ -51,7 +51,7 @@ interface MdomBaseNode {
   /**
    * The child-nodes of this node
    */
-  children: MdomNode[];
+  children?: MdomNode[];
 }
 
 /**
