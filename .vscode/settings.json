@@ -1,17 +1,22 @@
 {
   "cSpell.words": [
+    "AGPL",
     "Affero",
     "CQRS",
     "MDOM",
     "Matcha",
     "UUIDs",
+    "codelyzer",
+    "devkit",
     "editorconfig",
+    "jasminewd",
     "keyvalue",
     "ngsw",
     "peerjs",
     "prestart",
     "regexes",
-    "sidenav"
+    "sidenav",
+    "tslib"
   ],
   "htmlhint.options": {
     "attr-lowercase": false
