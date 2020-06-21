@@ -1,15 +1,14 @@
 {
   "name": "doublenote-backend",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/main.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/main.d.ts",
   "scripts": {
-    "watch": "nodemon -w src -x \"npm start\" -e ts",
-    "start": "node -r source-map-support/register .",
-    "prestart": "npm run build",
+    "watch": "nodemon -w src -x \"node -r source-map-support/register .\" -e ts",
+    "start": "node .",
     "build": "tsc",
-    "prepublish": "npm run build",
+    "prepack": "rm -r dist/* && tsc -p tsconfig.prod.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,12 +21,15 @@
     "url": "https://github.com/Bernd-L/DoubleNote/issues"
   },
   "homepage": "https://github.com/Bernd-L/DoubleNote#readme",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
-    "express": "^4.17.1",
-    "source-map-support": "^0.5.16",
-    "typescript": "^3.8.2"
+    "express": "^4.17.1"
   },
   "devDependencies": {
+    "source-map-support": "^0.5.16",
+    "typescript": "^3.8.2",
     "@types/express": "^4.17.3",
     "@types/node": "^13.7.6",
     "nodemon": "^2.0.2"
