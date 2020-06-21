@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "scripts": {
-    "watch": "nodemon -w src -x \"node -r source-map-support/register .\" -e ts",
+    "watch": "nodemon -w src -x \"tsc && node -r source-map-support/register .\" -e ts",
     "start": "node .",
     "build": "tsc",
     "prepack": "rm -r dist/* && tsc -p tsconfig.prod.json",
