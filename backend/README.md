@@ -45,5 +45,5 @@ This is supposed to make sharing and collaboration easier, but is not required, 
 
 ## Further reading
 
-For information about the frontend, see the [frontend README.md](/frontend/README.md).
+For information about the frontend, see the [frontend README.md](/frontend/README.md).  
 For information about the application as a whole, see the [main README.md](/README.md).
