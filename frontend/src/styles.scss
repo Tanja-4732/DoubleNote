@@ -83,3 +83,11 @@ mat-card-content {
 .wysiwyg-editor-environment div {
   margin-bottom: 0.5em;
 }
+
+code.inline-code {
+  $pad: 3px;
+
+  background-color: #e0e0e0;
+  padding-left: $pad;
+  padding-right: $pad;
+}

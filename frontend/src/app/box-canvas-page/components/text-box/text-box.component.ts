@@ -196,6 +196,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
           { nodeType: "text", text: "World" },
         ],
       },
+      { nodeType: "hr" },
       {
         nodeType: "paragraph",
         children: [
@@ -219,6 +220,17 @@ export class TextBoxComponent implements OnInit, OnDestroy {
                 children: [{ nodeType: "text", text: "combination of both" }],
               },
             ],
+          },
+          { nodeType: "text", text: "." },
+        ],
+      },
+      {
+        nodeType: "paragraph",
+        children: [
+          { nodeType: "text", text: "This paragraph contains " },
+          {
+            nodeType: "inlineCode",
+            children: [{ nodeType: "text", text: "some code" }],
           },
           { nodeType: "text", text: "." },
         ],
@@ -289,6 +301,8 @@ We might be able to use the Markdown generator in combination with the parser as
 
 > Swipe-to-type will insert entire words in one go, instead of using keys.
 https://github.com/ianstormtaylor/slate/issues/2062
+
+https://github.com/w3c/editing/issues/162#issuecomment-615941294
 
 */
 

@@ -134,11 +134,6 @@ export interface ImageNode extends MdomBaseNode {
 
 export interface HrNode extends MdomBaseNode {
   nodeType: "hr";
-
-  /**
-   * An hr element cannot have children
-   */
-  children: null;
 }
 
 export interface HeadingNode extends MdomBaseNode {

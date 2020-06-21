@@ -115,14 +115,14 @@
               ></ng-container>
             </div>
 
-            <!-- TODO support the image element -->
-            <div *ngSwitchCase="'image'">image</div>
+            <!-- The image element -->
+            <img *ngSwitchCase="'image'" [src]="blockNode.source" />
 
             <!-- TODO support the table element -->
             <div *ngSwitchCase="'table'">table</div>
 
-            <!-- TODO support the hr element -->
-            <div *ngSwitchCase="'hr'">hr</div>
+            <!-- The hr element -->
+            <hr *ngSwitchCase="'hr'" />
 
             <!-- TODO support the blockMath element -->
             <div *ngSwitchCase="'blockMath'">blockMath</div>
@@ -188,9 +188,16 @@
                 inlineMath
               </ng-container>
 
-              <!-- TODO Support the inlineCode element -->
+              <!-- The inlineCode element -->
               <ng-container *ngSwitchCase="'inlineCode'">
-                inlineCode
+                <code class="inline-code"
+                  ><ng-container
+                    *ngTemplateOutlet="
+                      inlineTextRenderer;
+                      context: { $implicit: inlineNode.children }
+                    "
+                  ></ng-container
+                ></code>
               </ng-container>
             </ng-container>
           </ng-template>
