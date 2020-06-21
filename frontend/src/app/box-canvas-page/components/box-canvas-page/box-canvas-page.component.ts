@@ -18,7 +18,6 @@ import { Subscription, Subject } from "rxjs";
 import { Message, BcpMessage } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
-import { Coordinates } from "../text-box/text-box.component";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -114,7 +113,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
 
     // Try all children recursively
     for (const child of tree.objects.children) {
-      return this.getPageByUuid(uuid, child);
+      const value = this.getPageByUuid(uuid, child);
+
+      if (value !== undefined) {
+        return value;
+      }
     }
 
     // If nothing was found, return undefined
