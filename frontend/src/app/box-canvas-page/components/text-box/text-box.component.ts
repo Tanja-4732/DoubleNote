@@ -52,6 +52,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   markdownText = "hello\nworld";
 
+  private wysiwygDomObserver = new MutationObserver(this.wysiwygDomChanged);
+
   constructor(
     public mb: MessageBusService,
     private engine: MarkdownEngineService,
@@ -79,11 +81,20 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.setBoxPosition();
 
     this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
+
+    this.wysiwygDomObserver.observe(document.querySelector("#wysiwyg"), {
+      attributes: true,
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.fbmSub.unsubscribe();
+
+    this.wysiwygDomObserver.disconnect();
   }
 
   get stateText(): string {
@@ -215,6 +226,10 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     ];
   }
 
+  private wysiwygDomChanged(mutationsList: MutationRecord[]) {
+    log(mutationsList);
+  }
+
   /**
    * Handles input events in the Markdown box.
    *
@@ -226,6 +241,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
    */
   onMdKeyEvent(event: KeyboardEvent) {
     log(event);
+
+    // TODO this entire method should be replaced with a MutationObserver like the one found in the WYSIWYG editor
 
     /* // 1. Receive the event (the default has already been prevented)
     log(event);
