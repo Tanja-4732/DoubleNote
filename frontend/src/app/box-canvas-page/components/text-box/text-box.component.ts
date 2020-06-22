@@ -83,7 +83,6 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
 
     this.wysiwygDomObserver.observe(document.querySelector("#wysiwyg"), {
-      attributes: true,
       characterData: true,
       childList: true,
       subtree: true,
