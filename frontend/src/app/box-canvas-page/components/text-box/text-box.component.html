@@ -128,7 +128,16 @@
             <div *ngSwitchCase="'blockMath'">blockMath</div>
 
             <!-- TODO support the blockCode element -->
-            <div *ngSwitchCase="'blockCode'">blockCode</div>
+            <div *ngSwitchCase="'blockCode'">
+              <code class="block-code">
+                <ng-container
+                  *ngTemplateOutlet="
+                    blockCodeRenderer;
+                    context: { $implicit: blockNode.children }
+                  "
+                ></ng-container>
+              </code>
+            </div>
 
             <!-- TODO support the blockQuote element -->
             <div *ngSwitchCase="'blockQuote'">blockQuote</div>
@@ -139,6 +148,22 @@
             <!-- The comment element (hidden) -->
             <ng-container *ngSwitchCase="'comment'"></ng-container>
           </ng-container>
+
+          <!-- Block code renderer -->
+          <ng-template #blockCodeRenderer let-childNodes>
+            <ng-container
+              *ngFor="let inlineNode of childNodes"
+              [ngSwitch]="inlineNode.nodeType"
+            >
+              <!-- The lineBreak element -->
+              <br *ngSwitchCase="'lineBreak'" />
+
+              <!-- The text element -->
+              <ng-container *ngSwitchCase="'text'">{{
+                inlineNode.text
+              }}</ng-container>
+            </ng-container>
+          </ng-template>
 
           <!-- Inline text renderer -->
           <ng-template #inlineTextRenderer let-childNodes>

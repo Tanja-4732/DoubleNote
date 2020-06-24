@@ -167,7 +167,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   debug() {
     // TODO remove this
-    this.box.mdom = [
+    const mdom: MdomNode[] = [
       {
         nodeType: "heading",
         level: 1,
@@ -210,7 +210,6 @@ export class TextBoxComponent implements OnInit, OnDestroy {
             children: [{ nodeType: "text", text: "italic(s) text" }],
           },
           { nodeType: "text", text: ", and a " },
-
           {
             nodeType: "bold",
             children: [
@@ -234,7 +233,39 @@ export class TextBoxComponent implements OnInit, OnDestroy {
           { nodeType: "text", text: "." },
         ],
       },
+      {
+        nodeType: "paragraph",
+        children: [{ nodeType: "text", text: " " }],
+      },
+      {
+        nodeType: "blockCode",
+        language: "TypeScript",
+        children: [
+          {
+            nodeType: "text",
+            text: `import { log } from "src/functions/console";`,
+          },
+          { nodeType: "lineBreak" },
+          { nodeType: "text", text: `log(mutationsList);` },
+        ],
+      },
+      {
+        nodeType: "paragraph",
+        children: [{ nodeType: "text", text: "." }],
+      },
+      {
+        nodeType: "paragraph",
+        children: [{ nodeType: "text", text: "." }],
+      },
     ];
+
+    this.mb.dispatchMessage({
+      messageType: "TextBoxMessage",
+      authorUuid: this.mb.myUuid,
+      creationDate: new Date().toISOString(),
+      mdom,
+      uuid: this.box.uuid,
+    });
   }
 
   private wysiwygDomChanged(mutationsList: MutationRecord[]) {

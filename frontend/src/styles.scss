@@ -91,3 +91,14 @@ code.inline-code {
   padding-left: $pad;
   padding-right: $pad;
 }
+
+code.block-code {
+  $pad: 3px;
+
+  display: inline-block;
+  background-color: #e0e0e0;
+  padding-left: $pad;
+  padding-right: $pad;
+
+  border-radius: 4px;
+}
