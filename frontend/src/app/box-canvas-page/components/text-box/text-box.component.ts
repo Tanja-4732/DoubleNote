@@ -167,7 +167,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   debug() {
     // TODO remove this
-    this.box.mdom = [
+    const mdom: MdomNode[] = [
       {
         nodeType: "heading",
         level: 1,
@@ -210,7 +210,6 @@ export class TextBoxComponent implements OnInit, OnDestroy {
             children: [{ nodeType: "text", text: "italic(s) text" }],
           },
           { nodeType: "text", text: ", and a " },
-
           {
             nodeType: "bold",
             children: [
@@ -235,6 +234,14 @@ export class TextBoxComponent implements OnInit, OnDestroy {
         ],
       },
     ];
+
+    this.mb.dispatchMessage({
+      messageType: "TextBoxMessage",
+      authorUuid: this.mb.myUuid,
+      creationDate: new Date().toISOString(),
+      mdom,
+      uuid: this.box.uuid,
+    });
   }
 
   private wysiwygDomChanged(mutationsList: MutationRecord[]) {
