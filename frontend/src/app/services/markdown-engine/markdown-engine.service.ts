@@ -8,6 +8,20 @@ export class MarkdownEngineService {
   constructor() {}
 
   /**
+   * Parses a DOM (sub-)tree and returns an array of MDOM nodes.
+   *
+   * Intended for parsing the text in the WYSIWYG editor
+   *
+   * @param nodes The child nodes of the root node of the WYSIWYG editor
+   */
+  parseDOM(nodes: Element[]): MdomNode[] {
+    for (const node of nodes) {
+    }
+
+    throw new Error("Not implemented yet"); // TODO implement the DOM parser
+  }
+
+  /**
    * Generates a string representation of MDOM tree.
    *
    * Parsing the returned string will yield the specified MDOM nodes.

@@ -8,6 +8,7 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
+  ViewChild,
 } from "@angular/core";
 import { Subscription, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -52,6 +53,9 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   markdownText = "hello\nworld";
 
+  @ViewChild("wysiwyg")
+  wysiwygEditor: ElementRef;
+
   private wysiwygDomObserver = new MutationObserver(this.wysiwygDomChanged);
 
   constructor(
@@ -82,7 +86,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
     this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
 
-    this.wysiwygDomObserver.observe(document.querySelector("#wysiwyg"), {
+    this.wysiwygDomObserver.observe(this.wysiwygEditor.nativeElement, {
       characterData: true,
       childList: true,
       subtree: true,
@@ -268,8 +272,25 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * The event handler for DOM mutations in the WYSIWYG editor
+   *
+   * @param mutationsList The list of mutations
+   */
   private wysiwygDomChanged(mutationsList: MutationRecord[]) {
     log(mutationsList);
+
+    const mdom = this.engine.parseDOM(
+      Array.from(this.wysiwygEditor.nativeElement.children)
+    );
+
+    this.mb.dispatchMessage({
+      messageType: "TextBoxMessage",
+      authorUuid: this.mb.myUuid,
+      creationDate: new Date().toISOString(),
+      mdom,
+      uuid: this.box.uuid,
+    });
   }
 
   /**
