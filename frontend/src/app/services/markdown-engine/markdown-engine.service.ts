@@ -15,7 +15,7 @@ export class MarkdownEngineService {
    *
    * @param nodes The child nodes of the root node of the WYSIWYG editor
    */
-  parseDOM(nodes: Element[]): MdomNode[] {
+  parseDOM(nodes: Node[]): MdomNode[] {
     log(nodes);
 
     /**
@@ -25,33 +25,40 @@ export class MarkdownEngineService {
 
     // Iterate over all nodes in the DOM
     for (const node of nodes) {
-      // Skip over comments
-      if (node.nodeType !== Node.ELEMENT_NODE) {
-        continue;
-      }
-
       // Parse the node itself
-      switch (node.nodeName) {
-        // Inline nodes
-        case "#text":
+      switch (node.nodeType) {
+        case Node.TEXT_NODE:
+          log("Text node: " + node.textContent);
           mdom.push({
             nodeType: "text",
             text: node.textContent,
           });
           break;
 
-        // Block nodes
-        case "P":
-          log("P node");
+        case Node.ELEMENT_NODE:
+          log("Element node: " + node.textContent);
+          switch (node.nodeName) {
+            // Inline nodes
+
+            // Block nodes
+            case "P":
+              log("P node");
+              break;
+
+            case "H1":
+              const children = this.parseDOM(Array.from(node.childNodes) as []);
+              log(children);
+              mdom.push({ nodeType: "heading", level: 1, children });
+              break;
+
+            case "DIV":
+              log("DIV node");
+              break;
+          }
           break;
 
-        case "H1":
-          log("H1 node");
-          break;
-
-        case "DIV":
-          log("DIV node");
-          break;
+        default:
+          log("Unknown node type: " + node.nodeType);
       }
     }
 
