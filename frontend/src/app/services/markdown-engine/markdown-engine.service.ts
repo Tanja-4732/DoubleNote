@@ -16,8 +16,6 @@ export class MarkdownEngineService {
    * @param nodes The child nodes of the root node of the WYSIWYG editor
    */
   parseDOM(nodes: Node[]): MdomNode[] {
-    log(nodes);
-
     /**
      * The MDOM nodes to be returned
      */
@@ -28,7 +26,6 @@ export class MarkdownEngineService {
       // Parse the node itself
       switch (node.nodeType) {
         case Node.TEXT_NODE:
-          log("Text node: " + node.textContent);
           mdom.push({
             nodeType: "text",
             text: node.textContent,
@@ -36,29 +33,45 @@ export class MarkdownEngineService {
           break;
 
         case Node.ELEMENT_NODE:
-          log("Element node: " + node.textContent);
+          // Parse the children nodes
+          const children = this.parseDOM(Array.from(node.childNodes) as []);
+
           switch (node.nodeName) {
             // Inline nodes
 
             // Block nodes
             case "P":
-              log("P node");
               break;
 
+            // Headings
             case "H1":
-              const children = this.parseDOM(Array.from(node.childNodes) as []);
-              log(children);
               mdom.push({ nodeType: "heading", level: 1, children });
               break;
 
+            case "H2":
+              mdom.push({ nodeType: "heading", level: 2, children });
+              break;
+
+            case "H3":
+              mdom.push({ nodeType: "heading", level: 3, children });
+              break;
+
+            case "H4":
+              mdom.push({ nodeType: "heading", level: 4, children });
+              break;
+
+            case "H5":
+              mdom.push({ nodeType: "heading", level: 5, children });
+              break;
+
+            case "H6":
+              mdom.push({ nodeType: "heading", level: 6, children });
+              break;
+
             case "DIV":
-              log("DIV node");
               break;
           }
           break;
-
-        default:
-          log("Unknown node type: " + node.nodeType);
       }
     }
 
