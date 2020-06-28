@@ -87,6 +87,17 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
     this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
 
+    this.connectDomObserver();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.fbmSub.unsubscribe();
+
+    this.disconnectDomObserver();
+  }
+
+  private connectDomObserver() {
     this.wysiwygDomObserver.observe(this.wysiwygEditor.nativeElement, {
       characterData: true,
       childList: true,
@@ -94,11 +105,23 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.fbmSub.unsubscribe();
-
+  private disconnectDomObserver() {
     this.wysiwygDomObserver.disconnect();
+  }
+
+  /**
+   * Runs code outside of the DOM observer
+   *
+   * 1. The DOM observer gets disabled
+   * 2. The callback gets executed
+   * 3. The DOM observer gets enabled
+   *
+   * @param callback The callback function to be run outside the DOM observer
+   */
+  private runOutsideDomObserver(callback: () => void) {
+    this.disconnectDomObserver();
+    callback();
+    this.connectDomObserver();
   }
 
   get stateText(): string {
@@ -160,14 +183,16 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     // Log the incoming message
     log(message.mdom);
 
-    // Update the markdown object model
-    this.box.mdom = message.mdom;
+    this.runOutsideDomObserver(() => {
+      // Update the markdown object model
+      this.box.mdom = message.mdom;
 
-    // Refresh the Markdown string
-    this.markdownText = this.engine.generateMarkdown(this.box.mdom);
+      // Refresh the Markdown string
+      this.markdownText = this.engine.generateMarkdown(this.box.mdom);
 
-    // Get Angular to re-render the view
-    this.cdr.detectChanges();
+      // Get Angular to re-render the view
+      this.cdr.detectChanges();
+    });
   }
 
   debug() {
@@ -278,8 +303,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
    *
    * @param mutationsList The list of mutations
    */
-  private wysiwygDomChanged(mutationsList: MutationRecord[]) {
-    log(mutationsList);
+  private wysiwygDomChanged(mutationsList?: MutationRecord[]) {
+    // log(mutationsList);
 
     const mdom = this.engine.parseDOM(
       Array.from(this.wysiwygEditor.nativeElement.children[0].children)

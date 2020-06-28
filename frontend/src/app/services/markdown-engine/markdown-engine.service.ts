@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MdomNode } from "src/typings/markdown/MDOM";
+import { log } from "src/functions/console";
 
 @Injectable({
   providedIn: "root",
@@ -15,10 +16,46 @@ export class MarkdownEngineService {
    * @param nodes The child nodes of the root node of the WYSIWYG editor
    */
   parseDOM(nodes: Element[]): MdomNode[] {
+    log(nodes);
+
+    /**
+     * The MDOM nodes to be returned
+     */
+    const mdom: MdomNode[] = [];
+
+    // Iterate over all nodes in the DOM
     for (const node of nodes) {
+      // Skip over comments
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        continue;
+      }
+
+      // Parse the node itself
+      switch (node.nodeName) {
+        // Inline nodes
+        case "#text":
+          mdom.push({
+            nodeType: "text",
+            text: node.textContent,
+          });
+          break;
+
+        // Block nodes
+        case "P":
+          log("P node");
+          break;
+
+        case "H1":
+          log("H1 node");
+          break;
+
+        case "DIV":
+          log("DIV node");
+          break;
+      }
     }
 
-    throw new Error("Not implemented yet"); // TODO implement the DOM parser
+    return mdom;
   }
 
   /**
@@ -38,7 +75,7 @@ export class MarkdownEngineService {
         temp += "\n";
       }
 
-      temp += this.generateMarkdown(node.children);
+      temp += this.generateMarkdown(node.children ?? []); // TODO implement Markdown generation
     }
 
     return temp;
