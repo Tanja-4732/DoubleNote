@@ -282,7 +282,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     log(mutationsList);
 
     const mdom = this.engine.parseDOM(
-      Array.from(this.wysiwygEditor.nativeElement.children)
+      Array.from(this.wysiwygEditor.nativeElement.children[0].children)
     );
 
     this.mb.dispatchMessage({
