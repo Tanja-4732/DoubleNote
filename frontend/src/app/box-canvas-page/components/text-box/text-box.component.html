@@ -128,8 +128,8 @@
             <div *ngSwitchCase="'blockMath'">blockMath</div>
 
             <!-- TODO support the blockCode element -->
-            <div *ngSwitchCase="'blockCode'">
-              <code class="block-code">
+            <ng-container *ngSwitchCase="'blockCode'">
+              <code class="block-code lang-{{ blockNode.language }}">
                 <ng-container
                   *ngTemplateOutlet="
                     blockCodeRenderer;
@@ -137,7 +137,7 @@
                   "
                 ></ng-container>
               </code>
-            </div>
+            </ng-container>
 
             <!-- TODO support the blockQuote element -->
             <div *ngSwitchCase="'blockQuote'">blockQuote</div>

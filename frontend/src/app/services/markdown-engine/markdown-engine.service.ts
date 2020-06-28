@@ -34,16 +34,10 @@ export class MarkdownEngineService {
 
         case Node.ELEMENT_NODE:
           // Parse the children nodes
-          const children = this.parseDOM(Array.from(node.childNodes) as []);
+          const children = this.parseDOM(Array.from(node.childNodes));
 
           switch (node.nodeName) {
-            // Inline nodes
-
-            // Block nodes
-            case "P":
-              break;
-
-            // Headings
+            // The heading elements
             case "H1":
               mdom.push({ nodeType: "heading", level: 1, children });
               break;
@@ -68,7 +62,43 @@ export class MarkdownEngineService {
               mdom.push({ nodeType: "heading", level: 6, children });
               break;
 
+            // The paragraph element
             case "DIV":
+              mdom.push({ nodeType: "paragraph", children });
+              break;
+
+            // The bold element
+            case "B":
+              mdom.push({ nodeType: "bold", children });
+              break;
+
+            // The italic element
+            case "I":
+              mdom.push({ nodeType: "italics", children });
+              break;
+
+            // The line break element
+            case "BR":
+              mdom.push({ nodeType: "lineBreak" });
+              break;
+
+            // The HR element
+            case "HR":
+              mdom.push({ nodeType: "hr" });
+              break;
+
+            // The code elements (block & inline)
+            case "CODE":
+              switch ((node as Element).classList[0]) {
+                case "inline-code":
+                  mdom.push({ nodeType: "inlineCode", children });
+                  break;
+
+                case "block-code":
+                  const language = (node as Element).classList[1].substring(5);
+                  mdom.push({ nodeType: "blockCode", language, children });
+                  break;
+              }
               break;
           }
           break;
