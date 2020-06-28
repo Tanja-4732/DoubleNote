@@ -8,7 +8,6 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
-  ViewChild,
 } from "@angular/core";
 import { Subscription, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
