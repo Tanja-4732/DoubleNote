@@ -55,7 +55,9 @@ export class TextBoxComponent implements OnInit, OnDestroy {
   @ViewChild("wysiwyg")
   wysiwygEditor: ElementRef;
 
-  private wysiwygDomObserver = new MutationObserver(this.wysiwygDomChanged);
+  private wysiwygDomObserver = new MutationObserver(
+    (mutationsList: MutationRecord[]) => this.wysiwygDomChanged(mutationsList)
+  );
 
   constructor(
     public mb: MessageBusService,
