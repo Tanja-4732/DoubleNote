@@ -192,6 +192,11 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
       // Get Angular to re-render the view
       this.cdr.detectChanges();
+
+      /*
+        Maybe run this outside of the Angular zone?
+        See the performance branch
+      */
     });
   }
 
