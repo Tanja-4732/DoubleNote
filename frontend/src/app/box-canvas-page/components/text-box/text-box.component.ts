@@ -8,6 +8,7 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
+  NgZone,
 } from "@angular/core";
 import { Subscription, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
@@ -62,7 +63,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
   constructor(
     public mb: MessageBusService,
     private engine: MarkdownEngineService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -183,15 +185,17 @@ export class TextBoxComponent implements OnInit, OnDestroy {
     // Log the incoming message
     log(message.mdom);
 
-    this.runOutsideDomObserver(() => {
-      // Update the markdown object model
-      this.box.mdom = message.mdom;
+    this.ngZone.runOutsideAngular(() => {
+      this.runOutsideDomObserver(() => {
+        // Update the markdown object model
+        this.box.mdom = message.mdom;
 
-      // Refresh the Markdown string
-      this.markdownText = this.engine.generateMarkdown(this.box.mdom);
+        // Refresh the Markdown string
+        this.markdownText = this.engine.generateMarkdown(this.box.mdom);
 
-      // Get Angular to re-render the view
-      this.cdr.detectChanges();
+        // Get Angular to re-render the view
+        this.cdr.detectChanges();
+      });
     });
   }
 
