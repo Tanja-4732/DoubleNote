@@ -87,6 +87,9 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
     this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
 
+    // Refresh the Markdown string
+    this.markdownText = this.engine.generateMarkdown(this.box.mdom);
+
     this.connectDomObserver();
   }
 
@@ -267,10 +270,6 @@ export class TextBoxComponent implements OnInit, OnDestroy {
           },
           { nodeType: "text", text: "." },
         ],
-      },
-      {
-        nodeType: "paragraph",
-        children: [{ nodeType: "text", text: " " }],
       },
       {
         nodeType: "blockCode",

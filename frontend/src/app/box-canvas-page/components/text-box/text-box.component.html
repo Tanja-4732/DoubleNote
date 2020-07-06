@@ -25,13 +25,13 @@
     </div>
 
     <div class="editor-wrap">
-      <div
+      <code
         *ngIf="box.state === 'both' || box.state === 'markdown'"
         class="editor-markdown"
         contentEditable
         [innerText]="markdownText"
         (selectionchange)="onMdKeyEvent($event)"
-      ></div>
+      ></code>
 
       <!-- WYSIWYG start -->
       <div

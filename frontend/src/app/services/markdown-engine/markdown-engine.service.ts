@@ -117,18 +117,78 @@ export class MarkdownEngineService {
    * @param mdom The MDOM tree to convert to text
    */
   generateMarkdown(mdom: MdomNode[]): string {
-    let temp = "";
+    let str = "";
 
     for (const node of mdom) {
-      if (node.nodeType === "text") {
-        temp += node.text;
-        temp += "\n";
-      }
+      switch (node.nodeType) {
+        // Block nodes
+        case "heading":
+          str += "#".repeat(node.level);
+          str += " ";
+          str += this.generateMarkdown(node.children);
+          str += "\n\n";
+          break;
 
-      temp += this.generateMarkdown(node.children ?? []); // TODO implement Markdown generation
+        case "paragraph":
+          str += this.generateMarkdown(node.children);
+          str += "\n\n";
+          break;
+
+        case "hr":
+          str += " --- \n\n";
+          break;
+
+        case "blockCode":
+          str += "```" + node.language + "\n";
+          str += this.generateMarkdown(node.children);
+          str += "\n```\n\n";
+          break;
+
+        case "blockQuote":
+          str += "> ";
+          str += this.generateMarkdown(node.children);
+          str += "\n\n";
+          break;
+
+        // Inline nodes
+        case "text":
+          str += node.text;
+          break;
+
+        case "lineBreak":
+          str += "  \n";
+          break;
+
+        case "inlineCode":
+          str += "`";
+          str += this.generateMarkdown(node.children);
+          str += "`";
+          break;
+
+        case "italics":
+          str += "_";
+          str += this.generateMarkdown(node.children);
+          str += "_";
+          break;
+
+        case "bold":
+          str += "**";
+          str += this.generateMarkdown(node.children);
+          str += "**";
+          break;
+
+        case "comment":
+          str += "<!--";
+          str += this.generateMarkdown(node.children);
+          str += "-->";
+          break;
+
+        default:
+          break;
+      }
     }
 
-    return temp;
+    return str;
   }
 
   // TODO (re)move "this is a recursive function" in the following JSDoc
