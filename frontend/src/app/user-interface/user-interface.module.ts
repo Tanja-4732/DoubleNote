@@ -14,6 +14,7 @@ import { SettingsComponent } from "./components/settings/settings.component";
 import { SideNavComponent } from "./components/side-nav/side-nav.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { ConnectionsComponent } from './components/connections/connections.component';
+import { ImportComponent } from './components/import/import.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { ConnectionsComponent } from './components/connections/connections.compo
     SideNavComponent,
     PageNotFoundComponent,
     ConnectionsComponent,
+    ImportComponent,
   ],
   imports: [CommonModule, AppRoutingModule, AngularMaterialModule],
   exports: [MainComponent, BoxCanvasPageModule, SequentialBlockPageModule],
