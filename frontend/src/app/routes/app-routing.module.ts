@@ -9,6 +9,7 @@ import { BcpNotebookComponent } from "../box-canvas-page/components/bcp-notebook
 import { PageNotFoundComponent } from "../user-interface/components/page-not-found/page-not-found.component";
 import { BoxCanvasPageComponent } from "../box-canvas-page/components/box-canvas-page/box-canvas-page.component";
 import { ConnectionsComponent } from "../user-interface/components/connections/connections.component";
+import { ImportComponent } from "../user-interface/components/import/import.component";
 
 const routes: Routes = [
   // Welcome component
@@ -30,6 +31,13 @@ const routes: Routes = [
     path: "notebooks",
     children: [
       { path: "", component: NotebooksComponent },
+      {
+        path: "import",
+        children: [
+          { path: "", component: ImportComponent },
+          { path: ":notebookData", component: ImportComponent },
+        ],
+      },
       {
         path: "bcp/:notebookUuid",
         children: [

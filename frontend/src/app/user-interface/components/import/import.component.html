@@ -1,1 +1,40 @@
-<p>import works!</p>
+<h1>
+  Notebook import
+</h1>
+
+<p>
+  Exported notebooks can be imported using their JSON representation. <br />
+  Use the button below to paste the JSON from your clipboard, then enter the
+  desired name and hit import.
+</p>
+
+<p>
+  Only import notebooks from sources you trust.
+</p>
+
+<p>
+  <button mat-raised-button (click)="pasteJSON()" color="accent">
+    Paste JSON
+  </button>
+  &nbsp;
+  <button
+    mat-stroked-button
+    (click)="importNotebook()"
+    color="accent"
+    [disabled]="disableImport"
+  >
+    Import notebook
+  </button>
+</p>
+
+<h2>
+  Preview
+</h2>
+
+<p *ngIf="pastedJSON === ''">
+  Nothing to preview
+</p>
+
+<code>
+  {{ pastedJSON }}
+</code>

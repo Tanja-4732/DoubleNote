@@ -58,6 +58,9 @@ export enum Icons {
   MultiUser6 = "group",
   NoMultiUser = "voice_over_off",
   NoMultiUser2 = "leak_remove",
+  Import = "save_alt",
+  Import2 = "play_for_work",
+  Import3 = "system_update",
 }
 
 /**
