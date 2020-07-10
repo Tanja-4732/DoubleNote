@@ -9,6 +9,7 @@ import { TextBox } from "src/typings/bcp/TextBox";
 import { cloneDeep } from "lodash";
 import { fieldHider } from "src/functions/functions";
 import { log } from "src/functions/console";
+import { version } from "src/functions/version";
 
 export const WORKING_TREE_DIRTY =
   "The working tree contains uncommitted changes and the force flag was not set";
@@ -467,6 +468,41 @@ export class BcpVcsService {
     const hash = sha256(JSON.stringify(category, fieldHider));
     this.trees[hash] = category;
     return hash;
+  }
+
+  /**
+   * Returns the JSON representation of the specified notebook
+   *
+   * @param notebook The notebook to be exported
+   */
+  exportNotebook(notebook: BcpNotebook): string {
+    // const { trees, pages, boxes } = this.makeExportRecursive(notebook.objects.);
+    // return JSON.stringify({ notebook, trees, pages, boxes }, fieldHider, 2);
+
+    return JSON.stringify(
+      {
+        version,
+        ExportVersion: 1,
+        date: new Date().toISOString(),
+        notebook,
+      },
+      null,
+      2
+    );
+  }
+
+  private makeExportRecursive(
+    tree: CategoryTree
+  ): {
+    trees: CategoryTree[];
+    pages: BoxCanvasPage[];
+    boxes: TextBox[];
+  } {
+    const trees: CategoryTree[] = [];
+    const pages: BoxCanvasPage[] = [];
+    const boxes: TextBox[] = [];
+
+    return { trees, pages, boxes };
   }
 
   /**

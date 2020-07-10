@@ -11,9 +11,11 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ["./import.component.scss"],
 })
 export class ImportComponent implements OnInit {
-  public pastedJSON = "";
+  public pastedJSON: string;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) {
+    this.pastedJSON = route.snapshot.params.notebookData ?? "";
+  }
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [

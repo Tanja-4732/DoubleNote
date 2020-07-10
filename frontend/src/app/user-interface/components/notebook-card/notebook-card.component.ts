@@ -68,4 +68,20 @@ export class NotebookCardComponent implements OnInit {
       }
     }
   }
+
+  onExport() {
+    switch (this.notebook.type) {
+      case "BCP":
+        navigator.clipboard.writeText(
+          this.bcpVcs.exportNotebook(this.notebook)
+        );
+        break;
+
+      case "SBP":
+        throw new Error("Not implemented yet");
+
+      case undefined:
+        throw new Error("Something went wrong");
+    }
+  }
 }
