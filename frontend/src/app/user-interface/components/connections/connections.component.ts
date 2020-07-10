@@ -24,7 +24,7 @@ export class ConnectionsComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        title: "Connections",
+        title: "Peer connections",
         icon: Icons.MultiUser,
       },
     ];
