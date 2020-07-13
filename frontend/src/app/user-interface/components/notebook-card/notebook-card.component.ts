@@ -8,6 +8,7 @@ import {
 } from "../notebook-dialog/notebook-dialog.component";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-notebook-card",
@@ -21,7 +22,8 @@ export class NotebookCardComponent implements OnInit {
   constructor(
     private bcpVcs: BcpVcsService,
     private sbpVcs: SbpVcsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {}
@@ -75,6 +77,10 @@ export class NotebookCardComponent implements OnInit {
         navigator.clipboard.writeText(
           this.bcpVcs.exportNotebook(this.notebook)
         );
+
+        this.snackBar.open("JSON copied to clipboard", "Close", {
+          duration: 3000,
+        });
         break;
 
       case "SBP":
