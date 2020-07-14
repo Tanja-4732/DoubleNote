@@ -52,6 +52,8 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   markdownText = "hello\nworld";
 
+  selections: TextBoxMessage["selections"] = {};
+
   @ViewChild("wysiwyg")
   wysiwygEditor: ElementRef;
 
@@ -184,7 +186,7 @@ export class TextBoxComponent implements OnInit, OnDestroy {
 
   private handleIncomingMessage(message: TextBoxMessage) {
     // Log the incoming message
-    log(message.mdom);
+    log(message);
 
     this.runOutsideDomObserver(() => {
       // Update the markdown object model
@@ -293,12 +295,15 @@ export class TextBoxComponent implements OnInit, OnDestroy {
       },
     ];
 
+    this.selections[this.mb.myUuid] = window.getSelection();
+
     this.mb.dispatchMessage({
       messageType: "TextBoxMessage",
       authorUuid: this.mb.myUuid,
       creationDate: new Date().toISOString(),
       mdom,
       uuid: this.box.uuid,
+      selections: this.selections,
     });
   }
 
@@ -314,12 +319,15 @@ export class TextBoxComponent implements OnInit, OnDestroy {
       Array.from(this.wysiwygEditor.nativeElement.children[0].childNodes)
     );
 
+    this.selections[this.mb.myUuid] = window.getSelection();
+
     this.mb.dispatchMessage({
       messageType: "TextBoxMessage",
       authorUuid: this.mb.myUuid,
       creationDate: new Date().toISOString(),
       mdom,
       uuid: this.box.uuid,
+      selections: this.selections,
     });
   }
 

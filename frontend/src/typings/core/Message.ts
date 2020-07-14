@@ -49,6 +49,13 @@ export interface TextBoxMessage extends BaseMessage {
    * The UUID of the text box this message applies to
    */
   uuid: string;
+
+  /**
+   * The selections (and carets) of the users
+   */
+  selections: {
+    [userUuid: string]: Selection;
+  };
 }
 
 export interface BcpMessage extends BaseMessage {
