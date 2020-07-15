@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { V1 } from "./v1";
+import { version } from "../../functions/version";
 
 export class API {
   /**
@@ -25,9 +26,10 @@ export class API {
 
   private greeting = (req: Request, res: Response) => {
     res.json({
+      serverVersion: version,
+      date: new Date().toISOString(),
       message: "Welcome to the DoubleNote API",
-      versions: ["/v1"],
-      date: new Date().toISOString()
+      apiVersions: ["/v1"],
     });
   };
 }
