@@ -1,4 +1,5 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
+import { version } from "../../functions/version";
 
 export class V1 {
   /**
@@ -10,6 +11,15 @@ export class V1 {
    * Configures the V1 API router
    */
   constructor() {
-    // this.router.use( something );
+    // Mount the greeting endpoint
+    this.router.use("/", (req, res) => this.greeting(req, res));
   }
+
+  private greeting = (req: Request, res: Response) => {
+    res.json({
+      serverVersion: version,
+      date: new Date().toISOString(),
+      message: "DoubleNote API v1",
+    });
+  };
 }
