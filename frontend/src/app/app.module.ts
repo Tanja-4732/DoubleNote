@@ -9,6 +9,7 @@ import { AppComponent } from "./app.component";
 
 import { AppRoutingModule } from "./routes/app-routing.module";
 import { UserInterfaceModule } from "./user-interface/user-interface.module";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +17,7 @@ import { UserInterfaceModule } from "./user-interface/user-interface.module";
     UserInterfaceModule,
 
     BrowserAnimationsModule,
+    HttpClientModule,
     LayoutModule,
     BrowserModule,
     AppRoutingModule,

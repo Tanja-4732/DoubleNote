@@ -3,6 +3,9 @@ import {
   CrumbTrailComponent,
   Icons,
 } from "../crumb-trail/crumb-trail.component";
+import { ServersService } from "src/app/services/servers/servers.service";
+import { Server } from "src/typings/core/Server";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-servers",
@@ -10,7 +13,14 @@ import {
   styleUrls: ["./servers.component.scss"],
 })
 export class ServersComponent implements OnInit {
-  constructor() {}
+  get servers(): Server[] {
+    return this.serversService.servers;
+  }
+
+  public originServerStatus: "added" | "exists" | "unavailable" | "working" =
+    "working";
+
+  constructor(private serversService: ServersService) {}
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
@@ -19,5 +29,9 @@ export class ServersComponent implements OnInit {
         icon: Icons.Server,
       },
     ];
+
+    this.serversService
+      .tryAddOrigin()
+      .then((result) => (this.originServerStatus = result));
   }
 }

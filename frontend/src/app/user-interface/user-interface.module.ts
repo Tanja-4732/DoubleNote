@@ -15,7 +15,7 @@ import { SideNavComponent } from "./components/side-nav/side-nav.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { PeersComponent } from "./components/peers/peers.component";
 import { ImportComponent } from "./components/import/import.component";
-import { ServersComponent } from './components/servers/servers.component';
+import { ServersComponent } from "./components/servers/servers.component";
 
 @NgModule({
   declarations: [

@@ -5,4 +5,46 @@
     your browser. <br />
     To prevent this from happening, you can synchronize your data with a server.
   </p>
+
+  <ng-container [ngSwitch]="originServerStatus">
+    <p *ngSwitchCase="'working'">
+      Attempting to add the host of this application as a server...
+    </p>
+
+    <p *ngSwitchCase="'added'">
+      The host of this application has now been added as a server.
+    </p>
+
+    <p *ngSwitchCase="'exists'">
+      The host of this application has already been added added as a server.
+    </p>
+
+    <p *ngSwitchCase="'unavailable'">
+      The host of this application does not provide an API.
+    </p>
+  </ng-container>
 </div>
+
+<h2>
+  Register a new API server
+</h2>
+
+todo...
+
+<!-- TODO support adding API servers -->
+
+<h2>
+  List of registered servers:
+</h2>
+
+<ul *ngIf="servers.length > 0">
+  <li>
+    <code *ngFor="let server of servers">
+      {{ server.apiUrl }}
+    </code>
+  </li>
+</ul>
+
+<p *ngIf="servers.length === 0">
+  None so far.
+</p>
