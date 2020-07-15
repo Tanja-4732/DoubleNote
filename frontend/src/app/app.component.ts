@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
   ) {
     updates.available.subscribe((event) => this.onNewVersionAvailable(event));
     updates.activated.subscribe((event) => this.onNewVersionActivated(event));
-    console.log("Hello there 2");
   }
 
   ngOnInit() {
