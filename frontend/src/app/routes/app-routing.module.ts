@@ -8,8 +8,9 @@ import { SbpNotebookComponent } from "../sequential-block-page/components/sbp-no
 import { BcpNotebookComponent } from "../box-canvas-page/components/bcp-notebook/bcp-notebook.component";
 import { PageNotFoundComponent } from "../user-interface/components/page-not-found/page-not-found.component";
 import { BoxCanvasPageComponent } from "../box-canvas-page/components/box-canvas-page/box-canvas-page.component";
-import { ConnectionsComponent } from "../user-interface/components/connections/connections.component";
+import { PeersComponent } from "../user-interface/components/peers/peers.component";
 import { ImportComponent } from "../user-interface/components/import/import.component";
+import { ServersComponent } from "../user-interface/components/servers/servers.component";
 
 const routes: Routes = [
   // Welcome component
@@ -18,11 +19,21 @@ const routes: Routes = [
   // Settings component
   { path: "settings", component: SettingsComponent },
 
+  // Peers management
   {
-    path: "connections",
+    path: "peers",
     children: [
-      { path: "", component: ConnectionsComponent },
-      { path: "new/:remoteUuid", component: ConnectionsComponent },
+      { path: "", component: PeersComponent },
+      { path: "new/:remoteUuid", component: PeersComponent },
+    ],
+  },
+
+  // Servers management
+  {
+    path: "servers",
+    children: [
+      { path: "", component: ServersComponent },
+      { path: "new/:serverUrl", component: ServersComponent },
     ],
   },
 

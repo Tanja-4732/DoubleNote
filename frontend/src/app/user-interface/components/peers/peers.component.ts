@@ -7,11 +7,11 @@ import {
 import { SettingsService } from "src/app/services/settings/settings.service";
 
 @Component({
-  selector: "app-connections",
-  templateUrl: "./connections.component.html",
-  styleUrls: ["./connections.component.scss"],
+  selector: "app-peers",
+  templateUrl: "./peers.component.html",
+  styleUrls: ["./peers.component.scss"],
 })
-export class ConnectionsComponent implements OnInit {
+export class PeersComponent implements OnInit {
   name = "";
   uuid = "";
   myName: string;

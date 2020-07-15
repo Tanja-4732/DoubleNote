@@ -61,6 +61,9 @@ export enum Icons {
   Import = "save_alt",
   Import2 = "play_for_work",
   Import3 = "system_update",
+  Server = "cloud",
+  Server2 = "storage",
+  Server3 = "dns",
 }
 
 /**
