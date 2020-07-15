@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="frontend/design/dn-logo/dn-logo.svg" width="150px">
+</div>
+
 # DoubleNote
 
 This is a new project; its development status is far away from a beta release.
