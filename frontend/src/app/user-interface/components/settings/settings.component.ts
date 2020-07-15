@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ApplicationRef } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { SettingsService } from "src/app/services/settings/settings.service";
 import { Subscription } from "rxjs";
@@ -13,6 +13,8 @@ import {
   ConfirmDialogOutput,
 } from "src/app/box-canvas-page/components/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { version } from "src/functions/version";
+import { SwUpdate } from "@angular/service-worker";
 
 @Component({
   selector: "app-settings",
@@ -23,10 +25,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   private sub: Subscription;
 
+  get version(): string {
+    return version;
+  }
+
+  public updateText =
+    "New updates may be available. Click the button below to check for updates.";
+
   constructor(
     private settings: SettingsService,
     formBuilder: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private updates: SwUpdate
   ) {
     this.formGroup = formBuilder.group({
       enableOfflineMode: true,
@@ -83,5 +93,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
         deleteAll();
       }
     });
+  }
+
+  async onCheckForUpdate(): Promise<void> {
+    this.updateText = "Checking for updates...";
+    await this.updates.checkForUpdate();
+    this.updateText = "Checked for updates.";
   }
 }

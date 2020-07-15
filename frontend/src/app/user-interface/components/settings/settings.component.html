@@ -1,28 +1,59 @@
-<h1>Settings</h1>
+<div class="bulk-text">
+  <h1>Settings</h1>
 
-<form [formGroup]="formGroup">
-  <mat-slide-toggle formControlName="enableOfflineMode">
-    Enable offline mode
-  </mat-slide-toggle>
-</form>
+  <form [formGroup]="formGroup">
+    <mat-slide-toggle formControlName="enableOfflineMode">
+      Enable offline mode
+    </mat-slide-toggle>
+  </form>
 
-<br />
+  <br />
 
-<p>
-  Reloading the application (F5) may be required to apply changes.
-</p>
+  <p>
+    Reloading the application (F5) may be required to apply changes.
+  </p>
 
-<h1>Delete everything</h1>
+  <h1>
+    Check for updates
+  </h1>
 
-<p>
-  The button below will delete all data stored in this application. <br />
-  Every notebook will be deleted.
-</p>
+  <p>
+    This application is currently on the version {{ version }}. <br />
+    Updates are automatically installed once they are available, which usually
+    happens roughly ten seconds after the application has finished loading. The
+    button below will check for updates and download them if they are available.
+    <br />
+    Once the text directly above the button changes to "Checked for updates."
+    the check has completed. If updates were found (and their download has been
+    completed) a snack bar will appear with a reload button. <br />
+    The application will automatically check for updates (and download them if
+    possible) every time it's opened. This is why you might see the "Updates
+    available" snack bar roughly ten seconds after opening the application.
+  </p>
 
-<p>
-  This operation cannot be undone.
-</p>
+  <p>
+    {{ updateText }}
+  </p>
 
-<button mat-raised-button color="warn" (click)="deleteAll()">
-  Delete all data
-</button>
+  <button mat-raised-button color="accent" (click)="onCheckForUpdate()">
+    Check for updates
+  </button>
+
+  <br />
+  <br />
+
+  <h1>Delete everything</h1>
+
+  <p>
+    The button below will delete all data stored in this application. <br />
+    Every notebook will be deleted.
+  </p>
+
+  <p>
+    This operation cannot be undone.
+  </p>
+
+  <button mat-raised-button color="warn" (click)="deleteAll()">
+    Delete all data
+  </button>
+</div>
