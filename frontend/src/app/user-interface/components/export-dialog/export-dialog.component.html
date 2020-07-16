@@ -1,0 +1,55 @@
+<h1>Export notebook</h1>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <div mat-dialog-content>
+    <p>
+      <em>
+        Warning: You are about to export this entire notebook. Only share this
+        data with destinations you trust.
+      </em>
+    </p>
+
+    <p>
+      You can export this notebook using
+      <a routerLink="notebooks/import" (click)="onNoClick()"
+        >DoubleNote's native migration tools</a
+      >. or copy the JSON form of the notebook to your clipboard.
+      <br />
+      Only the former needs a URL.
+    </p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Import-URL</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="My notes"
+        required
+        cdkFocusInitial
+      />
+      <mat-error *ngIf="formGroup.invalid">A URL must be provided</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" type="button">
+      Cancel
+    </button>
+    <button
+      mat-stroked-button
+      (click)="onCopyJson()"
+      type="button"
+      color="accent"
+    >
+      Copy JSON
+    </button>
+
+    <button
+      mat-button
+      [disabled]="formGroup.invalid"
+      type="submit"
+      color="primary"
+    >
+      Confirm
+    </button>
+  </div>
+</form>

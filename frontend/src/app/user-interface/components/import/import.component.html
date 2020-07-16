@@ -1,39 +1,98 @@
-<h1>
-  Notebook import
-</h1>
+<div class="bulk-text">
+  <h1>
+    Notebook import
+  </h1>
 
-<p>
-  Exported notebooks can be imported using their JSON representation. <br />
-  Use the button below to paste the JSON from your clipboard, then enter the
-  desired name and hit import.
-</p>
+  <p>
+    While <a routerLink="../../../servers">DoubleNote-servers</a> are a great
+    choice for backing up your data, syncing it access devices and sharing it
+    with the people you want to, they are not always the available, which is why
+    DoubleNote offers the ability to manually export and import your notebooks.
+  </p>
 
-<p>
-  Only import notebooks from sources you trust.
-</p>
+  <p>
+    You can import notebooks from several of sources, such as your clipboard
+    (using JSON) or using DoubleNote's built-in native migration tools.
+  </p>
+  <p>
+    Transfering notebooks via JSON is less secure, but easier to use, and can be
+    done across multiple devices and browsers, and even between multiple users.
+  </p>
+  <p>
+    Sharing data using DoubleNote's native migration tools is safer and easier,
+    especially when dealing with multiple notebooks from several sources, but
+    doesn't work across devices for for several users.
+  </p>
 
-<p>
-  <button mat-raised-button (click)="pasteJSON()" color="accent">
-    Paste JSON
-  </button>
-  &nbsp;
-  <button
-    mat-stroked-button
-    (click)="importNotebook()"
-    color="accent"
-    [disabled]="disableImport"
-  >
-    Import notebook
-  </button>
-</p>
+  <p>
+    <em>Only import notebooks from sources you trust.</em>
+  </p>
 
-<h2>
-  Preview
-</h2>
+  <h2>
+    Native import
+  </h2>
 
-<p *ngIf="pastedJSON === ''">
-  Nothing to preview
-</p>
+  <p>
+    DoubleNote supports migrating (importing and exporting) notebooks from one
+    DoubleNote instance to another. This is accomplished by following these
+    steps:
+  </p>
+
+  <ol>
+    <li>
+      Open this page in the DoubleNote instance into which you want to import
+    </li>
+    <li>
+      Copy the import-URL displayed below (you will need it soon)
+    </li>
+    <li>
+      Open the DoubleNote instance from which you want to export a notebook
+    </li>
+    <li>
+      On the notebook you want to export, click "export", then click "native
+      export"
+    </li>
+    <li>
+      Close this page and follow the remaining steps on the other instance.
+    </li>
+  </ol>
+
+  <p>
+    The import-URL of this instance is: <br />
+    <code>{{ importUrl }}</code>
+  </p>
+
+  <h2>
+    JSON paste
+  </h2>
+
+  <p>
+    Exported notebooks can be imported using their JSON representation. <br />
+    Use the button below to paste the JSON from your clipboard, then enter the
+    desired name and hit import.
+  </p>
+
+  <p>
+    <button mat-raised-button (click)="pasteJSON()" color="accent">
+      Paste JSON
+    </button>
+    &nbsp;
+    <button
+      mat-stroked-button
+      (click)="importNotebook()"
+      color="accent"
+      [disabled]="disableImport"
+    >
+      Import notebook
+    </button>
+  </p>
+
+  <p *ngIf="pastedJSON === ''">
+    Paste the JSON representation of your notebook using the button above.
+    <br />
+    A preview of the pasted JSON contents will appear here.
+  </p>
+</div>
 
 <code>
   <pre>{{ pastedJSON }}</pre>

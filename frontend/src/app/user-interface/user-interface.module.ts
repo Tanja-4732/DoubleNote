@@ -16,6 +16,7 @@ import { WelcomeComponent } from "./components/welcome/welcome.component";
 import { PeersComponent } from "./components/peers/peers.component";
 import { ImportComponent } from "./components/import/import.component";
 import { ServersComponent } from "./components/servers/servers.component";
+import { ExportDialogComponent } from './components/export-dialog/export-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ServersComponent } from "./components/servers/servers.component";
     PeersComponent,
     ImportComponent,
     ServersComponent,
+    ExportDialogComponent,
   ],
   imports: [CommonModule, AppRoutingModule, AngularMaterialModule],
   exports: [MainComponent, BoxCanvasPageModule, SequentialBlockPageModule],
