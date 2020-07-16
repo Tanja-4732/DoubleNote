@@ -15,21 +15,28 @@ export class ServersService {
     localStorage.setItem("dn.servers", JSON.stringify(this.servers));
   }
 
+  get baseHref(): string {
+    return this.locationStrategy.getBaseHref();
+  }
+
   constructor(
     private http: HttpClient,
     private locationStrategy: LocationStrategy
   ) {}
 
+  /**
+   * Checks if a URL is a valid DoubleNote API-providing server
+   *
+   * @param url The API URL to be probed
+   */
   public async probeServer(url: string): Promise<boolean> {
-    let response;
-
     try {
-      response = await this.http.get(url).toPromise();
+      return (
+        (await this.http.get<any>(url).toPromise())?.apiVersions?.length > 0
+      );
     } catch (error) {
       return false;
     }
-
-    return !!(response?.apiVersions?.length > 0);
   }
 
   /**
@@ -69,12 +76,10 @@ export class ServersService {
    * This does not guarantee that the server provides an API.
    */
   public getApiUrl(): string {
-    const baseHref = this.locationStrategy.getBaseHref();
-
     return (
       window.origin +
-      baseHref +
-      (baseHref.charAt(baseHref.length - 1) === "/" ? "" : "/") +
+      this.baseHref +
+      (this.baseHref.charAt(this.baseHref.length - 1) === "/" ? "" : "/") +
       "api"
     );
   }
