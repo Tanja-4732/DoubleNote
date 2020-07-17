@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { log } from "src/functions/console";
 
 @Component({
   selector: "app-export-dialog",
@@ -18,22 +19,20 @@ export class ExportDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public input: ExportDialogInput
   ) {
     this.formGroup = formBuilder.group({
-      name: ["", Validators.required],
-      type: ["BCP"],
+      url: ["", Validators.required],
     });
   }
 
   ngOnInit(): void {}
 
   onNoClick(): void {
-    this.dialogRef.close({} as ExportDialogInput);
+    this.dialogRef.close({ confirmed: false } as ExportDialogOutput);
   }
 
   onSubmit(): void {
     this.dialogRef.close({
       confirmed: true,
-      name: this.formGroup.value.name,
-      type: this.formGroup.value.type,
+      url: this.formGroup.value.url,
     } as ExportDialogOutput);
   }
 
@@ -44,7 +43,7 @@ export class ExportDialogComponent implements OnInit {
       duration: 3000,
     });
 
-    this.dialogRef.close({} as ExportDialogInput);
+    this.dialogRef.close({ confirmed: false } as ExportDialogOutput);
   }
 }
 
@@ -55,4 +54,7 @@ export interface ExportDialogInput {
   jsonText: string;
 }
 
-export interface ExportDialogOutput {}
+export interface ExportDialogOutput {
+  confirmed: boolean;
+  url: string;
+}

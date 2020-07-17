@@ -12,6 +12,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import {
   ExportDialogComponent,
   ExportDialogInput,
+  ExportDialogOutput,
 } from "../export-dialog/export-dialog.component";
 import { log } from "src/functions/console";
 
@@ -75,7 +76,7 @@ export class NotebookCardComponent implements OnInit {
     }
   }
 
-  onExport() {
+  async onExport() {
     switch (this.notebook.type) {
       case "BCP":
         const data: ExportDialogInput = {
@@ -87,7 +88,19 @@ export class NotebookCardComponent implements OnInit {
           data,
         });
 
-        dialogRef.afterClosed().subscribe((result) => log(result));
+        const result: ExportDialogOutput | null = await dialogRef
+          .afterClosed()
+          .toPromise();
+
+        if (result?.confirmed) {
+          const newTab = window.open(result.url);
+          window.addEventListener(
+            "message",
+            () => newTab.postMessage(this.notebook, newTab.origin),
+            { once: true }
+          );
+        }
+
         break;
 
       case "SBP":

@@ -36,6 +36,7 @@ export class ImportComponent implements OnInit {
     this.pastedJSON = route.snapshot.params.notebookData ?? "";
 
     window.addEventListener("message", (event) => this.handleMessage(event));
+    window.opener?.postMessage("ready", window.opener.origin);
   }
 
   ngOnInit(): void {
