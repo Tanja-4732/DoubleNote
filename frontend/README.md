@@ -173,8 +173,36 @@ WIP (not anymore; see the 5th iteration)
   - Use some kind of authentication mechanism
   - Provide editing features for the peers (contacts) view
 - Implement some sort of search functionality
-
-WIP
+  - Everything has to be indexed
+- Server-side persistance
+  - HTTP API, WebSockets
+  - Third party cloud providers?
+- Server-less data sharing
+  - Over WebRTC with peerJS (notebooks need to be synced before collaboration can begin)
+  - Bluetooth?
+- Free hand drawing
+  - Canvas element
+  - Undo/Redo
+  - One panel per BCP or several?
+    - One seems better
+  - Collaborative editing
+  - Maybe get some inspiration form ProseMirror
+    - Transaction-based state management
+    - Document model (for the drawing)
+- Import/Export
+  - JSON import & export
+    - Export all trees, pages and boxes of a notebook separated into those 3 arrays along with the notebook's metadata
+    - The JSON export now contains metadata and three arrays of objects. They will then get imported and hashed by the importing party
+    - The importing party needs to reconstruct the structure from flat hierarchy of the exported blobs
+  - Native migration
+    - Use WebRTC to communicate between user A and user B directly
+      - If WebRTC supports establishing data channels across origins, the next point (and its sub-points will be worthless)
+    - Using `window.open` and `window.postMessage` to traverse origins in one browser for one user
+      - Origin-agnostic data migration in one browser between different instances of DoubleNote
+      - Maybe implement a "pass-through" mode so user A on host 1 can share their data with user B on host 2
+        - This means user B has an instance running in "pass-through" mode on host 1, or user A has an instance running in "pass-through" mode on host 2
+        - This circumvents the same-origin policy but is rather cumbersome in comparison to WebRTC
+      - Consider scrapping the `window.open`/`window.postMessage` strategy all together in favor of a bulk JSON export
 
 ## Sub-projects
 
