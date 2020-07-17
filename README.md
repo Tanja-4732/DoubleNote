@@ -4,39 +4,27 @@
 
 # DoubleNote
 
+A note taking app focused on ease of use and user freedom.
+
 This is a new project; its development status is far away from a beta release.
 
-See the `master` branch deployed here: <https://DoubleNote.bernd.pw/>  
+See the `master` branch deployed here: <https://DoubleNote.bernd.pw/> using Vercel.  
 Notice: This is only the frontend served statically. Some (planned) features are only available using the backend server.
 
 ## (Planned) Features
 
-_See the newest plans in the [4th iteration of the frontend README](/frontend/README.md#4th-iteration)_
+_See the newest plans in the [5th iteration of the frontend README](/frontend/README.md#5th-iteration)_
 
-- Progressive web application
-  - Full offline support
-- Real-time collaboration
-  - WebRTC
-  - Peer-to-peer collaboration
-  - PeerJs
-- Organize notes in notebooks
-  - Store notebooks in `localStorage`
-  - Allow for sections & subsections (recursively)
-  - Use pages for notes
-- Markdown & Free-hand drawing
-  - Create text boxes anywhere within a page
-  - Write notes using Markdown
-  - Draw anywhere on a page
-  - Touch & mouse support
-- Undo/Redo functionality
-  - Undo multiple actions
-  - Revert undo-s using redo
-  - Persistent edit history
-  - Maybe also use commit-based version control
-- Import/Export
-  - (De)serialize notebooks to and from JSON
-
-Frontend-specific features are specified in the [frontend implementation strategy](/frontend/README.md#implementation-strategy).
+- Note-taking with both Markdown and WYSIWYG editors (ProseMirror)
+- Full offline support (Progressive Web App)
+- Peer-to-peer real-time collaboration (WebRTC, no backend server needed)
+- Git-like version control (commits, branches, tags, reused objects)
+- Two types of notebooks
+  - Recursive categories with pages containing text boxes and free-hand drawing (like OneNote)
+  - Sequential blocks with nested pages capable of special data and tables (like Notion)
+- Offline-capable import/export functionality (JSON)
+- Origin-agnostic migration support (for DoubleNote instances on different hosts)
+- Optional cloud storage (server-side software) with user accounts and shared permissions
 
 ## Further reading
 

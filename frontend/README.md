@@ -12,11 +12,12 @@ You can view a static deployment of the `master` branch at <https://DoubleNote.b
 
 This is how I envision DoubleNote to be implemented
 
-### Older stuff (1st, 2nd and 3rd iteration)
+The arrow menu below contains older stuff (1st, 2nd, 3rd and 4th iteration) kept for historical reasons;  
+The current plan follows it.
 
 <details>
 <summary>
-  Show older ideas (1st, 2nd and 3rd iteration)
+  Show older ideas (1st, 2nd, 3rd and 4th iteration)
 </summary>
 
 ### Initial strategy
@@ -142,8 +143,6 @@ List of nodes
   - Async editing requires distributed merging of conflicting changes
   - Achieve eventual consistency somehow
 
-</details>
-
 ### 4th iteration
 
 - Function both as a static website and with a server
@@ -159,6 +158,22 @@ List of nodes
 - Notebooks
 - Tags
 
+WIP (not anymore; see the 5th iteration)
+
+</details>
+
+### 5th iteration
+
+- Use ProseMirror for text editing
+  - Scratch the current attempt for a WYSIWYG editor
+  - Figure out how to make ProseMirror-view look native in this app
+  - Create a ProseMirror-document model compatible with MDOM
+- Use the MessageBus for real-time collaboration
+  - Figure out how to make this work with ProseMirror
+  - Use some kind of authentication mechanism
+  - Provide editing features for the peers (contacts) view
+- Implement some sort of search functionality
+
 WIP
 
 ## Sub-projects
@@ -166,11 +181,11 @@ WIP
 - Frontend user interface
 - Message bus
 - Markdown engine
-- WYSIWYG editor
 - Distributed version control
 - SBP implementation
 - BCP implementation
-- Web-port of [matcha dark sea](https://github.com/vinceliuice/Matcha-gtk-theme#readme)
+- Web-port of [matcha dark sea](https://github.com/vinceliuice/Matcha-gtk-theme#readme) (optional)
+- WYSIWYG editor (suspended)
 
 ## Folder structure
 
@@ -184,8 +199,8 @@ Only the relevant files and folders are listed
       - `user-interface/` The main UI module containing most UI components
       - `routes/` Contains Angular routing
         - `app-routing.module.ts` The routing module (specifies Angular routes)
-      - `box-canvas-page` The Box canvas page implementation
-      - `sequential-block-page` The Sequential block page implementation
+      - `box-canvas-page/` The Box canvas page implementation
+      - `sequential-block-page/` The Sequential block page implementation
       - `app.module.ts` The root app module
       - `app.component.*` The root angular component
     - `typings/` The TypeScript interfaces used in the application
