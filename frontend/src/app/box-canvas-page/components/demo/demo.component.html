@@ -39,15 +39,10 @@
 <br />
 
 <h1>
-  contentEditable
+  ProseMirror text box
 </h1>
 
-<div>
-  <div contentEditable="caret">Caret</div>
-  <div contentEditable="events">Events</div>
-  <div contentEditable="plaintext-only">Plaintext only</div>
-  <div contentEditable="typing">Typing</div>
-</div>
+<app-pm-box></app-pm-box>
 
 <br />
 <br />
@@ -55,11 +50,14 @@
 <h1>
   Icons
 </h1>
+<details>
+  <summary>Toggle listing</summary>
 
-<div *ngFor="let icon of allIcons | keyvalue">
-  <span>
-    {{ icon.key }}
-  </span>
+  <div *ngFor="let icon of allIcons | keyvalue">
+    <span>
+      {{ icon.key }}
+    </span>
 
-  <mat-icon> {{ icon.value }}</mat-icon>
-</div>
+    <mat-icon> {{ icon.value }}</mat-icon>
+  </div>
+</details>

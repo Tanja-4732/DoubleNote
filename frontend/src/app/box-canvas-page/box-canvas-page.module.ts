@@ -17,6 +17,7 @@ import { RouterModule } from "@angular/router";
 import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
 import { MarkdownDirective } from './directives/markdown/markdown.directive';
 import { ContentEditableDirective } from './directives/content-editable/content-editable.directive';
+import { PmBoxComponent } from './components/pm-box/pm-box.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ContentEditableDirective } from './directives/content-editable/content-
     ConfirmDialogComponent,
     MarkdownDirective,
     ContentEditableDirective,
+    PmBoxComponent,
   ],
   imports: [
     CommonModule,
