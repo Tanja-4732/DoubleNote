@@ -8,6 +8,8 @@ import {
 import { schema } from "prosemirror-schema-basic";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
+import { undo, redo, history } from "prosemirror-history";
+import { keymap } from "prosemirror-keymap";
 
 @Component({
   selector: "app-pm-box",
@@ -23,7 +25,17 @@ export class PmBoxComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    let state = EditorState.create({ schema });
-    let view = new EditorView(this.pmEditorRef.nativeElement, { state });
+    this.initProseMirror();
+  }
+
+  /**
+   * Initializes ProseMirror
+   */
+  private initProseMirror() {
+    const state = EditorState.create({
+      schema,
+      plugins: [history(), keymap({ "Mod-z": undo, "Mod-y": redo })],
+    });
+    const view = new EditorView(this.pmEditorRef.nativeElement, { state });
   }
 }
