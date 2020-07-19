@@ -167,7 +167,7 @@ WIP (not anymore; see the 5th iteration)
 - Use ProseMirror for text editing
   - Scratch the current attempt for a WYSIWYG editor
   - Figure out how to make ProseMirror-view look native in this app
-  - Create a ProseMirror-document model compatible with MDOM
+  - Create a ProseMirror schema compatible with MDOM
 - Use the MessageBus for real-time collaboration
   - Figure out how to make this work with ProseMirror
   - Use some kind of authentication mechanism

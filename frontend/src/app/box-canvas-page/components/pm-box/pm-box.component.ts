@@ -36,6 +36,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit {
       schema,
       plugins: [history(), keymap({ "Mod-z": undo, "Mod-y": redo })],
     });
+
     const view = new EditorView(this.pmEditorRef.nativeElement, { state });
   }
 }
