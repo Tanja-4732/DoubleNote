@@ -19,7 +19,8 @@
   z-index: -1;
 }
 
-app-text-box {
+app-text-box,
+app-pm-box {
   pointer-events: none;
   position: absolute;
 }
