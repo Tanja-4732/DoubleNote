@@ -21,11 +21,7 @@ import { log } from "src/functions/console";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { CdkDragEnd } from "@angular/cdk/drag-drop";
 import { environment } from "src/environments/environment";
-
-export interface Coordinates {
-  x: number;
-  y: number;
-}
+import { Coordinates } from "src/typings/bcp/Coordinates";
 
 @Component({
   selector: "app-text-box",
