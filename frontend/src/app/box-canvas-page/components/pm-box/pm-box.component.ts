@@ -1,15 +1,18 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   OnInit,
   ViewChild,
-  ElementRef,
-  AfterViewInit,
 } from "@angular/core";
+import { exampleSetup } from "prosemirror-example-setup";
+import { history, redo, undo } from "prosemirror-history";
+import { keymap } from "prosemirror-keymap";
+import { DOMParser, Schema } from "prosemirror-model";
 import { schema } from "prosemirror-schema-basic";
+import { addListNodes } from "prosemirror-schema-list";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { undo, redo, history } from "prosemirror-history";
-import { keymap } from "prosemirror-keymap";
 
 @Component({
   selector: "app-pm-box",

@@ -1,1 +1,29 @@
-<div #pmEditorRef></div>
+<div class="editor-box" cdkDragBoundary=".text-box-boundary" cdkDrag>
+  <div class="editor-container">
+    <div class="editor-bar">
+      <div class="editor-state">
+        todo
+      </div>
+
+      <div cdkDragHandle class="editor-handle">
+        Move
+      </div>
+
+      <button>
+        Debug
+      </button>
+
+      <div class="editor-state">
+        Close
+      </div>
+    </div>
+
+    <div class="editor-wrap">
+      <code class="editor-markdown" contentEditable></code>
+
+      <!-- WYSIWYG start -->
+      <div class="editor-wysiwyg" #pmEditorRef></div>
+      <!-- WYSIWYG end -->
+    </div>
+  </div>
+</div>
