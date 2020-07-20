@@ -24,6 +24,7 @@
 </ng-container>
 
 <div class="text-box-boundary">
+  <!--
   <app-text-box
     *ngFor="let box of page.objects.boxes; trackBy: trackByBox"
     [box]="box"
@@ -32,6 +33,14 @@
     (boxDeleted)="onBoxDeleted(box)"
   >
   </app-text-box>
+  -->
+
+  <app-pm-box
+    *ngFor="let box of page.objects.boxes; trackBy: trackByBox"
+    (boxState)="onBoxStateChanged(box)"
+    (boxDeleted)="onBoxDeleted(box)"
+  >
+  </app-pm-box>
 
   <div class="background" (click)="createNewBox($event)"></div>
 </div>
