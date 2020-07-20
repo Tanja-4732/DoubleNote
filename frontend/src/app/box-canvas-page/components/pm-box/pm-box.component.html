@@ -36,8 +36,24 @@
         *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
         class="editor-wysiwyg"
         #pmEditorRef
+        id="editor"
       ></div>
+
       <!-- WYSIWYG end -->
     </div>
   </div>
+</div>
+
+<link rel="stylesheet" href="https://prosemirror.net/css/editor.css" />
+<div id="content" style="display: none;">
+  <h2>
+    Demo text
+  </h2>
+  <p>
+    Saving doesn't really work yet. <br />
+    But the editor should work.
+  </p>
+  <p>
+    This is powered by the <a href="https://prosemirror.net/">ProseMirror</a>.
+  </p>
 </div>

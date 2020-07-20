@@ -1,33 +1,31 @@
+import { CdkDragEnd } from "@angular/cdk/drag-drop";
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  OnInit,
-  ViewChild,
-  Input,
-  ChangeDetectorRef,
-  OnDestroy,
-  Output,
   EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
 } from "@angular/core";
 import { exampleSetup } from "prosemirror-example-setup";
-import { history, redo, undo } from "prosemirror-history";
-import { keymap } from "prosemirror-keymap";
 import { DOMParser, Schema } from "prosemirror-model";
 import { schema } from "prosemirror-schema-basic";
 import { addListNodes } from "prosemirror-schema-list";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { TextBox } from "src/typings/bcp/TextBox";
 import { Observable, Subscription } from "rxjs";
-import { Coordinates } from "src/typings/bcp/Coordinates";
-import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
-import { MarkdownEngineService } from "src/app/services/markdown-engine/markdown-engine.service";
-import { Message, TextBoxMessage } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
-import { CdkDragEnd } from "@angular/cdk/drag-drop";
-import { log } from "src/functions/console";
+import { MarkdownEngineService } from "src/app/services/markdown-engine/markdown-engine.service";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 import { environment } from "src/environments/environment";
+import { log } from "src/functions/console";
+import { Coordinates } from "src/typings/bcp/Coordinates";
+import { TextBox } from "src/typings/bcp/TextBox";
+import { Message, TextBoxMessage } from "src/typings/core/Message";
 
 @Component({
   selector: "app-pm-box",
@@ -122,7 +120,9 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    // setTimeout(() => {
     this.initProseMirror();
+    // }, 2000);
   }
 
   ngOnDestroy(): void {
@@ -151,12 +151,23 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * Initializes ProseMirror
    */
   private initProseMirror() {
-    const state = EditorState.create({
-      schema,
-      plugins: [history(), keymap({ "Mod-z": undo, "Mod-y": redo })],
+    const mySchema = new Schema({
+      nodes: addListNodes(
+        (schema.spec.nodes as unknown) as any,
+        "paragraph block*",
+        "block"
+      ),
+      marks: schema.spec.marks,
     });
 
-    const view = new EditorView(this.pmEditorRef.nativeElement, { state });
+    const view = new EditorView(this.pmEditorRef.nativeElement, {
+      state: EditorState.create({
+        doc: DOMParser.fromSchema(mySchema).parse(
+          document.querySelector("#content")
+        ),
+        plugins: exampleSetup({ schema: mySchema }),
+      }),
+    });
   }
 
   // #region event handlers
