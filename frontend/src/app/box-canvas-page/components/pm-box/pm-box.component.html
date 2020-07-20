@@ -7,28 +7,36 @@
 >
   <div class="editor-container">
     <div class="editor-bar">
-      <div class="editor-state">
-        todo
+      <div class="editor-state" (click)="onCycleModes()">
+        {{ stateText }}
       </div>
 
       <div cdkDragHandle class="editor-handle">
         Move
       </div>
 
-      <button>
+      <button *ngIf="isDevMode || true" (click)="onDebug()">
         Debug
       </button>
 
-      <div class="editor-state">
+      <div class="editor-state" (click)="onDeleteBox()">
         Close
       </div>
     </div>
 
     <div class="editor-wrap">
-      <code class="editor-markdown" contentEditable></code>
+      <code
+        *ngIf="box.state === 'both' || box.state === 'markdown'"
+        class="editor-markdown"
+        contentEditable
+      ></code>
 
       <!-- WYSIWYG start -->
-      <div class="editor-wysiwyg" #pmEditorRef></div>
+      <div
+        *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
+        class="editor-wysiwyg"
+        #pmEditorRef
+      ></div>
       <!-- WYSIWYG end -->
     </div>
   </div>

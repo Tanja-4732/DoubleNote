@@ -27,6 +27,7 @@ import { Message, TextBoxMessage } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
 import { CdkDragEnd } from "@angular/cdk/drag-drop";
 import { log } from "src/functions/console";
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: "app-pm-box",
@@ -42,9 +43,9 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly box: TextBox;
 
   /**
-   * TODO
+   * The subscription to the MessageBus
    */
-  subscription: Subscription;
+  private mbSub: Subscription;
 
   /**
    * An input to this component, notifying it when it needs to be moved
@@ -97,7 +98,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // Get the message bus observable
     // Subscribe to the message bus
-    this.subscription = this.mb.messageStream
+    this.mbSub = this.mb.messageStream
 
       .pipe(
         // Filter for TextBoxMessages only
@@ -125,7 +126,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.mbSub.unsubscribe();
     this.fbmSub.unsubscribe();
   }
   // #endregion
@@ -159,8 +160,46 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // #region event handlers
+  /**
+   * Cycles the editor(s) displayed in the text box
+   */
+  onCycleModes() {
+    switch (this.box.state) {
+      case "both":
+        this.box.state = "markdown";
+        break;
+      case "markdown":
+        this.box.state = "wysiwyg";
+        break;
+      case "wysiwyg":
+        this.box.state = "both";
+        break;
+    }
+  }
+
   onDeleteBox() {
     this.boxDeleted.emit();
+  }
+
+  onDebug() {}
+  // #endregion
+
+  // #region getters
+  get stateText(): string {
+    switch (this.box.state) {
+      case "both":
+        return "Hybrid";
+
+      case "markdown":
+        return "Markdown";
+
+      case "wysiwyg":
+        return "WYSIWYG";
+    }
+  }
+
+  get isDevMode(): boolean {
+    return !environment.production;
   }
   // #endregion
 
