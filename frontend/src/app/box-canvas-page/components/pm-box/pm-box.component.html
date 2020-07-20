@@ -1,4 +1,10 @@
-<div class="editor-box" cdkDragBoundary=".text-box-boundary" cdkDrag>
+<div
+  class="editor-box"
+  cdkDragBoundary=".text-box-boundary"
+  cdkDrag
+  [cdkDragFreeDragPosition]="dragPosition"
+  (cdkDragEnded)="onDragEnded($event)"
+>
   <div class="editor-container">
     <div class="editor-bar">
       <div class="editor-state">

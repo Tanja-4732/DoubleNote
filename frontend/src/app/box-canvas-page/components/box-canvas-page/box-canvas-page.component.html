@@ -37,7 +37,9 @@
 
   <app-pm-box
     *ngFor="let box of page.objects.boxes; trackBy: trackByBox"
-    (boxState)="onBoxStateChanged(box)"
+    [box]="box"
+    [foreignBoxMove]="foreignBoxMove.asObservable()"
+    (boxStateChanged)="onBoxStateChanged(box)"
     (boxDeleted)="onBoxDeleted(box)"
   >
   </app-pm-box>
