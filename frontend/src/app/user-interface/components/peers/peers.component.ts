@@ -5,6 +5,13 @@ import {
   Icons,
 } from "../crumb-trail/crumb-trail.component";
 import { SettingsService } from "src/app/services/settings/settings.service";
+import {
+  ConfirmDialogInput,
+  ConfirmDialogComponent,
+  ConfirmDialogOutput,
+} from "src/app/box-canvas-page/components/confirm-dialog/confirm-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { Contact } from "src/typings/core/contact";
 
 @Component({
   selector: "app-peers",
@@ -18,7 +25,8 @@ export class PeersComponent implements OnInit {
 
   constructor(
     public mbs: MessageBusService,
-    public settings: SettingsService
+    public settings: SettingsService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -49,5 +57,35 @@ export class PeersComponent implements OnInit {
     this.mbs.persistContacts();
 
     this.name = this.uuid = "";
+  }
+
+  deleteContact(contact: Contact): void {
+    const data: ConfirmDialogInput = {
+      heading: `Delete contact "${contact.name}"?`,
+      body:
+        "The contact will be removed. You can add it again later.\n" +
+        "This operation cannot be (automatically) undone.",
+      cancel: {
+        color: "primary",
+        text: "Cancel",
+      },
+      confirm: {
+        color: "warn",
+        text: "Delete contact",
+      },
+    };
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: "350px",
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((result: ConfirmDialogOutput) => {
+      if (result?.result) {
+        const i = this.mbs.contacts.findIndex((c) => c.uuid === contact.uuid);
+        this.mbs.contacts.splice(i, 1);
+        this.mbs.persistContacts();
+      }
+    });
   }
 }

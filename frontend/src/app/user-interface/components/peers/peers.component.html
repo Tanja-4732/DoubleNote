@@ -50,18 +50,26 @@
     </mat-form-field>
     <code> {{ contact.uuid }} </code>
 
-    <!-- Check if offline -->
-    <ng-container *ngIf="!settings.offlineMode; else offlineMode">
-      <!-- If not offline -->
-      <!-- Check if already connected -->
-      <button
-        mat-stroked-button
-        (click)="connectToPeer(contact.uuid)"
-        *ngIf="!mbs.isConnected(contact.uuid); else alreadyConnected"
-      >
-        Connect
+    <div>
+      <!-- Check if offline -->
+      <ng-container *ngIf="!settings.offlineMode; else offlineMode">
+        <!-- If not offline -->
+        <!-- Check if already connected -->
+        <button
+          mat-stroked-button
+          (click)="connectToPeer(contact.uuid)"
+          *ngIf="!mbs.isConnected(contact.uuid); else alreadyConnected"
+        >
+          Connect
+        </button>
+      </ng-container>
+
+      &nbsp;
+
+      <button mat-stroked-button (click)="deleteContact(contact)" color="warn">
+        Delete
       </button>
-    </ng-container>
+    </div>
 
     <ng-template #offlineMode>
       <!-- If offline -->
