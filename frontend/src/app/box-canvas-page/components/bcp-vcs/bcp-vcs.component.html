@@ -1,6 +1,6 @@
 <div class="card-grid">
   <mat-card>
-    <mat-card-title>Status</mat-card-title>
+    <mat-card-title>VCS Status</mat-card-title>
     <mat-card-content>
       Commit hash at head: <code>{{ notebook.strings.head | slice: 0:7 }}</code>
       <br />
@@ -18,7 +18,7 @@
   </mat-card>
 
   <mat-card>
-    <mat-card-title>Branches</mat-card-title>
+    <mat-card-title>Branches & Tags</mat-card-title>
     <mat-card-content>
       <ul>
         <li *ngFor="let branch of notebook.objects.branches | keyvalue">
@@ -29,13 +29,23 @@
     <mat-card-actions>
       <button
         mat-button
-        [matMenuTriggerFor]="selectBranch"
+        [matMenuTriggerFor]="selectBranchOrTag"
         [disabled]="disableCheckout"
       >
         {{ notebook.strings.selectedBranch }}
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
 
+      <mat-menu #selectBranchOrTag>
+        <button mat-menu-item [matMenuTriggerFor]="selectBranch">
+          Branches
+        </button>
+        <button mat-menu-item [matMenuTriggerFor]="selectTag">
+          Tags
+        </button>
+      </mat-menu>
+
+      <!-- Branches -->
       <mat-menu #selectBranch>
         <ng-container
           *ngFor="let branch of notebook.strings.branches | keyvalue"
@@ -48,6 +58,25 @@
             {{ branch.key }}
           </button>
         </ng-container>
+      </mat-menu>
+
+      <!-- Tags -->
+      <mat-menu #selectTag>
+        <button mat-menu-item disabled>
+          TODO 🤷
+        </button>
+        <button mat-menu-item disabled>
+          You can't create them either 🤷🤷
+        </button>
+        <!-- <ng-container *ngFor="let tag of notebook.strings.tags | keyvalue">
+          <button
+            mat-menu-item
+            (click)="onCheckoutBranch(tag.key)"
+            *ngIf="notebook.strings.TODO !== tag.key"
+          >
+            {{ tag.key }}
+          </button>
+        </ng-container> -->
       </mat-menu>
 
       <button mat-button (click)="onCreateBranch()">Create branch</button>
