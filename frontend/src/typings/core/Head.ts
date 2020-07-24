@@ -1,10 +1,8 @@
 import { Commit } from "./Commit";
 
-export type Head = CommitHead | BranchHead;
+export type Head = DetachedHead | BranchHead;
 
 interface BaseHead {
-  type: "commit" | "branch";
-
   /**
    * Whether the HEAD is in a detached state
    *
@@ -13,9 +11,7 @@ interface BaseHead {
   detached: boolean;
 }
 
-export interface CommitHead extends BaseHead {
-  type: "commit";
-
+export interface DetachedHead extends BaseHead {
   detached: true;
 
   /**
@@ -25,8 +21,6 @@ export interface CommitHead extends BaseHead {
 }
 
 export interface BranchHead extends BaseHead {
-  type: "branch";
-
   detached: false;
 
   /**

@@ -3,6 +3,7 @@ import { BcpNotebook } from "../bcp/BcpNotebook";
 import { Commit } from "./Commit";
 import { CategoryTree } from "../bcp/CategoryTree";
 import { Tag } from "./Tag";
+import { Head } from "./Head";
 
 export type Notebook = SbpNotebook | BcpNotebook;
 
@@ -71,9 +72,9 @@ export interface BaseNotebook {
     tags: Tag[];
 
     /**
-     * The currently selected commit
+     * The commit or branch to which the HEAD points to
      */
-    head: Commit;
+    head: Head;
 
     /**
      * The working tree
