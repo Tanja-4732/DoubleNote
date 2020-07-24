@@ -9,6 +9,8 @@ export interface BaseCommit {
    */
   timestamp: string;
 
+  // TODO maybe allow messages and authors
+
   /**
    * String-based references to the objects of this commit
    */

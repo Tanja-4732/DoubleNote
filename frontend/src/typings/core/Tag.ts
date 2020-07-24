@@ -1,8 +1,7 @@
-import { BcpCommit } from "../bcp/BcpCommit";
-import { Notebook } from "./Notebook";
 import { Commit } from "./Commit";
+import { BcpTag } from "../bcp/BcpTag";
 
-export type Tag = BcpCommit;
+export type Tag = BcpTag;
 
 export interface BaseTag {
   /**

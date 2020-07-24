@@ -2,6 +2,7 @@ import { SbpNotebook } from "../sbp/SbpNotebook";
 import { BcpNotebook } from "../bcp/BcpNotebook";
 import { Commit } from "./Commit";
 import { CategoryTree } from "../bcp/CategoryTree";
+import { Tag } from "./Tag";
 
 export type Notebook = SbpNotebook | BcpNotebook;
 
@@ -26,7 +27,20 @@ export interface BaseNotebook {
     };
 
     /**
-     * The hash of the currently selected commit
+     * The hashes of the tags of this notebook
+     */
+    tags: string[];
+
+    /**
+     * The currently selected object
+     *
+     * This can be:
+     *
+     * 1. A branch name
+     * 2. A tag name
+     * 3. A commit hash
+     *
+     * They will be checked in this order.
      */
     head: string;
 
@@ -36,11 +50,6 @@ export interface BaseNotebook {
      * This is the hash root tree node of the working tree
      */
     workingTree: string;
-
-    /**
-     * The name of the active branch
-     */
-    selectedBranch: string;
   };
 
   objects?: {
@@ -55,6 +64,11 @@ export interface BaseNotebook {
         name: string
       ]: Commit;
     };
+
+    /**
+     * The tags of this notebook
+     */
+    tags: Tag[];
 
     /**
      * The currently selected commit

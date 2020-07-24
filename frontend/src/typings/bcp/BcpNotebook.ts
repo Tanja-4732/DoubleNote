@@ -13,7 +13,7 @@ export interface BcpNotebook extends BaseNotebook {
       [name: string]: BcpCommit;
     };
 
-    head: BcpCommit;
+    head: BcpCommit; // TODO
 
     /**
      * The working tree
