@@ -13,6 +13,8 @@ export interface BaseNotebook {
   strings: {
     /**
      * The branches of this notebook
+     *
+     * Every string is a branch name and points to a commit hash
      */
     branches: {
       [
