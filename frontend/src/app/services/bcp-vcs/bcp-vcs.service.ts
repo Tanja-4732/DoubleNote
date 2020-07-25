@@ -11,9 +11,15 @@ import { fieldHider } from "src/functions/functions";
 import { log } from "src/functions/console";
 import { version } from "src/functions/version";
 import { BranchHead } from "src/typings/core/Head";
+import { BcpTag } from "src/typings/bcp/BcpTag";
 
+// Error messages
 export const WORKING_TREE_DIRTY =
   "The working tree contains uncommitted changes and the force flag was not set";
+export const NO_SUCH_BRANCH = "The specified branch does not exist";
+export const HEAD_STATE_DETACHED = "Cannot commit in detached HEAD state";
+export const BRANCH_NAME_TAKEN = "Branch exists already";
+export const NO_SUCH_COMMIT = "The specified commit does not exist";
 
 @Injectable({
   providedIn: "root",
