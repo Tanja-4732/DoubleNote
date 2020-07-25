@@ -34,6 +34,9 @@ export class BcpVcsService {
   private readonly boxes: { [hash: string]: TextBox } =
     JSON.parse(window.localStorage.getItem("dn.bcp.boxes")) ?? {};
 
+  private readonly tags: { [hash: string]: BcpTag } =
+    JSON.parse(window.localStorage.getItem("dn.bcp.tags")) ?? {};
+
   /**
    * ## Box Canvas Page version control system
    *
