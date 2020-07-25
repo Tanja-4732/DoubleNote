@@ -8,7 +8,7 @@ interface BaseHead {
    *
    * This is the case if the HEAD doesn't directly point to a branch.
    */
-  detached: boolean;
+  detached: true | false;
 }
 
 export interface DetachedHead extends BaseHead {

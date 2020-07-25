@@ -10,6 +10,7 @@ import { cloneDeep } from "lodash";
 import { fieldHider } from "src/functions/functions";
 import { log } from "src/functions/console";
 import { version } from "src/functions/version";
+import { BranchHead } from "src/typings/core/Head";
 
 export const WORKING_TREE_DIRTY =
   "The working tree contains uncommitted changes and the force flag was not set";
@@ -59,12 +60,27 @@ export class BcpVcsService {
    * committing unless the opposite is specified.
    *
    * @param notebook The notebook to be committed
+   * @param persistWorkingTree If persistWorkingTree should be called
+   * @param allowDetached If committing should be allowed in a detached HEAD state
    */
-  commitNotebook(notebook: BcpNotebook, persistWorkingTree = true): void {
+  commitNotebook(
+    notebook: BcpNotebook,
+    persistWorkingTree = true,
+    allowDetached = false
+  ): void {
+    // Persist the working tree if requested
     if (persistWorkingTree) {
       this.persistWorkingTree(notebook);
     }
 
+    // Check if the notebook is in a detached HEAD state
+    if (!allowDetached && notebook.objects.head.detached) {
+      throw new Error("Cannot commit in detached HEAD state");
+    }
+
+    /**
+     * The commit object created by this method
+     */
     const commit: BcpCommit = {
       timestamp: new Date().toISOString(),
       strings: {
@@ -72,12 +88,14 @@ export class BcpVcsService {
         rootCategory: notebook.strings.workingTree,
       },
       objects: {
-        previous: notebook.objects.head,
+        previous: notebook.objects.head.commit,
         rootCategory: notebook.objects.workingTree,
       },
     };
 
-    // Calculate the hash of the commit
+    /**
+     * The hash of the commit
+     */
     const commitHash = sha256(JSON.stringify(commit, fieldHider));
 
     // Save the commit
@@ -85,19 +103,22 @@ export class BcpVcsService {
 
     // Move the head to the new commit
     notebook.strings.head = commitHash;
-    notebook.objects.head = commit;
+    notebook.objects.head.commit = commit;
 
-    // Update the active branch
-    const selectedBranch = notebook.strings.selectedBranch;
-    notebook.strings.branches[selectedBranch] = notebook.strings.head;
-    notebook.objects.branches[selectedBranch] = notebook.objects.head;
+    // Update the active branch if the HEAD is not detached
+    switch (notebook.objects.head.detached) {
+      // This switch statement cannot be replaced with an if statement; see:
+      // https://github.com/microsoft/TypeScript/issues/10564#issuecomment-663879330
+      case false:
+        const selectedBranch = notebook.objects.head.name;
+        notebook.strings.branches[selectedBranch] = notebook.strings.head;
+        notebook.objects.branches[selectedBranch] =
+          notebook.objects.head.commit;
+    }
 
     // Persist everything
     this.persistNotebooks();
     this.persistCommits();
-
-    // Get the working tree ready
-    // this.replaceHeadWithWorkingTreeCopy(notebook);
   }
 
   /**

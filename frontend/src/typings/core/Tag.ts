@@ -4,6 +4,8 @@ import { BcpTag } from "../bcp/BcpTag";
 export type Tag = BcpTag;
 
 export interface BaseTag {
+  type: "BCP" | "SBP";
+
   /**
    * The `new Date().toISOString()` of the tag
    */
