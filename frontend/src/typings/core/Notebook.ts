@@ -38,8 +38,7 @@ export interface BaseNotebook {
      * This can be:
      *
      * 1. A branch name
-     * 2. A tag name
-     * 3. A commit hash
+     * 2. A commit hash
      *
      * They will be checked in this order.
      */
