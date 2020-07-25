@@ -480,6 +480,23 @@ export class BcpVcsService {
   }
 
   /**
+   * Resolves a HEAD string to a commit hash
+   *
+   * Since the HEAD (in its string representation) may be a branch name or a commit hash,
+   * it may need to be resolved. If no such branch exists, the string will be returned.
+   *
+   * This method does not check if the specified commit hash exists in storage.
+   *
+   * @param headString The string found in a HEAD to be resolved
+   * @param notebook The containing notebook
+   */
+  private resolveHead(headString: string, notebook: BcpNotebook): string {
+    return notebook.strings.branches.hasOwnProperty(headString)
+      ? notebook.strings.branches[headString]
+      : headString;
+  }
+
+  /**
    * Returns the JSON representation of the specified notebook
    *
    * @param notebook The notebook to be exported
