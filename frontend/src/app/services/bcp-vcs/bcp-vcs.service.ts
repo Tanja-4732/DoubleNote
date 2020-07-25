@@ -575,4 +575,14 @@ export class BcpVcsService {
       JSON.stringify(this.boxes, fieldHider)
     );
   }
+
+  /**
+   * Persists the tags to localStorage
+   */
+  private persistTags(): void {
+    window.localStorage.setItem(
+      "dn.bcp.tags",
+      JSON.stringify(this.tags, fieldHider)
+    );
+  }
 }
