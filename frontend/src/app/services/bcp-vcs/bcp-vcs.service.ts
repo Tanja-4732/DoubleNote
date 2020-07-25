@@ -315,27 +315,6 @@ export class BcpVcsService {
   }
 
   /**
-   * Replaces the HEAD object-representation
-   * with a copy of the working tree
-   *
-   * This method automatically persists the new HEAD.
-   *
-   * @param notebook The notebook of which to replace the HEAD
-   */
-  private replaceHeadWithWorkingTreeCopy(notebook: BcpNotebook): void {
-    // Make a deep clone of the HEAD's root tree
-    notebook.objects.workingTree = cloneDeep(
-      notebook.objects.head.objects.rootCategory
-    );
-
-    // Since the tree didn't change, its hash stays the same as well
-    notebook.strings.workingTree = notebook.objects.head.strings.rootCategory;
-
-    // Persist the new working tree
-    this.persistWorkingTree(notebook);
-  }
-
-  /**
    * Prepares a notebook's object representation
    *
    * This method loads data from the string-representation
