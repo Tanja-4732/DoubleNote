@@ -94,7 +94,7 @@ export class BcpVcsService {
     const commit: BcpCommit = {
       timestamp: new Date().toISOString(),
       strings: {
-        previous: notebook.strings.head,
+        previous: this.resolveHead(notebook.strings.head, notebook),
         rootCategory: notebook.strings.workingTree,
       },
       objects: {
@@ -112,7 +112,6 @@ export class BcpVcsService {
     this.commits[commitHash] = commit;
 
     // Move the head to the new commit
-    notebook.strings.head = commitHash;
     notebook.objects.head.commit = commit;
 
     // Update the active branch if the HEAD is not detached
@@ -120,10 +119,13 @@ export class BcpVcsService {
       // This switch statement cannot be replaced with an if statement; see:
       // https://github.com/microsoft/TypeScript/issues/10564#issuecomment-663879330
       case false:
-        const selectedBranch = notebook.objects.head.name;
-        notebook.strings.branches[selectedBranch] = notebook.strings.head;
-        notebook.objects.branches[selectedBranch] =
-          notebook.objects.head.commit;
+        notebook.strings.branches[notebook.objects.head.name] = commitHash;
+        notebook.objects.branches[notebook.objects.head.name] = commit;
+        break;
+
+      case true:
+        notebook.strings.head = commitHash;
+        break;
     }
 
     // Persist everything
@@ -218,7 +220,8 @@ export class BcpVcsService {
       notebook.objects.head.commit.objects.rootCategory
     );
 
-    this.persistNotebooks();
+    // Update the working tree hash
+    this.persistWorkingTree(notebook);
   }
 
   /**
