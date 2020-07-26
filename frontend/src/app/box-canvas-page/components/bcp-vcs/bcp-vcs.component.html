@@ -5,7 +5,9 @@
       Commit hash at head: <code>{{ notebook.strings.head | slice: 0:7 }}</code>
       <br />
       Root tree at head commit:
-      <code>{{ notebook.objects.head.strings.rootCategory | slice: 0:7 }}</code>
+      <code>{{
+        notebook.objects.head.commit.strings.rootCategory | slice: 0:7
+      }}</code>
       <br />
       Working tree hash:
       <code>{{ notebook.strings.workingTree | slice: 0:7 }}</code>
@@ -32,7 +34,7 @@
         [matMenuTriggerFor]="selectBranchOrTag"
         [disabled]="disableCheckout"
       >
-        {{ notebook.strings.selectedBranch }}
+        {{ notebook.objects.head.name || "Detached" }}
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
 
@@ -53,7 +55,7 @@
           <button
             mat-menu-item
             (click)="onCheckoutBranch(branch.key)"
-            *ngIf="notebook.strings.selectedBranch !== branch.key"
+            *ngIf="notebook.objects.head.name !== branch.key"
           >
             {{ branch.key }}
           </button>

@@ -371,6 +371,12 @@ export class BcpVcsService {
       notebook.strings.head
     );
 
+    // Set the branch name in the HEAD if applicable
+    switch (notebook.objects.head.detached) {
+      case false:
+        notebook.objects.head.name = notebook.strings.head;
+    }
+
     // Get the working tree ready
     notebook.objects.workingTree = cloneDeep(
       this.trees[notebook.strings.workingTree]
