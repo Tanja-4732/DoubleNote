@@ -2,7 +2,8 @@
   <mat-card>
     <mat-card-title>VCS Status</mat-card-title>
     <mat-card-content>
-      Commit hash at head: <code>{{ notebook.strings.head | slice: 0:7 }}</code>
+      Commit hash at head:
+      <code>{{ resolveHead(notebook.strings.head) | slice: 0:7 }}</code>
       <br />
       Root tree at head commit:
       <code>{{

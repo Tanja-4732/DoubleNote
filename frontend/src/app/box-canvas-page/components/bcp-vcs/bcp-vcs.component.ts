@@ -124,13 +124,15 @@ export class BcpVcsComponent implements OnInit {
         this.vcs.resolveHead(this.notebook.strings.head, this.notebook),
         true
       );
-
-      this.vcs.checkoutBranch(this.notebook, result.name);
     }
   }
 
   onCommit(): void {
     this.vcs.commitNotebook(this.notebook);
+  }
+
+  resolveHead(head: string): string {
+    return this.vcs.resolveHead(head, this.notebook);
   }
 
   debug(): void {
