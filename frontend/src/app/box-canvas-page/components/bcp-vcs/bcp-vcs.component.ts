@@ -121,8 +121,11 @@ export class BcpVcsComponent implements OnInit {
       this.vcs.createBranch(
         this.notebook,
         result.name,
-        this.vcs.resolveHead(this.notebook.strings.head, this.notebook)
+        this.vcs.resolveHead(this.notebook.strings.head, this.notebook),
+        true
       );
+
+      this.vcs.checkoutBranch(this.notebook, result.name);
     }
   }
 

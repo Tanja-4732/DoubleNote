@@ -138,13 +138,17 @@ export class BcpVcsService {
    * This process does not create a new commit. Instead, the new branch
    * will point to the specified commit hash directly.
    *
-   * The new branch will not be checked out automatically.
-   *
    * @param notebook The notebook for which a branch should be created
    * @param name The name of the branch to be created (may not exist already)
    * @param source The hash of the parent commit on which the branch should be based on
+   * @param checkout If the new branch should be checked out
    */
-  createBranch(notebook: BcpNotebook, name: string, source: string): void {
+  createBranch(
+    notebook: BcpNotebook,
+    name: string,
+    source: string,
+    checkout: boolean
+  ): void {
     // Check if the branch exists already
     if (notebook.strings.branches.hasOwnProperty(name)) {
       throw new Error(BRANCH_NAME_TAKEN);
@@ -161,6 +165,14 @@ export class BcpVcsService {
     // Create the new branch
     notebook.strings.branches[name] = source;
     notebook.objects.branches[name] = commit;
+
+    // Move the HEAD to the specified branch if desired
+    if (checkout) {
+      notebook.strings.head = name;
+      notebook.objects.head.commit = commit;
+      notebook.objects.head.detached = false;
+      (notebook.objects.head as BranchHead).name = name;
+    }
 
     // Persist the new branch
     this.persistNotebooks();
@@ -205,6 +217,8 @@ export class BcpVcsService {
     notebook.objects.workingTree = cloneDeep(
       notebook.objects.head.commit.objects.rootCategory
     );
+
+    this.persistNotebooks();
   }
 
   /**
