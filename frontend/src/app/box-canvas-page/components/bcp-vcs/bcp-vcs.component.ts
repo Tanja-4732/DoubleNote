@@ -40,7 +40,7 @@ export class BcpVcsComponent implements OnInit {
 
   get disableCommit(): boolean {
     return (
-      this.notebook.objects.head.strings.rootCategory ===
+      this.notebook.objects.head.commit.strings.rootCategory ===
       this.notebook.strings.workingTree
     );
   }
@@ -123,8 +123,8 @@ export class BcpVcsComponent implements OnInit {
 
   debug(): void {
     log("Root tree at head commit");
-    log(hash(this.notebook.objects.head.objects.rootCategory));
-    log(this.notebook.objects.head.objects.rootCategory);
+    log(hash(this.notebook.objects.head.commit.objects.rootCategory));
+    log(this.notebook.objects.head.commit.objects.rootCategory);
     log("");
 
     log("Working tree");
