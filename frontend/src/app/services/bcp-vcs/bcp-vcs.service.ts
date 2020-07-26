@@ -324,7 +324,7 @@ export class BcpVcsService {
     // Prepare the target data structure
     notebook.objects = {
       branches: {},
-      head: null,
+      head: { commit: null, detached: null },
       workingTree: null,
       tags: [],
     };
