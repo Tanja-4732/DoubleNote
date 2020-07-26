@@ -20,6 +20,7 @@ export const NO_SUCH_BRANCH = "The specified branch does not exist";
 export const HEAD_STATE_DETACHED = "Cannot commit in detached HEAD state";
 export const BRANCH_NAME_TAKEN = "Branch exists already";
 export const NO_SUCH_COMMIT = "The specified commit does not exist";
+export const NO_SUCH_NOTEBOOK = "Notebook not found";
 
 @Injectable({
   providedIn: "root",
@@ -84,7 +85,7 @@ export class BcpVcsService {
 
     // Check if the notebook is in a detached HEAD state
     if (!allowDetached && notebook.objects.head.detached) {
-      throw new Error("Cannot commit in detached HEAD state");
+      throw new Error(HEAD_STATE_DETACHED);
     }
 
     /**
@@ -98,7 +99,7 @@ export class BcpVcsService {
       },
       objects: {
         previous: notebook.objects.head.commit,
-        rootCategory: notebook.objects.workingTree,
+        rootCategory: cloneDeep(notebook.objects.workingTree),
       },
     };
 
@@ -137,7 +138,7 @@ export class BcpVcsService {
    * This process does not create a new commit. Instead, the new branch
    * will point to the specified commit hash directly.
    *
-   * The new branch will be checked out automatically.
+   * The new branch will not be checked out automatically.
    *
    * @param notebook The notebook for which a branch should be created
    * @param name The name of the branch to be created (may not exist already)
@@ -146,7 +147,7 @@ export class BcpVcsService {
   createBranch(notebook: BcpNotebook, name: string, source: string): void {
     // Check if the branch exists already
     if (notebook.strings.branches.hasOwnProperty(name)) {
-      throw new Error("Branch exists already");
+      throw new Error(BRANCH_NAME_TAKEN);
     }
 
     // Get the source commit
@@ -154,15 +155,12 @@ export class BcpVcsService {
 
     // Make sure the specified commit exists
     if (commit == null) {
-      throw new Error("The specified commit does not exist");
+      throw new Error(NO_SUCH_COMMIT);
     }
 
     // Create the new branch
     notebook.strings.branches[name] = source;
     notebook.objects.branches[name] = commit;
-
-    // Set the active branch
-    notebook.strings.selectedBranch = name;
 
     // Persist the new branch
     this.persistNotebooks();
@@ -185,27 +183,28 @@ export class BcpVcsService {
   checkoutBranch(notebook: BcpNotebook, branch: string, force = false): void {
     // Check if the branch exists
     if (!notebook.strings.branches.hasOwnProperty(branch)) {
-      throw new Error("The specified branch does not exist");
+      throw new Error(NO_SUCH_BRANCH);
     }
 
     // Prevent unwanted data loss
     if (
       !force &&
-      this.commits[notebook.strings.head].strings.rootCategory !==
-        notebook.strings.workingTree
+      this.commits[this.resolveHead(notebook.strings.head, notebook)].strings
+        .rootCategory !== notebook.strings.workingTree
     ) {
       throw new Error(WORKING_TREE_DIRTY);
     }
 
     // Move the HEAD to the specified branch
-    notebook.strings.head = notebook.strings.branches[branch];
-    notebook.objects.head = notebook.objects.branches[branch];
-
-    // Set the active branch
-    notebook.strings.selectedBranch = branch;
+    notebook.strings.head = branch;
+    notebook.objects.head.commit = notebook.objects.branches[branch];
+    notebook.objects.head.detached = false;
+    (notebook.objects.head as BranchHead).name = branch;
 
     // Copy the working tree
-    this.replaceHeadWithWorkingTreeCopy(notebook);
+    notebook.objects.workingTree = cloneDeep(
+      notebook.objects.head.commit.objects.rootCategory
+    );
   }
 
   /**
@@ -266,9 +265,9 @@ export class BcpVcsService {
         branches: {
           master: commitHash,
         },
-        head: commitHash,
+        head: "master",
         workingTree: treeHash,
-        selectedBranch: "master",
+        tags: [],
       },
     };
 
@@ -279,9 +278,6 @@ export class BcpVcsService {
 
     // Initialize the notebook
     this.prepareNotebook(notebook);
-
-    // Prepare the working tree
-    this.replaceHeadWithWorkingTreeCopy(notebook);
 
     // Persist everything
     this.persistTrees();
@@ -304,7 +300,7 @@ export class BcpVcsService {
 
     // Check for the existence of the notebook
     if (index === -1) {
-      throw new Error("Notebook not found");
+      throw new Error(NO_SUCH_NOTEBOOK);
     }
 
     // Update the name
@@ -330,6 +326,7 @@ export class BcpVcsService {
       branches: {},
       head: null,
       workingTree: null,
+      tags: [],
     };
 
     // Initialize every branch
@@ -354,13 +351,32 @@ export class BcpVcsService {
       this.loadTree(notebook.objects.branches[branchName].objects.rootCategory);
     }
 
-    // Set the head
-    notebook.objects.head = this.commits[notebook.strings.head];
+    // Initialize every tag
+    for (const tagHash of notebook.strings.tags) {
+      const tag = this.tags[tagHash];
+      tag.objects.target = this.commits[tag.strings.target];
+      notebook.objects.tags.push(tag);
+    }
+
+    /**
+     * The resolved HEAD commit hash
+     */
+    const resolvedHead = this.resolveHead(notebook.strings.head, notebook);
+
+    // Load the commit the HEAD points to
+    notebook.objects.head.commit = this.commits[resolvedHead];
+
+    // Set the HEAD's detached status
+    notebook.objects.head.detached = !notebook.strings.branches.hasOwnProperty(
+      notebook.strings.head
+    );
 
     // Get the working tree ready
     notebook.objects.workingTree = cloneDeep(
       this.trees[notebook.strings.workingTree]
     );
+
+    // Prepare the deeper levels of the working tree recursively
     this.loadWorkingTree(notebook.objects.workingTree);
   }
 
