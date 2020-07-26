@@ -34,7 +34,7 @@
         [matMenuTriggerFor]="selectBranchOrTag"
         [disabled]="disableCheckout"
       >
-        {{ notebook.objects.head.name || "Detached" }}
+        {{ branchText }}
         <mat-icon>arrow_drop_down</mat-icon>
       </button>
 
@@ -55,7 +55,7 @@
           <button
             mat-menu-item
             (click)="onCheckoutBranch(branch.key)"
-            *ngIf="notebook.objects.head.name !== branch.key"
+            *ngIf="calcDisableBranchButton(branch.key)"
           >
             {{ branch.key }}
           </button>

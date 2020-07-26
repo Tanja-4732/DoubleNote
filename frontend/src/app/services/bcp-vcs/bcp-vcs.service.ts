@@ -512,7 +512,7 @@ export class BcpVcsService {
    * @param headString The string found in a HEAD to be resolved
    * @param notebook The containing notebook
    */
-  private resolveHead(headString: string, notebook: BcpNotebook): string {
+  public resolveHead(headString: string, notebook: BcpNotebook): string {
     return notebook.strings.branches.hasOwnProperty(headString)
       ? notebook.strings.branches[headString]
       : headString;

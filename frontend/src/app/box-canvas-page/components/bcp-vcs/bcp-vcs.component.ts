@@ -20,6 +20,7 @@ import {
   ConfirmDialogInput,
   ConfirmDialogComponent,
 } from "../confirm-dialog/confirm-dialog.component";
+import { BranchHead } from "src/typings/core/Head";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -51,6 +52,14 @@ export class BcpVcsComponent implements OnInit {
 
   get commitText(): string {
     return this.disableCommit ? "Nothing to commit" : "Commit changes";
+  }
+
+  get branchText(): string {
+    return (this.notebook.objects.head as BranchHead).name || "Detached";
+  }
+
+  calcDisableBranchButton(name: string): boolean {
+    return (this.notebook.objects.head as BranchHead).name !== name;
   }
 
   onCheckoutBranch(name: string): void {
@@ -112,7 +121,7 @@ export class BcpVcsComponent implements OnInit {
       this.vcs.createBranch(
         this.notebook,
         result.name,
-        this.notebook.strings.head
+        this.vcs.resolveHead(this.notebook.strings.head, this.notebook)
       );
     }
   }

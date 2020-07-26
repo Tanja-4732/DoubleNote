@@ -18,6 +18,7 @@ import { Subscription, Subject } from "rxjs";
 import { Message, BcpMessage } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
+import { BranchHead } from "src/typings/core/Head";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -132,15 +133,18 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   // #region Commit
   get disableCommit(): boolean {
     return (
-      this.notebook.objects.head.strings.rootCategory ===
-      this.notebook.strings.workingTree
+      this.notebook.objects.head.detached ||
+      this.notebook.objects.head.commit.strings.rootCategory ===
+        this.notebook.strings.workingTree
     );
   }
 
   get commitText(): string {
-    return this.disableCommit
+    return this.notebook.objects.head.detached
+      ? "HEAD detached"
+      : this.disableCommit
       ? "Nothing to commit"
-      : "Commit to " + this.notebook.strings.selectedBranch;
+      : "Commit to " + (this.notebook.objects.head as BranchHead).name;
   }
   // #endregion
 
