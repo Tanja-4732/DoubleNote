@@ -10,6 +10,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  NgZone,
 } from "@angular/core";
 import { exampleSetup } from "prosemirror-example-setup";
 import { DOMParser, Schema } from "prosemirror-model";
@@ -89,7 +90,8 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public mb: MessageBusService,
     private engine: MarkdownEngineService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   // #region Angular life cycle hooks
@@ -120,9 +122,16 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // setTimeout(() => {
-    this.initProseMirror();
-    // }, 2000);
+    this.ngZone.runOutsideAngular(() => this.recTimeOut(100));
+  }
+
+  private recTimeOut(i: number): void {
+    if (i === 0) {
+      this.initProseMirror();
+      return;
+    }
+
+    setTimeout(() => this.recTimeOut(--i), 0);
   }
 
   ngOnDestroy(): void {
@@ -151,6 +160,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * Initializes ProseMirror
    */
   private initProseMirror() {
+    log("pm init");
     const mySchema = new Schema({
       nodes: addListNodes(
         (schema.spec.nodes as unknown) as any,
