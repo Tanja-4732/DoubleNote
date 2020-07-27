@@ -84,7 +84,6 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @ViewChild("pmEditorRef")
   pmEditorRef: ElementRef;
-
   // #endregion
 
   constructor(
@@ -97,9 +96,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   // #region Angular life cycle hooks
   ngOnInit(): void {
     // Get the message bus observable
-    // Subscribe to the message bus
     this.mbSub = this.mb.messageStream
-
       .pipe(
         // Filter for TextBoxMessages only
         filter((m: Message) => m.messageType === "TextBoxMessage"),
@@ -112,9 +109,13 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.handleIncomingMessage(message)
       );
 
+    // Detect changes once, manually
     this.cdr.detectChanges();
+
+    // Update the position of the box on the page, once, manually
     this.setBoxPosition();
 
+    // Register to the observable to be notified when the box gets moved
     this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
 
     // TODO Refresh the Markdown string
@@ -122,16 +123,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.ngZone.runOutsideAngular(() => this.recTimeOut(100));
-  }
-
-  private recTimeOut(i: number): void {
-    if (i === 0) {
-      this.initProseMirror();
-      return;
-    }
-
-    setTimeout(() => this.recTimeOut(--i), 0);
+    this.initProseMirror();
   }
 
   ngOnDestroy(): void {
@@ -160,7 +152,9 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * Initializes ProseMirror
    */
   private initProseMirror() {
+    log(this.pmEditorRef.nativeElement);
     log("pm init");
+
     const mySchema = new Schema({
       nodes: addListNodes(
         (schema.spec.nodes as unknown) as any,
@@ -173,7 +167,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     const view = new EditorView(this.pmEditorRef.nativeElement, {
       state: EditorState.create({
         doc: DOMParser.fromSchema(mySchema).parse(
-          document.querySelector("#content")
+          this.pmEditorRef.nativeElement
         ),
         plugins: exampleSetup({ schema: mySchema }),
       }),

@@ -87,11 +87,26 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
         )
       )
       .subscribe((message: BcpMessage) => this.handleMessage(message));
+
+    // Register the control+s key
+    window.addEventListener("keydown", this.handleCtrlS);
+    log("registered");
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+
+    // Unregister the control+s key
+    window.removeEventListener("keydown", this.handleCtrlS);
+    log("unregistered");
   }
+
+  private handleCtrlS = (event: KeyboardEvent): void => {
+    if (event.key === "s" && event.ctrlKey) {
+      event.preventDefault();
+      this.onSaveChanges();
+    }
+  };
 
   /**
    * Recursively searches for a page
