@@ -26,6 +26,10 @@ _See the newest plans in the [5th iteration of the frontend README](/frontend/RE
 - Origin-agnostic migration support (for DoubleNote instances on different hosts)
 - Optional cloud storage (server-side software) with user accounts and shared permissions
 
+## Development
+
+For more information on how to develop this application, push it beyond its current capabilities and realize your own features and/or bug fixes, see the [development section f the frontend README.md](/frontend/README.md#development)
+
 ## Further reading
 
 For information about the frontend, see the [frontend README.md](/frontend/README.md).  
