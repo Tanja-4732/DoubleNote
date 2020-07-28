@@ -169,7 +169,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
         doc: DOMParser.fromSchema(mySchema).parse(
           this.pmEditorRef.nativeElement
         ),
-        plugins: exampleSetup({ schema: mySchema }),
+        plugins: exampleSetup({ schema: mySchema, floatingMenu: false }),
       }),
     });
   }
