@@ -1,4 +1,5 @@
 // @use "matcha";
+@use "pm";
 /* You can add global styles to this file, and also import other style files */
 
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Quicksand:wght@400;500&family=Raleway&display=swap");
@@ -115,6 +116,10 @@ code.block-code {
   width: 100%;
   height: 100%;
   padding: 4px;
+}
+
+.ProseMirror-menubar-wrapper {
+  height: 100%;
 }
 
 .ProseMirror-menubar {
