@@ -113,3 +113,10 @@ mat-divider {
   $the-perfect-amount: 2.57598px;
   margin: $the-perfect-amount 4px;
 }
+
+button.mat-menu-item {
+  $height: 25px;
+
+  line-height: $height;
+  height: $height;
+}

@@ -285,8 +285,34 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onType(): void {
-    log("onType");
+  onType(styleType: string): void {
+    log("onType: " + styleType);
+
+    switch (styleType) {
+      case "plain":
+        break;
+
+      case "code":
+        break;
+
+      case "h1":
+        break;
+
+      case "h2":
+        break;
+
+      case "h3":
+        break;
+
+      case "h4":
+        break;
+
+      case "h5":
+        break;
+
+      case "h6":
+        break;
+    }
   }
 
   onUndo(): void {
