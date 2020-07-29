@@ -13,7 +13,7 @@ import {
   NgZone,
 } from "@angular/core";
 import { exampleSetup } from "prosemirror-example-setup";
-import { DOMParser, Schema } from "prosemirror-model";
+import { DOMParser, Schema, MarkType } from "prosemirror-model";
 import { schema } from "prosemirror-schema-basic";
 import { addListNodes } from "prosemirror-schema-list";
 import { EditorState } from "prosemirror-state";
@@ -27,6 +27,8 @@ import { log } from "src/functions/console";
 import { Coordinates } from "src/typings/bcp/Coordinates";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { Message, TextBoxMessage } from "src/typings/core/Message";
+import { history } from "prosemirror-history";
+import { toggleMark } from "prosemirror-commands";
 
 @Component({
   selector: "app-pm-box",
@@ -84,6 +86,22 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @ViewChild("pmEditorRef")
   pmEditorRef: ElementRef;
+
+  private view: EditorView;
+  private mySchema: Schema<
+    | "get"
+    | "update"
+    | "remove"
+    | "addToStart"
+    | "addToEnd"
+    | "addBefore"
+    | "forEach"
+    | "prepend"
+    | "append"
+    | "subtract"
+    | "size",
+    "link" | "em" | "strong" | "code"
+  >;
   // #endregion
 
   constructor(
@@ -155,7 +173,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     log(this.pmEditorRef.nativeElement);
     log("pm init");
 
-    const mySchema = new Schema({
+    this.mySchema = new Schema({
       nodes: addListNodes(
         (schema.spec.nodes as unknown) as any,
         "paragraph block*",
@@ -164,12 +182,14 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       marks: schema.spec.marks,
     });
 
-    const view = new EditorView(this.pmEditorRef.nativeElement, {
+    this.view = new EditorView(this.pmEditorRef.nativeElement, {
       state: EditorState.create({
-        doc: DOMParser.fromSchema(mySchema).parse(
+        doc: DOMParser.fromSchema(this.mySchema).parse(
           this.pmEditorRef.nativeElement
         ),
-        plugins: exampleSetup({ schema: mySchema, menuBar: false }),
+        plugins: [].concat(
+          exampleSetup({ schema: this.mySchema, menuBar: false })
+        ),
       }),
     });
   }
@@ -196,10 +216,39 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.boxDeleted.emit();
   }
 
-  onDebug() {}
+  onDebug(): void {
+    log(this.view.dom);
+
+    const state = this.view.state;
+    const dispatch = this.view.dispatch;
+
+    if (dispatch) {
+      dispatch(state.tr.deleteSelection());
+    }
+  }
 
   onBold(): void {
     log("onBold");
+
+    log(this.view.dom);
+
+    const state = this.view.state;
+    const dispatch = this.view.dispatch;
+
+    if (dispatch) {
+      const mark = schema.marks.strong;
+      log(mark);
+
+      const tm = toggleMark(mark);
+
+      log(tm);
+
+      tm(this.view.state);
+
+      // dispatch(
+      //   state.tr.addMark(state.selection.from, state.selection.to, mark)
+      // );
+    }
   }
 
   onItalic(): void {
@@ -220,6 +269,20 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onHr(): void {
     log("onHr");
+
+    log(this.mySchema.nodes);
+
+    const state = this.view.state;
+    const dispatch = this.view.dispatch;
+
+    if (dispatch) {
+      dispatch(
+        state.tr.insert(
+          this.view.state.selection.from,
+          this.mySchema.node("horizontal_rule")
+        )
+      );
+    }
   }
 
   onType(): void {
