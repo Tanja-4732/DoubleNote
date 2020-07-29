@@ -169,7 +169,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
         doc: DOMParser.fromSchema(mySchema).parse(
           this.pmEditorRef.nativeElement
         ),
-        plugins: exampleSetup({ schema: mySchema, floatingMenu: false }),
+        plugins: exampleSetup({ schema: mySchema, menuBar: false }),
       }),
     });
   }
@@ -197,6 +197,58 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onDebug() {}
+
+  onBold(): void {
+    log("onBold");
+  }
+
+  onItalic(): void {
+    log("onItalic");
+  }
+
+  onCode(): void {
+    log("onCode");
+  }
+
+  onLink(): void {
+    log("onLink");
+  }
+
+  onPicture(): void {
+    log("onPicture");
+  }
+
+  onHr(): void {
+    log("onHr");
+  }
+
+  onType(): void {
+    log("onType");
+  }
+
+  onUndo(): void {
+    log("onUndo");
+  }
+
+  onRedo(): void {
+    log("onRedo");
+  }
+
+  onBulletList(): void {
+    log("onBulletList");
+  }
+
+  onNumberList(): void {
+    log("onNumberList");
+  }
+
+  onQuote(): void {
+    log("onQuote");
+  }
+
+  onSelectParentNode(): void {
+    log("onSelectParentNode");
+  }
   // #endregion
 
   // #region getters

@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { TextBoxComponent } from "./components/text-box/text-box.component";
 import { DrawComponent } from "./components/draw/draw.component";
 import { DemoComponent } from "./components/demo/demo.component";
 import { FormsModule } from "@angular/forms";
@@ -15,14 +14,13 @@ import { PageDialogComponent } from "./components/page-dialog/page-dialog.compon
 import { BoxCanvasPageComponent } from "./components/box-canvas-page/box-canvas-page.component";
 import { RouterModule } from "@angular/router";
 import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dialog.component";
-import { MarkdownDirective } from './directives/markdown/markdown.directive';
-import { ContentEditableDirective } from './directives/content-editable/content-editable.directive';
-import { PmBoxComponent } from './components/pm-box/pm-box.component';
+import { MarkdownDirective } from "./directives/markdown/markdown.directive";
+import { ContentEditableDirective } from "./directives/content-editable/content-editable.directive";
+import { PmBoxComponent } from "./components/pm-box/pm-box.component";
 
 @NgModule({
   declarations: [
     DemoComponent,
-    TextBoxComponent,
     DrawComponent,
     BcpNotebookComponent,
     BcpVcsComponent,

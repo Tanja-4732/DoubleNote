@@ -1,0 +1,103 @@
+* {
+  font-family: "Raleway", "system-ui", Roboto, "Helvetica Neue", sans-serif;
+}
+
+code,
+code *,
+.code {
+  font-family: "Fira Code", monospace, ui-monospace, sans-serif !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  // font-family: "system-ui" !important;
+  // font-variant-ligatures: common-ligatures !important;
+  // background-color: matcha.$bg_color;
+}
+
+// button {
+// color: matcha.$text_color;
+// background-color: matcha.$button_bg;
+// border: matcha.$button_border;
+// }
+
+.defaultMargin {
+  margin: 8px;
+}
+
+/**
+The css-grid for card layouts
+*/
+.card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+mat-card-title,
+mat-toolbar > span,
+mat-toolbar {
+  font-family: "Quicksand", "system-ui", Roboto, "Helvetica Neue", sans-serif !important;
+}
+
+mat-toolbar > span {
+  font-weight: 600;
+  font-weight: 500;
+  font-weight: medium;
+}
+
+div.mat-dialog-content {
+  overflow: unset;
+}
+
+mat-card {
+  display: flex !important;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+mat-card-actions {
+  margin-top: auto;
+}
+
+mat-card-content {
+  overflow: hidden;
+}
+
+code.inline-code {
+  $pad: 3px;
+
+  background-color: #e0e0e0;
+  padding-left: $pad;
+  padding-right: $pad;
+}
+
+code.block-code {
+  $pad: 3px;
+
+  display: inline-block;
+  background-color: #e0e0e0;
+  padding-left: $pad;
+  padding-right: $pad;
+
+  border-radius: 4px;
+}
+
+.no-right-margin {
+  margin-right: 0 !important;
+}
+
+.bulk-text {
+  max-width: 700px;
+}

@@ -1,0 +1,17 @@
+@use "pm-default";
+
+.ProseMirror {
+  width: 100%;
+  height: 100%;
+  // height: -webkit-fill-available;
+  // padding: 2px;
+}
+
+.ProseMirror-menubar-wrapper {
+  height: 100%;
+}
+
+.ProseMirror-menubar {
+  min-height: unset;
+  position: sticky;
+}
