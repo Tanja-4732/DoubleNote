@@ -27,7 +27,7 @@ import { log } from "src/functions/console";
 import { Coordinates } from "src/typings/bcp/Coordinates";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { Message, TextBoxMessage } from "src/typings/core/Message";
-import { history } from "prosemirror-history";
+import { undo, redo } from "prosemirror-history";
 import { toggleMark } from "prosemirror-commands";
 
 @Component({
@@ -231,18 +231,30 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     log("onBold");
 
     if (this.view.dispatch) {
-      const tm = toggleMark(schema.marks.strong);
+      const command = toggleMark(schema.marks.strong);
 
-      tm(this.view.state, this.view.dispatch);
+      command(this.view.state, this.view.dispatch);
     }
   }
 
   onItalic(): void {
     log("onItalic");
+
+    if (this.view.dispatch) {
+      const command = toggleMark(schema.marks.em);
+
+      command(this.view.state, this.view.dispatch);
+    }
   }
 
   onCode(): void {
     log("onCode");
+
+    if (this.view.dispatch) {
+      const command = toggleMark(schema.marks.code);
+
+      command(this.view.state, this.view.dispatch);
+    }
   }
 
   onLink(): void {
@@ -303,10 +315,22 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onUndo(): void {
     log("onUndo");
+
+    if (this.view.dispatch) {
+      const command = undo;
+
+      command(this.view.state, this.view.dispatch);
+    }
   }
 
   onRedo(): void {
     log("onRedo");
+
+    if (this.view.dispatch) {
+      const command = redo;
+
+      command(this.view.state, this.view.dispatch);
+    }
   }
 
   onBulletList(): void {
