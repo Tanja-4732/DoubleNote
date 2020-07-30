@@ -230,24 +230,10 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   onBold(): void {
     log("onBold");
 
-    log(this.view.dom);
+    if (this.view.dispatch) {
+      const tm = toggleMark(schema.marks.strong);
 
-    const state = this.view.state;
-    const dispatch = this.view.dispatch;
-
-    if (dispatch) {
-      const mark = schema.marks.strong;
-      log(mark);
-
-      const tm = toggleMark(mark);
-
-      log(tm);
-
-      tm(this.view.state);
-
-      // dispatch(
-      //   state.tr.addMark(state.selection.from, state.selection.to, mark)
-      // );
+      tm(this.view.state, this.view.dispatch);
     }
   }
 
