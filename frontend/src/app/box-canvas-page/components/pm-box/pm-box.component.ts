@@ -223,7 +223,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     const dispatch = this.view.dispatch;
 
     if (dispatch) {
-      dispatch(state.tr.deleteSelection());
+      // dispatch(state.tr.deleteSelection());
     }
   }
 
