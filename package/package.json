@@ -2,12 +2,20 @@
   "name": "doublenote",
   "version": "0.0.1",
   "description": "An Angular note taking app supporting both real-time and async collaboration using Markdown or a WYSIWYG editor, optimised for peer-to-peer usage with optional commit-based versioning",
+  "main": "dist/cli.js",
   "files": [
-    "README.md",
-    "package.json"
+    "dist"
   ],
   "bin": {
-    "dn": "cli.sh"
+    "dn": "dist/cli.js",
+    "doublenote": "dist/cli.js"
+  },
+  "scripts": {
+    "watch": "nodemon -w src -x \"tsc && node -r source-map-support/register .\" -e ts",
+    "start": "node .",
+    "build": "tsc",
+    "prepack": "rm -r dist/ && tsc -p tsconfig.prod.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -22,5 +30,11 @@
   "dependencies": {
     "doublenote-backend": "latest",
     "doublenote-frontend": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "nodemon": "^2.0.4",
+    "source-map-support": "^0.5.19",
+    "typescript": "^3.9.7"
   }
 }

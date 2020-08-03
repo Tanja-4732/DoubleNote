@@ -1,6 +1,6 @@
 {
   "name": "doublenote-backend",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
