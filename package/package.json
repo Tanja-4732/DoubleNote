@@ -6,11 +6,8 @@
     "README.md",
     "package.json"
   ],
-  "scripts": {
-    "start": "node ../doublenote-backend/dist/main.js"
-  },
   "bin": {
-    "doublenote": "cli.sh"
+    "dn": "cli.sh"
   },
   "repository": {
     "type": "git",
