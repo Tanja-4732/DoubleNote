@@ -1,0 +1,29 @@
+{
+  "name": "doublenote",
+  "version": "0.0.1",
+  "description": "An Angular note taking app supporting both real-time and async collaboration using Markdown or a WYSIWYG editor, optimised for peer-to-peer usage with optional commit-based versioning",
+  "files": [
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "start": "node ../doublenote-backend/dist/main.js"
+  },
+  "bin": {
+    "doublenote": "cli.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bernd-L/DoubleNote.git"
+  },
+  "author": "Bernd-L",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Bernd-L/DoubleNote/issues"
+  },
+  "homepage": "https://github.com/Bernd-L/DoubleNote#readme",
+  "dependencies": {
+    "doublenote-backend": "latest",
+    "doublenote-frontend": "latest"
+  }
+}
