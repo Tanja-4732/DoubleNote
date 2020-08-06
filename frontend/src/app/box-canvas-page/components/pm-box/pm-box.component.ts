@@ -30,6 +30,8 @@ import { Message, TextBoxMessage } from "src/typings/core/Message";
 import { undo, redo } from "prosemirror-history";
 import { toggleMark } from "prosemirror-commands";
 
+export const BOX_CONTENT_EMPTY = "box-empty";
+
 @Component({
   selector: "app-pm-box",
   templateUrl: "./pm-box.component.html",
@@ -42,6 +44,17 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @Input()
   readonly box: TextBox;
+
+  /**
+   * An input which triggers when the box should save its content
+   */
+  @Input()
+  saveInstruction: Observable<void>;
+
+  /**
+   * The subscription to be notified of save instructions
+   */
+  private saveInstructionSub: Subscription;
 
   /**
    * The subscription to the MessageBus
@@ -138,6 +151,10 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // TODO Refresh the Markdown string
     // this.markdownText = this.engine.generateMarkdown(this.box.mdom);
+
+    this.saveInstructionSub = this.saveInstruction.subscribe(() =>
+      this.saveDocument()
+    );
   }
 
   ngAfterViewInit(): void {
@@ -147,6 +164,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.mbSub.unsubscribe();
     this.fbmSub.unsubscribe();
+    this.saveInstructionSub.unsubscribe();
   }
   // #endregion
 
@@ -155,8 +173,8 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     // Log the incoming message
     log(message);
 
-    // Update the markdown object model
-    this.box.mdom = message.mdom;
+    // TODO Update the markdown object model
+    // this.box.mdom = message.mdom;
 
     // TODO Refresh the Markdown string
     // this.markdownText = this.engine.generateMarkdown(this.box.mdom);
@@ -170,9 +188,6 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * Initializes ProseMirror
    */
   private initProseMirror() {
-    log(this.pmEditorRef.nativeElement);
-    log("pm init");
-
     this.mySchema = new Schema({
       nodes: addListNodes(
         (schema.spec.nodes as unknown) as any,
@@ -182,24 +197,28 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       marks: schema.spec.marks,
     });
 
-    const docFromLS = JSON.parse(
-      localStorage.getItem("dn.bcp.debug.pm-box-test")
-    );
-
     this.view = new EditorView(this.pmEditorRef.nativeElement, {
       state: EditorState.create({
         doc:
-          docFromLS != null
-            ? Node.fromJSON(this.mySchema, docFromLS)
-            : DOMParser.fromSchema(this.mySchema).parse(
+          this.box.pmDoc === BOX_CONTENT_EMPTY
+            ? DOMParser.fromSchema(this.mySchema).parse(
                 this.pmEditorRef.nativeElement
-              ),
-
+              )
+            : Node.fromJSON(this.mySchema, JSON.parse(this.box.pmDoc)),
         plugins: [].concat(
           exampleSetup({ schema: this.mySchema, menuBar: false })
         ),
       }),
     });
+  }
+
+  /**
+   * Saves the current pm document
+   *
+   * Called by the CanvasPageComponent using Angular Inputs
+   */
+  private saveDocument(): void {
+    this.box.pmDoc = JSON.stringify(this.view.state.doc);
   }
 
   // #region event handlers
@@ -226,10 +245,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onDebug(): void {
     const doc = this.view.state.doc;
-
     log(doc);
-
-    localStorage.setItem("dn.bcp.debug.pm-box-test", JSON.stringify(doc));
   }
 
   onBold(): void {

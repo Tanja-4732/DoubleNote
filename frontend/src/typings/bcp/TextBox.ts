@@ -11,10 +11,15 @@ export interface TextBox {
    */
   state: "both" | "markdown" | "wysiwyg";
 
+  // /**
+  //  * The MarkDown Object Model representation of the content of this text box
+  //  */
+  // mdom: MdomNode[];
+
   /**
-   * The MarkDown Object Model representation of the content of this text box
+   * The ProseMirror document contained in this box
    */
-  mdom: MdomNode[];
+  pmDoc: string;
 
   /**
    * The x position of the text box

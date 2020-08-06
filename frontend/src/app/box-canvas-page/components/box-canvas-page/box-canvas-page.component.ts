@@ -19,6 +19,7 @@ import { Message, BcpMessage } from "src/typings/core/Message";
 import { filter } from "rxjs/operators";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 import { BranchHead } from "src/typings/core/Head";
+import { BOX_CONTENT_EMPTY } from "../pm-box/pm-box.component";
 
 @Component({
   selector: "app-box-canvas-page",
@@ -33,6 +34,8 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   foreignBoxMove = new Subject<void>();
+
+  saveInstruction = new Subject<void>();
 
   workingTitle: string;
 
@@ -193,7 +196,7 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
           y: message.box.y,
           width: message.box.width,
           height: message.box.height,
-          mdom: [],
+          pmDoc: BOX_CONTENT_EMPTY,
         });
         break;
 
@@ -222,6 +225,7 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   onSaveChanges(): void {
     log("Saving changes");
     this.page.title = this.workingTitle;
+    this.saveInstruction.next();
     this.bcpVcs.persistWorkingTree(this.notebook);
     this.setCrumbTrail();
   }
