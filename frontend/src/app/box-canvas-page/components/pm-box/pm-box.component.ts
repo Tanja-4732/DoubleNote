@@ -13,7 +13,7 @@ import {
   NgZone,
 } from "@angular/core";
 import { exampleSetup } from "prosemirror-example-setup";
-import { DOMParser, Schema, MarkType } from "prosemirror-model";
+import { DOMParser, Schema, MarkType, Node } from "prosemirror-model";
 import { schema } from "prosemirror-schema-basic";
 import { addListNodes } from "prosemirror-schema-list";
 import { EditorState } from "prosemirror-state";
@@ -183,14 +183,14 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     const docFromLS = JSON.parse(
-      window.localStorage.getItem("dn.bcp.debug.pm-box-test")
+      localStorage.getItem("dn.bcp.debug.pm-box-test")
     );
 
     this.view = new EditorView(this.pmEditorRef.nativeElement, {
       state: EditorState.create({
         doc:
           docFromLS != null
-            ? docFromLS
+            ? Node.fromJSON(this.mySchema, docFromLS)
             : DOMParser.fromSchema(this.mySchema).parse(
                 this.pmEditorRef.nativeElement
               ),
@@ -229,10 +229,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     log(doc);
 
-    window.localStorage.setItem(
-      "dn.bcp.debug.pm-box-test",
-      JSON.stringify(doc)
-    );
+    localStorage.setItem("dn.bcp.debug.pm-box-test", JSON.stringify(doc));
   }
 
   onBold(): void {
