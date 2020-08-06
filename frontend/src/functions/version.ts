@@ -1,4 +1,4 @@
-export const version = "0.13.4";
+export const version = "0.14.0";
 
 class Helper {
   static get versionString(): string {
