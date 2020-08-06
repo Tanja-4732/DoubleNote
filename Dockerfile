@@ -2,14 +2,14 @@
 FROM node:12-alpine AS frontend
 WORKDIR /build/frontend
 COPY ./frontend .
-RUN npm i
+RUN npm install --silent
 RUN npm run build
 
 # Backend
 FROM node:12-alpine AS backend
 WORKDIR /build/backend
 COPY ./backend .
-RUN npm i
+RUN npm install --silent
 RUN npm run build
 RUN npm prune
 
