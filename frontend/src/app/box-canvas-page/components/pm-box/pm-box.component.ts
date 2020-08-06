@@ -182,11 +182,19 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       marks: schema.spec.marks,
     });
 
+    const docFromLS = JSON.parse(
+      window.localStorage.getItem("dn.bcp.debug.pm-box-test")
+    );
+
     this.view = new EditorView(this.pmEditorRef.nativeElement, {
       state: EditorState.create({
-        doc: DOMParser.fromSchema(this.mySchema).parse(
-          this.pmEditorRef.nativeElement
-        ),
+        doc:
+          docFromLS != null
+            ? docFromLS
+            : DOMParser.fromSchema(this.mySchema).parse(
+                this.pmEditorRef.nativeElement
+              ),
+
         plugins: [].concat(
           exampleSetup({ schema: this.mySchema, menuBar: false })
         ),
@@ -217,7 +225,14 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onDebug(): void {
-    log(this.view.dom);
+    const doc = this.view.state.doc;
+
+    log(doc);
+
+    window.localStorage.setItem(
+      "dn.bcp.debug.pm-box-test",
+      JSON.stringify(doc)
+    );
   }
 
   onBold(): void {
