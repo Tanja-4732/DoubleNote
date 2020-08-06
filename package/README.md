@@ -18,6 +18,8 @@ You can install DoubleNote globally, or run it using [npx](https://www.npmjs.com
    1. Run `npm i doublenote -g` to install DoubleNote globally
    2. Start DoubleNote using `dn` or `doublenote`
 
+This application is also available as a Docker image at <https://hub.docker.com/r/berndl/doublenote>.
+
 ## Further reading
 
 For information about the frontend, see the [frontend README.md](/frontend/README.md).  

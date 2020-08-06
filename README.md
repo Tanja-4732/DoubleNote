@@ -6,9 +6,9 @@
 
 A note taking app focused on ease of use and user freedom.
 
-This is a new project; its development status is far away from a beta release.
+This is a new project (currently in beta); its development status is far away from a 1.0 release.
 
-See the `master` branch deployed here: <https://DoubleNote.bernd.pw/> using Vercel.  
+To give it a try, see the `master` branch deployed here: <https://DoubleNote.bernd.pw/> (powered by Vercel).  
 Notice: This is only the frontend served statically. Some (planned) features are only available using the backend server.
 
 ## (Planned) Features
@@ -26,6 +26,14 @@ _See the newest plans in the [5th iteration of the frontend README](/frontend/RE
 - Origin-agnostic migration support (for DoubleNote instances on different hosts)
 - Optional cloud storage (server-side software) with user accounts and shared permissions
 
+## Usage
+
+If you want to try the application before installing via NPM or Docker, you can check it out [here on Vercel](https://DoubleNote.bernd.pw/).
+
+You can use the [doublenote Docker image](https://hub.docker.com/r/berndl/doublenote), or the [doublenote NPM package](https://npmjs.org/package/doublenote), which contains the frontend, the backend and some CLI files which allow for easy execution (for more details about the doublenote NPM package, see the [package README.md](/package/README.md); it contains info on how to install and start the software).
+
+Both the frontend and the backend have their respective packages on NPM: [doublenote-frontend](https://npmjs.org/package/doublenote-frontend) (contains the compiled frontend without any non-dev dependencies), and the [doublenote-backend](https://npmjs.org/package/doublenote-backend), which contains the compiled backend (depending on Express).
+
 ## Development
 
 For more information on how to develop this application, push it beyond its current capabilities and realize your own features and/or bug fixes, see the [development section f the frontend README.md](/frontend/README.md#development)
@@ -33,7 +41,8 @@ For more information on how to develop this application, push it beyond its curr
 ## Further reading
 
 For information about the frontend, see the [frontend README.md](/frontend/README.md).  
-For information about the backend, see the [backend README.md](/backend/README.md).
+For information about the backend, see the [backend README.md](/backend/README.md).  
+For information about the `doublenote` NPM package, see the [package README.md](/package/README.md).
 
 ## Licence & Copyright
 
