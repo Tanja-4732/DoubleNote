@@ -14,17 +14,33 @@ export class SettingsService {
   /**
    * A subject of the offline mode
    */
-  private readonly subject: BehaviorSubject<boolean>;
+  private readonly offlineModeSubject: BehaviorSubject<boolean>;
 
   /**
    * An observable of the offline mode
    */
-  public readonly observable: Observable<boolean>;
+  public readonly offlineModeObservable: Observable<boolean>;
+
+  /**
+   * A subject of the format bars
+   */
+  private readonly formatBarsSubject: BehaviorSubject<boolean>;
+
+  /**
+   * An observable of the format bars
+   */
+  public readonly formatBarsObservable: Observable<boolean>;
 
   constructor() {
     this.loadSettings();
-    this.subject = new BehaviorSubject(this.offlineMode);
-    this.observable = this.subject.asObservable();
+
+    // Offline mode
+    this.offlineModeSubject = new BehaviorSubject(this.offlineMode);
+    this.offlineModeObservable = this.offlineModeSubject.asObservable();
+
+    // Format bars
+    this.formatBarsSubject = new BehaviorSubject(this.formatBars);
+    this.formatBarsObservable = this.formatBarsSubject.asObservable();
   }
 
   /**
@@ -53,7 +69,7 @@ export class SettingsService {
   set offlineMode(value: boolean) {
     this.settings.enableOfflineMode = value;
     this.saveData();
-    this.subject.next(value);
+    this.offlineModeSubject.next(value);
   }
 
   get formatBars(): boolean {
@@ -63,7 +79,7 @@ export class SettingsService {
   set formatBars(value: boolean) {
     this.settings.enableFormatBars = value;
     this.saveData();
-    this.subject.next(value);
+    this.formatBarsSubject.next(value);
   }
 
   get sideNavOpened(): boolean {

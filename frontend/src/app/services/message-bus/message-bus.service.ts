@@ -97,7 +97,7 @@ export class MessageBusService {
   constructor(private settings: SettingsService) {
     // if (!this.settings.offlineMode && MessageBusService.myself == null) { }
 
-    this.offlineModeSubscription = this.settings.observable.subscribe(
+    this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
       (offline) =>
         offline ? this.enableOfflineMode() : this.disableOfflineMode()
     );
