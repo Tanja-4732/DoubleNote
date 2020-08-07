@@ -25,7 +25,10 @@
     </div>
 
     <div
-      *ngIf="box.state === 'both' || box.state === 'wysiwyg'"
+      *ngIf="
+        (settings.formatBarsObservable | async) &&
+        (box.state === 'both' || box.state === 'wysiwyg')
+      "
       class="editor-bar"
     >
       <button mat-icon-button (click)="onBold()">

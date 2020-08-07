@@ -29,6 +29,7 @@ import { TextBox } from "src/typings/bcp/TextBox";
 import { Message, TextBoxMessage } from "src/typings/core/Message";
 import { undo, redo } from "prosemirror-history";
 import { toggleMark } from "prosemirror-commands";
+import { SettingsService } from "src/app/services/settings/settings.service";
 
 export const BOX_CONTENT_EMPTY = "box-empty";
 
@@ -121,7 +122,8 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     public mb: MessageBusService,
     private engine: MarkdownEngineService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    public settings: SettingsService
   ) {}
 
   // #region Angular life cycle hooks
