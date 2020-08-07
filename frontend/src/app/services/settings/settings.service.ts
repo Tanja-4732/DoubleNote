@@ -56,6 +56,16 @@ export class SettingsService {
     this.subject.next(value);
   }
 
+  get formatBars(): boolean {
+    return this.settings.enableFormatBars ?? true;
+  }
+
+  set formatBars(value: boolean) {
+    this.settings.enableFormatBars = value;
+    this.saveData();
+    this.subject.next(value);
+  }
+
   get sideNavOpened(): boolean {
     return this.settings.sideNavOpened ?? true;
   }
@@ -71,5 +81,6 @@ export class SettingsService {
  */
 interface Settings {
   enableOfflineMode: boolean;
+  enableFormatBars: boolean;
   sideNavOpened: boolean;
 }
