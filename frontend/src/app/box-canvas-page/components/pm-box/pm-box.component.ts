@@ -28,7 +28,7 @@ import { Coordinates } from "src/typings/bcp/Coordinates";
 import { TextBox } from "src/typings/bcp/TextBox";
 import { Message, TextBoxMessage } from "src/typings/core/Message";
 import { undo, redo } from "prosemirror-history";
-import { toggleMark } from "prosemirror-commands";
+import { toggleMark, selectParentNode } from "prosemirror-commands";
 import { SettingsService } from "src/app/services/settings/settings.service";
 
 export const BOX_CONTENT_EMPTY = "box-empty";
@@ -370,6 +370,10 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSelectParentNode(): void {
     log("onSelectParentNode");
+
+    if (this.view.dispatch) {
+      selectParentNode(this.view.state, this.view.dispatch);
+    }
   }
   // #endregion
 
