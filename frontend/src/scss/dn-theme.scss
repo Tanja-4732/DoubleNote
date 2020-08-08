@@ -1,0 +1,29 @@
+// The Angular Material theming lib
+@import "~@angular/material/theming";
+
+// The DoubleNote colors
+@import "dn-colors.scss";
+
+// The common styles for Angular Material.
+@include mat-core();
+
+// Material palettes
+$dn-primary: mat-palette($dn-green);
+$dn-accent: mat-palette($dn-light-green);
+
+// The warn palette is optional (defaults to red).
+$dn-warn: mat-palette($mat-red);
+
+// Create the theme object
+$dn-theme: mat-dark-theme(
+  (
+    color: (
+      primary: $dn-primary,
+      accent: $dn-accent,
+      warn: $dn-warn,
+    ),
+  )
+);
+
+// Make and include the theme
+@include angular-material-theme($dn-theme);

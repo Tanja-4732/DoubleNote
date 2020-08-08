@@ -7,8 +7,15 @@ Those styles are used, because component-specific styles are only
 effective on elements known at compile time.
 */
 
-// @use "matcha";
+// General styles
 @use "scss/general";
+
+// The theming of the app
+// @use "matcha";
+@use "scss/dn-theme.scss";
+
+// Styles for the ProseMirror box
 @use "scss/pm-box.scss";
 
+// Fonts
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code&family=Quicksand:wght@400;500&family=Raleway&display=swap");

@@ -18,6 +18,7 @@
     "prosemirror",
     "regexes",
     "sidenav",
+    "theming",
     "tslib"
   ],
   "htmlhint.options": {
