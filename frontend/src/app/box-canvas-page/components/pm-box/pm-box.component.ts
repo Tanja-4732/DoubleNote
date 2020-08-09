@@ -10,7 +10,6 @@ import {
   OnInit,
   Output,
   ViewChild,
-  NgZone,
 } from "@angular/core";
 import { exampleSetup } from "prosemirror-example-setup";
 import { DOMParser, Schema, MarkType, Node } from "prosemirror-model";
@@ -122,7 +121,6 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     public mb: MessageBusService,
     private engine: MarkdownEngineService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
     public settings: SettingsService
   ) {}
 
