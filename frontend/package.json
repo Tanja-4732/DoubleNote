@@ -1,6 +1,6 @@
 {
   "name": "doublenote-frontend",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
