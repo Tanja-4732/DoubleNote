@@ -13,6 +13,12 @@ import {
 import { MatDialog } from "@angular/material/dialog";
 import { Contact } from "src/typings/core/contact";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { log } from "src/functions/console";
+import {
+  ContactDialogComponent,
+  ContactDialogInput,
+  ContactDialogOutput,
+} from "../contact-dialog/contact-dialog.component";
 
 @Component({
   selector: "app-collaboration",
@@ -49,8 +55,6 @@ export class CollaborationComponent implements OnInit {
   get contacts() {
     return this.mbs.contacts;
   }
-
-  connectToPeer = (uuid: string) => this.mbs.connectToPeer(uuid);
 
   persistMyName = () => (this.mbs.myName = this.myName);
 
@@ -95,6 +99,70 @@ export class CollaborationComponent implements OnInit {
         const i = this.mbs.contacts.findIndex((c) => c.uuid === contact.uuid);
         this.mbs.contacts.splice(i, 1);
         this.mbs.persistContacts();
+      }
+    });
+  }
+
+  openEditContactDialog(contact: Contact): void {
+    log("Edit Contact dialog");
+
+    const data: ContactDialogInput = {
+      contact,
+      opcode: "Update",
+      takenTitles: this.contacts.map((c) => c.name),
+    };
+
+    const dialogRef = this.dialog.open(ContactDialogComponent, {
+      // width: "250px",
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((result: ContactDialogOutput) => {
+      if (result !== undefined && result.confirmed) {
+        contact.name = result.name;
+        this.mbs.persistContacts();
+      }
+    });
+  }
+
+  openJoinContactDialog(contact: Contact): void {
+    log("Join Contact dialog");
+
+    const data: ContactDialogInput = {
+      contact,
+      opcode: "Join",
+      takenTitles: this.contacts.map((c) => c.name),
+    };
+
+    const dialogRef = this.dialog.open(ContactDialogComponent, {
+      // width: "250px",
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((result: ContactDialogOutput) => {
+      if (result !== undefined && result.confirmed) {
+        this.mbs.connectToPeer(result.contact.uuid);
+      }
+    });
+  }
+
+  openInviteContactDialog(contact: Contact): void {
+    log("Invite Contact dialog");
+
+    const data: ContactDialogInput = {
+      contact,
+      opcode: "Invite",
+      takenTitles: this.contacts.map((c) => c.name),
+    };
+
+    const dialogRef = this.dialog.open(ContactDialogComponent, {
+      // width: "250px",
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((result: ContactDialogOutput) => {
+      if (result !== undefined && result.confirmed) {
+        this.mbs.connectToPeer(result.contact.uuid);
       }
     });
   }

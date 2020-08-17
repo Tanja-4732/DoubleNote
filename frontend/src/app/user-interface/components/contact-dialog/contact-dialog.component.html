@@ -1,1 +1,122 @@
-<p>contact-dialog works!</p>
+<ng-container *ngIf="status === 'awaiting input'">
+  <ng-container *ngIf="input.opcode === 'Invite'">
+    <h1 mat-dialog-title>Invite "{{ input.contact.name }}"?</h1>
+
+    <div mat-dialog-content>
+      <p>
+        Do you want to authorize "{{ input.contact.name }}" to join your
+        session? They will have full read and write access to your notebooks.
+      </p>
+      <p><em>Only invite people you trust</em></p>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()" type="button">
+        Cancel
+      </button>
+      <button mat-button color="warn" (click)="onAuthorizeInvite()">
+        Authorize invitation
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="input.opcode === 'Join'">
+    <h1 mat-dialog-title>Join "{{ input.contact.name }}"?</h1>
+
+    <div mat-dialog-content>
+      <p>
+        Do you want to attempt to join the session of "{{
+          input.contact.name
+        }}"? You will be able to collaborate with them in their notebook.
+      </p>
+      <p>
+        This will only work if they have a pending invite for you. They will not
+        have access to your data.
+      </p>
+      <p><em>Only join people you trust</em></p>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()" type="button">
+        Cancel
+      </button>
+      <button mat-button color="primary" (click)="onJoin()">
+        Join session
+      </button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="input.opcode === 'Update'">
+    <h1 mat-dialog-title>Rename contact</h1>
+
+    <p>Parent category: {{ this.input.contact.name }}</p>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+      <div mat-dialog-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            formControlName="title"
+            name="page-name"
+            placeholder="My page"
+            required
+            cdkFocusInitial
+          />
+          <mat-error *ngIf="formGroup.invalid">
+            <!-- A title must be provided -->
+            An unused title must be provided
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()" type="button">
+          Cancel
+        </button>
+        <button mat-button [disabled]="formGroup.invalid" type="submit">
+          Confirm
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="status === 'invite pending'">
+  <h1 mat-dialog-title>Inviting "{{ input.contact.name }}"...</h1>
+
+  <div mat-dialog-content>
+    <p>
+      You have authorized "{{ input.contact.name }}" to join your session. They
+      will have full read and write access to your notebooks, once they join.
+    </p>
+    <p>
+      You can revoke the invitation at any time. The invitation is only valid
+      while this dialog is open.
+    </p>
+    <p><em>Keep this dialog open</em></p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button color="accent" (click)="onSubmit()">
+      Revoke invitation
+    </button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="status === 'join pending'">
+  <h1 mat-dialog-title>Joining "{{ input.contact.name }}"...</h1>
+
+  <div mat-dialog-content>
+    <p>Attempting to join the session of "{{ input.contact.name }}".</p>
+    <p>
+      If you see this message for longer than a couple of seconds, they may not
+      have had an invite for you. There won't be a reject-message.
+    </p>
+    <p>
+      Keep in mind that the invite must have been created before you click the
+      join button.
+    </p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button color="accent" (click)="onSubmit()">
+      Cancel
+    </button>
+  </div>
+</ng-container>

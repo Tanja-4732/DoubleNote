@@ -83,11 +83,18 @@
 
         <button
           mat-button
-          color="primary"
-          (click)="connectToPeer(contact.uuid)"
-          *ngIf="!mbs.isConnected(contact.uuid)"
+          (click)="openInviteContactDialog(contact)"
+          color="accent"
         >
-          Connect
+          Invite
+        </button>
+
+        <button
+          mat-button
+          (click)="openJoinContactDialog(contact)"
+          color="primary"
+        >
+          Join session
         </button>
       </mat-action-row>
     </mat-expansion-panel>
