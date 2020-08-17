@@ -13,10 +13,10 @@ import { PageNotFoundComponent } from "./components/page-not-found/page-not-foun
 import { SettingsComponent } from "./components/settings/settings.component";
 import { SideNavComponent } from "./components/side-nav/side-nav.component";
 import { WelcomeComponent } from "./components/welcome/welcome.component";
-import { PeersComponent } from "./components/peers/peers.component";
+import { CollaborationComponent } from "./components/collaboration/collaboration.component";
 import { ImportComponent } from "./components/import/import.component";
 import { ServersComponent } from "./components/servers/servers.component";
-import { ExportDialogComponent } from './components/export-dialog/export-dialog.component';
+import { ExportDialogComponent } from "./components/export-dialog/export-dialog.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +29,7 @@ import { ExportDialogComponent } from './components/export-dialog/export-dialog.
     NotebookCardComponent,
     SideNavComponent,
     PageNotFoundComponent,
-    PeersComponent,
+    CollaborationComponent,
     ImportComponent,
     ServersComponent,
     ExportDialogComponent,

@@ -8,7 +8,7 @@ import { SbpNotebookComponent } from "../sequential-block-page/components/sbp-no
 import { BcpNotebookComponent } from "../box-canvas-page/components/bcp-notebook/bcp-notebook.component";
 import { PageNotFoundComponent } from "../user-interface/components/page-not-found/page-not-found.component";
 import { BoxCanvasPageComponent } from "../box-canvas-page/components/box-canvas-page/box-canvas-page.component";
-import { PeersComponent } from "../user-interface/components/peers/peers.component";
+import { CollaborationComponent } from "../user-interface/components/collaboration/collaboration.component";
 import { ImportComponent } from "../user-interface/components/import/import.component";
 import { ServersComponent } from "../user-interface/components/servers/servers.component";
 
@@ -23,8 +23,8 @@ const routes: Routes = [
   {
     path: "peers",
     children: [
-      { path: "", component: PeersComponent },
-      { path: "new/:remoteUuid", component: PeersComponent },
+      { path: "", component: CollaborationComponent },
+      { path: "new/:remoteUuid", component: CollaborationComponent },
     ],
   },
 

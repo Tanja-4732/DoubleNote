@@ -14,11 +14,11 @@ import { MatDialog } from "@angular/material/dialog";
 import { Contact } from "src/typings/core/contact";
 
 @Component({
-  selector: "app-peers",
-  templateUrl: "./peers.component.html",
-  styleUrls: ["./peers.component.scss"],
+  selector: "app-collaboration",
+  templateUrl: "./collaboration.component.html",
+  styleUrls: ["./collaboration.component.scss"],
 })
-export class PeersComponent implements OnInit {
+export class CollaborationComponent implements OnInit {
   name = "";
   uuid = "";
   myName: string;
@@ -32,8 +32,8 @@ export class PeersComponent implements OnInit {
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
       {
-        title: "Peer connections",
-        icon: Icons.MultiUser,
+        title: "Collaboration",
+        icon: Icons.MultiUser6,
       },
     ];
 
