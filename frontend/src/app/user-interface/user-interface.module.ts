@@ -17,6 +17,7 @@ import { CollaborationComponent } from "./components/collaboration/collaboration
 import { ImportComponent } from "./components/import/import.component";
 import { ServersComponent } from "./components/servers/servers.component";
 import { ExportDialogComponent } from "./components/export-dialog/export-dialog.component";
+import { ContactDialogComponent } from "./components/contact-dialog/contact-dialog.component";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ExportDialogComponent } from "./components/export-dialog/export-dialog.
     ImportComponent,
     ServersComponent,
     ExportDialogComponent,
+    ContactDialogComponent,
   ],
   imports: [CommonModule, AppRoutingModule, AngularMaterialModule],
   exports: [MainComponent, BoxCanvasPageModule, SequentialBlockPageModule],
