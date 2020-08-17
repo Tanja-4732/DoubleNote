@@ -1,83 +1,120 @@
-<div class="contacts">
-  <!-- Headings -->
-  <h1>Name</h1>
-  <h1>UUID</h1>
-  <h1>Actions</h1>
+<div class="card-grid">
+  <mat-card>
+    <mat-card-title>My settings</mat-card-title>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>My name</mat-label>
+        <input matInput placeholder="Someone" [(ngModel)]="myName" required />
+      </mat-form-field>
+      <code> {{ myUuid }} </code>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-stroked-button
+        (click)="persistMyName()"
+        [disabled]="myName === '' || myName === mbs.myName"
+      >
+        Save
+      </button>
+    </mat-card-actions>
+  </mat-card>
 
-  <!-- Me -->
-  <mat-form-field appearance="outline">
-    <mat-label>My name</mat-label>
-    <input matInput placeholder="Someone" [(ngModel)]="myName" required />
-  </mat-form-field>
-  <code> {{ myUuid }} </code>
-  <button
-    mat-stroked-button
-    (click)="persistMyName()"
-    [disabled]="myName === '' || myName === mbs.myName"
-  >
-    Save
-  </button>
+  <mat-card>
+    <mat-card-title>Add contact</mat-card-title>
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Someone" [(ngModel)]="name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>UUID</mat-label>
+        <input
+          matInput
+          placeholder="d5fc0052-4f0d-4421-b929-dbc43ff80cc7"
+          [(ngModel)]="uuid"
+          class="code"
+        />
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-stroked-button
+        (click)="createContact()"
+        [disabled]="name === '' || uuid === ''"
+      >
+        Add contact
+      </button>
+    </mat-card-actions>
+  </mat-card>
 
-  <!-- Add contact -->
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input matInput placeholder="Someone" [(ngModel)]="name" />
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>UUID</mat-label>
-    <input
-      matInput
-      placeholder="d5fc0052-4f0d-4421-b929-dbc43ff80cc7"
-      [(ngModel)]="uuid"
-      class="code"
-    />
-  </mat-form-field>
-  <div>
-    <button
-      mat-stroked-button
-      (click)="createContact()"
-      [disabled]="name === '' || uuid === ''"
-    >
-      Add contact
-    </button>
-  </div>
+  <!-- (span>lorem)*100 -->
+</div>
 
-  <!-- Contacts -->
+<br />
+<h2>Contacts</h2>
+
+<mat-accordion>
   <ng-container *ngFor="let contact of contacts">
-    <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput placeholder="Someone" [(ngModel)]="contact.name" />
-    </mat-form-field>
-    <code> {{ contact.uuid }} </code>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ contact.name }}
+        </mat-panel-title>
+        <!-- <mat-panel-description>
+          <code> {{ contact.uuid }} </code>
+        </mat-panel-description> -->
+      </mat-expansion-panel-header>
+      <p>
+        <code> {{ contact.uuid }} </code>
+      </p>
 
-    <div>
-      <!-- Check if offline -->
-      <ng-container *ngIf="!settings.offlineMode; else offlineMode">
-        <!-- If not offline -->
-        <!-- Check if already connected -->
+      <mat-action-row>
+        <button mat-button (click)="deleteContact(contact)" color="warn">
+          Delete
+        </button>
+
         <button
-          mat-stroked-button
+          mat-button
+          color="primary"
           (click)="connectToPeer(contact.uuid)"
-          *ngIf="!mbs.isConnected(contact.uuid); else alreadyConnected"
+          *ngIf="!mbs.isConnected(contact.uuid)"
         >
           Connect
         </button>
-      </ng-container>
-
-      &nbsp;
-
-      <button mat-stroked-button (click)="deleteContact(contact)" color="warn">
-        Delete
-      </button>
-    </div>
-
-    <ng-template #offlineMode>
-      <!-- If offline -->
-      <p><a routerLink="/settings">Offline mode</a> enabled</p>
-    </ng-template>
-
-    <ng-template #alreadyConnected>
-      <p>Peer connected</p>
-    </ng-template>
+      </mat-action-row>
+    </mat-expansion-panel>
   </ng-container>
-</div>
+
+  <!-- Tutorial -->
+
+  <!-- <ng-container *ngIf="contacts.length === 0"> -->
+  <mat-expansion-panel [expanded]="contacts.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Collaboration guide
+      </mat-panel-title>
+      <mat-panel-description>
+        (Tutorial)
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>
+      DoubleNote supports collaboration in real time.
+    </p>
+
+    <p>
+      Use the interface above to add contacts, and to invite them to your
+      session, or join others in their sessions if you are invited.
+    </p>
+
+    <!-- <mat-action-row>
+        <button mat-button color="primary">Learn more</button>
+      </mat-action-row> -->
+  </mat-expansion-panel>
+  <!-- </ng-container> -->
+</mat-accordion>
+
+<!-- <ng-container *ngIf="isDevMode">
+  <br />
+  <button mat-raised-button (click)="debug()" color="primary">Debug</button>
+  <br />
+</ng-container> -->
