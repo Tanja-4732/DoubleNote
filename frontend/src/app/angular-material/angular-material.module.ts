@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-
 import { MatButtonModule } from "@angular/material/button";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatCardModule } from "@angular/material/card";
@@ -18,6 +17,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatTreeModule } from "@angular/material/tree";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatExpansionModule } from "@angular/material/expansion";
 
 @NgModule({
   declarations: [],
@@ -27,7 +27,6 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     FormsModule,
     ReactiveFormsModule,
     DragDropModule,
-
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
@@ -44,6 +43,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatMenuModule,
     MatTreeModule,
     MatSnackBarModule,
+    MatExpansionModule,
   ],
 })
 export class AngularMaterialModule {}
