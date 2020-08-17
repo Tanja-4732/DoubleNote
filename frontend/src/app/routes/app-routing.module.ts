@@ -19,12 +19,12 @@ const routes: Routes = [
   // Settings component
   { path: "settings", component: SettingsComponent },
 
-  // Peers management
+  // Collaboration management
   {
-    path: "peers",
+    path: "collaboration",
     children: [
       { path: "", component: CollaborationComponent },
-      { path: "new/:remoteUuid", component: CollaborationComponent },
+      { path: "add/:remoteUuid", component: CollaborationComponent },
     ],
   },
 
