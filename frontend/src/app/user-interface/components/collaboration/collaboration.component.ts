@@ -12,6 +12,7 @@ import {
 } from "src/app/box-canvas-page/components/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { Contact } from "src/typings/core/contact";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "app-collaboration",
@@ -26,6 +27,7 @@ export class CollaborationComponent implements OnInit {
   constructor(
     public mbs: MessageBusService,
     public settings: SettingsService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
 
@@ -57,6 +59,14 @@ export class CollaborationComponent implements OnInit {
     this.mbs.persistContacts();
 
     this.name = this.uuid = "";
+  }
+
+  copyMyUuid(): void {
+    navigator.clipboard.writeText(this.myUuid);
+
+    this.snackBar.open("UUID copied to clipboard", "Close", {
+      duration: 3000,
+    });
   }
 
   deleteContact(contact: Contact): void {

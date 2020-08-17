@@ -6,15 +6,22 @@
         <mat-label>My name</mat-label>
         <input matInput placeholder="Someone" [(ngModel)]="myName" required />
       </mat-form-field>
-      <code> {{ myUuid }} </code>
+      <p>
+        My UUID: <br />
+        <code> {{ myUuid }} </code>
+      </p>
     </mat-card-content>
     <mat-card-actions>
+      <button mat-button color="primary" (click)="copyMyUuid()">
+        Copy UUID
+      </button>
       <button
-        mat-stroked-button
+        mat-button
+        color="accent"
         (click)="persistMyName()"
         [disabled]="myName === '' || myName === mbs.myName"
       >
-        Save
+        Save name
       </button>
     </mat-card-actions>
   </mat-card>
@@ -38,7 +45,7 @@
     </mat-card-content>
     <mat-card-actions>
       <button
-        mat-stroked-button
+        mat-button
         (click)="createContact()"
         [disabled]="name === '' || uuid === ''"
       >
