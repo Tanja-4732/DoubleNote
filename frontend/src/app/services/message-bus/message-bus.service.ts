@@ -11,7 +11,8 @@ import { log } from "src/functions/console";
  * # MessageBusService
  *
  * This service allows the application to operate in real-time with peers.
- * It allows for dispatching messages, and observing incoming ones.
+ * It allows for dispatching messages, and observing incoming ones, as well as
+ * joining the sessions of other peers and inviting them to join the local one.
  *
  * ## Goals
  *
@@ -21,6 +22,9 @@ import { log } from "src/functions/console";
  * - Forward messages to all connected peers
  * - Accept incoming messages from all connected peers
  * - Deliver messages the parts of the application which need them
+ * - Manage connections using contacts
+ *   - Joining remote sessions provided an invitation
+ *   - Inviting others to collaboration in the local session
  */
 @Injectable({
   providedIn: "root",
