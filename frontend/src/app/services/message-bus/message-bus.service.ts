@@ -4,7 +4,7 @@ import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
 import { Message } from "../../../typings/core/Message";
 import { SettingsService } from "../settings/settings.service";
-import { Contact } from "src/typings/core/contact";
+import { Contact } from "src/typings/core/Contact";
 import { log } from "src/functions/console";
 
 /**

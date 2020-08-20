@@ -11,7 +11,7 @@ import {
   ConfirmDialogOutput,
 } from "src/app/box-canvas-page/components/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { Contact } from "src/typings/core/contact";
+import { Contact } from "src/typings/core/Contact";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { log } from "src/functions/console";
 import {

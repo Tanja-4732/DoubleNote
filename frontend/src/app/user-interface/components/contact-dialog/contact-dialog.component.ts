@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from "@angular/core";
-import { Contact } from "src/typings/core/contact";
+import { Contact } from "src/typings/core/Contact";
 import { log } from "src/functions/console";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
