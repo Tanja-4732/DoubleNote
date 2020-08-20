@@ -1,8 +1,9 @@
-export const version = "0.18.2";
+export { version } from "../../package.json";
+import { version } from "../../package.json";
 
 class Helper {
   static get versionString(): string {
-    return "Version " + version;
+    return `Version ${version}`;
   }
 }
 
