@@ -14,6 +14,10 @@ import { Injectable } from "@angular/core";
  *   - Download and upload notebooks to and from peers to establish shared sessions
  * - Outside code should be mostly agnostic to the session owner
  *   - Allow the pre-existing code to interface with local and remote notebooks
+ * - Manage permissions
+ *   - Read/Write control
+ *   - Shared notebooks
+ *   - Scoped access (sub-notebook)
  */
 @Injectable({
   providedIn: "root",
