@@ -8,6 +8,7 @@ import {
   Validators,
   AbstractControl,
 } from "@angular/forms";
+import { SessionService } from "src/app/services/session/session.service";
 
 @Component({
   selector: "app-contact-dialog",
@@ -24,6 +25,7 @@ export class ContactDialogComponent implements OnInit {
   formGroup: FormGroup;
 
   constructor(
+    public session: SessionService,
     formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ContactDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public input: ContactDialogInput
@@ -52,6 +54,7 @@ export class ContactDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close({ confirmed: false } as ContactDialogOutput);
+    log(this.session.autorizeInviteByUuid(this.input.contact.uuid)); // TODO display this somehow in the GUI
   }
 
   onSubmit(): void {
