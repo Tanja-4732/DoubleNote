@@ -107,23 +107,21 @@
   <ng-container *ngSwitchCase="OpCode.update">
     <h1 mat-dialog-title>Rename contact</h1>
 
-    <p>Parent category: {{ this.input.contact.name }}</p>
-
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
       <div mat-dialog-content>
         <mat-form-field appearance="outline">
-          <mat-label>Title</mat-label>
+          <mat-label>Name</mat-label>
           <input
             matInput
             formControlName="title"
             name="page-name"
-            placeholder="My page"
+            placeholder="Someone"
             required
             cdkFocusInitial
           />
           <mat-error *ngIf="formGroup.invalid">
             <!-- A title must be provided -->
-            An unused title must be provided
+            An unused name must be provided
           </mat-error>
         </mat-form-field>
       </div>
