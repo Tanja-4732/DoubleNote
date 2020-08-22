@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Icons } from "../crumb-trail/crumb-trail.component";
-import { versionString } from "src/functions/version";
+import { shortVersionString } from "src/functions/version";
 
 @Component({
   selector: "app-side-nav",
@@ -13,7 +13,7 @@ export class SideNavComponent implements OnInit {
   }
 
   get version() {
-    return versionString;
+    return shortVersionString;
   }
 
   constructor() {}
