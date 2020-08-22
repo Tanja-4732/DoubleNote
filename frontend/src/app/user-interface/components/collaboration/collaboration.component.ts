@@ -18,6 +18,7 @@ import {
   ContactDialogComponent,
   ContactDialogInput,
   ContactDialogOutput,
+  ContactDialogOpcode,
 } from "../contact-dialog/contact-dialog.component";
 
 @Component({
@@ -108,7 +109,7 @@ export class CollaborationComponent implements OnInit {
 
     const data: ContactDialogInput = {
       contact,
-      opcode: "Update",
+      opcode: ContactDialogOpcode.update,
       takenTitles: this.contacts.map((c) => c.name),
     };
 
@@ -130,7 +131,7 @@ export class CollaborationComponent implements OnInit {
 
     const data: ContactDialogInput = {
       contact,
-      opcode: "Join",
+      opcode: ContactDialogOpcode.join,
       takenTitles: this.contacts.map((c) => c.name),
     };
 
@@ -151,7 +152,7 @@ export class CollaborationComponent implements OnInit {
 
     const data: ContactDialogInput = {
       contact,
-      opcode: "Invite",
+      opcode: ContactDialogOpcode.invite,
       takenTitles: this.contacts.map((c) => c.name),
     };
 

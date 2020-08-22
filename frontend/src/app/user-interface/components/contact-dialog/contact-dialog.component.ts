@@ -19,11 +19,7 @@ import localeImport from "@angular/common/locales/de-AT";
   styleUrls: ["./contact-dialog.component.scss"],
 })
 export class ContactDialogComponent implements OnInit {
-  status:
-    | "awaiting input"
-    | "invite pending"
-    | "invite accepted"
-    | "join pending" = "awaiting input";
+  public dialogState = Status.awaiting_input;
 
   readonly joinCode: string = "";
 
@@ -60,6 +56,14 @@ export class ContactDialogComponent implements OnInit {
     });
   }
 
+  get Status() {
+    return Status;
+  }
+
+  get OpCode() {
+    return ContactDialogOpcode;
+  }
+
   ngOnInit(): void {}
 
   onNoClick(): void {
@@ -83,13 +87,13 @@ export class ContactDialogComponent implements OnInit {
   onAuthorizeInvite() {
     this.token = this.session.autorizeInviteByUuid(this.input.contact.uuid);
     log(this.token);
-    this.status = "invite pending";
+    this.dialogState = Status.pending;
   }
 
   onRevokeInvite() {}
 
   onJoin() {
-    this.status = "join pending";
+    this.dialogState = Status.pending;
   }
 }
 
@@ -107,7 +111,7 @@ export interface ContactDialogInput {
   /**
    * The operation to perform
    */
-  opcode: "Create" | "Update" | "Invite" | "Join";
+  opcode: ContactDialogOpcode;
 }
 
 export interface ContactDialogOutput {
@@ -127,4 +131,16 @@ export interface ContactDialogOutput {
    * A list of unavailable names
    */
   takenNames: string[];
+}
+
+enum Status {
+  awaiting_input,
+  pending,
+  accepted,
+}
+
+export enum ContactDialogOpcode {
+  invite,
+  join,
+  update,
 }
