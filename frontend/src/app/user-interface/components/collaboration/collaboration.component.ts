@@ -105,8 +105,6 @@ export class CollaborationComponent implements OnInit {
   }
 
   openEditContactDialog(contact: Contact): void {
-    log("Edit Contact dialog");
-
     const data: ContactDialogInput = {
       contact,
       opcode: ContactDialogOpcode.update,
@@ -127,8 +125,6 @@ export class CollaborationComponent implements OnInit {
   }
 
   openJoinContactDialog(contact: Contact): void {
-    log("Join Contact dialog");
-
     const data: ContactDialogInput = {
       contact,
       opcode: ContactDialogOpcode.join,
@@ -148,8 +144,6 @@ export class CollaborationComponent implements OnInit {
   }
 
   openInviteContactDialog(contact: Contact): void {
-    log("Invite Contact dialog");
-
     const data: ContactDialogInput = {
       contact,
       opcode: ContactDialogOpcode.invite,
