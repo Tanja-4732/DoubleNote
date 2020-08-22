@@ -47,7 +47,7 @@
         <p><em>Keep this dialog open</em></p>
       </div>
       <div mat-dialog-actions>
-        <button mat-button color="accent" (click)="onSubmit()">
+        <button mat-button color="accent" (click)="onRevokeInvite()">
           Revoke invitation
         </button>
       </div>
@@ -66,18 +66,46 @@
           }}"? You will be able to collaborate with them in their notebook.
         </p>
         <p>
-          This will only work if they have a pending invite for you. They will
-          not have access to your data.
+          This will only work if they have a pending invite for you, and if you
+          have the one-time invitation code. They will not have access to your
+          data.
         </p>
+
         <p><em>Only join people you trust</em></p>
-      </div>
-      <div mat-dialog-actions>
-        <button mat-button (click)="onNoClick()" type="button">
-          Cancel
-        </button>
-        <button mat-button color="primary" (click)="onJoin()">
-          Join session
-        </button>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+          <div mat-dialog-content>
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                formControlName="title"
+                name="page-name"
+                placeholder="Someone"
+                required
+                cdkFocusInitial
+              />
+              <mat-error *ngIf="formGroup.invalid">
+                <!-- A title must be provided -->
+                An unused name must be provided
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div mat-dialog-actions>
+            <button mat-button (click)="onNoClick()" type="button">
+              Cancel
+            </button>
+            <button
+              mat-button
+              [disabled]="formGroup.invalid"
+              (click)="onJoin()"
+              type="button"
+            >
+              Join session
+            </button>
+          </div>
+        </form>
       </div>
     </ng-container>
 
