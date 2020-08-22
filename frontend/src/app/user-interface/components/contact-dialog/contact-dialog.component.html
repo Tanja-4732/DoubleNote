@@ -107,6 +107,8 @@
   <ng-container *ngSwitchCase="OpCode.update">
     <h1 mat-dialog-title>Rename contact</h1>
 
+    <p>Previous name: {{ this.input.contact.name }}</p>
+
     <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
       <div mat-dialog-content>
         <mat-form-field appearance="outline">
