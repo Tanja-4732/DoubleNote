@@ -76,18 +76,18 @@
         <form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
           <div mat-dialog-content>
             <mat-form-field appearance="outline">
-              <mat-label>Name</mat-label>
+              <mat-label>One-time invitation code</mat-label>
               <input
                 matInput
                 formControlName="title"
                 name="page-name"
-                placeholder="Someone"
+                placeholder="571 812 164"
+                class="code"
                 required
                 cdkFocusInitial
               />
               <mat-error *ngIf="formGroup.invalid">
-                <!-- A title must be provided -->
-                An unused name must be provided
+                The one-time invite code is required
               </mat-error>
             </mat-form-field>
           </div>
@@ -150,7 +150,6 @@
             cdkFocusInitial
           />
           <mat-error *ngIf="formGroup.invalid">
-            <!-- A title must be provided -->
             An unused name must be provided
           </mat-error>
         </mat-form-field>
