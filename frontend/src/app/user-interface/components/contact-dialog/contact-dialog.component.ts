@@ -9,6 +9,9 @@ import {
   AbstractControl,
 } from "@angular/forms";
 import { SessionService } from "src/app/services/session/session.service";
+import { SessionToken } from "src/typings/session/SessionToken";
+import { registerLocaleData } from "@angular/common";
+import localeImport from "@angular/common/locales/de-AT";
 
 @Component({
   selector: "app-contact-dialog",
@@ -22,7 +25,13 @@ export class ContactDialogComponent implements OnInit {
     | "invite accepted"
     | "join pending" = "awaiting input";
 
+  readonly joinCode: string = "";
+
+  token: SessionToken;
+
   formGroup: FormGroup;
+
+  readonly locale = "de-AT";
 
   constructor(
     public session: SessionService,
@@ -30,6 +39,7 @@ export class ContactDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ContactDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public input: ContactDialogInput
   ) {
+    registerLocaleData(localeImport, this.locale);
     this.formGroup = formBuilder.group({
       title: [
         "",
@@ -54,7 +64,6 @@ export class ContactDialogComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close({ confirmed: false } as ContactDialogOutput);
-    log(this.session.autorizeInviteByUuid(this.input.contact.uuid)); // TODO display this somehow in the GUI
   }
 
   onSubmit(): void {
@@ -72,8 +81,12 @@ export class ContactDialogComponent implements OnInit {
   }
 
   onAuthorizeInvite() {
+    this.token = this.session.autorizeInviteByUuid(this.input.contact.uuid);
+    log(this.token);
     this.status = "invite pending";
   }
+
+  onRevokeInvite() {}
 
   onJoin() {
     this.status = "join pending";

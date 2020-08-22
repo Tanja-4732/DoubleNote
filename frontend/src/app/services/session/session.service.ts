@@ -61,7 +61,7 @@ export class SessionService {
   private makeJoinCode(length: number): string {
     let joinCode = "";
 
-    for (let i = 0; i <= length; i++) {
+    for (let i = 0; i < length; i++) {
       joinCode += Math.floor(Math.random() * 9);
     }
 

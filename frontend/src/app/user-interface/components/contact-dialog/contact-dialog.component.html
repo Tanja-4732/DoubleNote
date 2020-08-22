@@ -87,10 +87,19 @@
       You have authorized "{{ input.contact.name }}" to join your session. They
       will have full read and write access to your notebooks, once they join.
     </p>
+
+    <p>
+      They will need the following code (without the spaces) to join: <br />
+      <code>
+        {{ token.joinCode | number: "9.0-0":locale }}
+      </code>
+    </p>
+
     <p>
       You can revoke the invitation at any time. The invitation is only valid
       while this dialog is open.
     </p>
+
     <p><em>Keep this dialog open</em></p>
   </div>
   <div mat-dialog-actions>
