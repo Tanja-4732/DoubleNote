@@ -55,8 +55,24 @@ export class SessionService {
    * Revokes the invitation of a peer from the local session (if any)
    *
    * @param uuid The UUID of the peer to be revoked access to the local session
+   * @return True, if the peer access was revoked, false if there was no such peer
    */
-  public revokeInviteByUuid(uuid: string) {}
+  public revokeInviteByUuid(uuid: string): boolean {
+    // Find the authorization, if any
+    const i = this.invitations.findIndex((token) => token.guestUuid === uuid);
+
+    // Check if the authorization exists
+    if (i === -1) {
+      // Return false if not
+      return false;
+    }
+
+    // Remove the authorization from the list
+    this.invitations.splice(i, 1);
+
+    // Return trues
+    return true;
+  }
 
   private makeJoinCode(length: number): string {
     let joinCode = "";
