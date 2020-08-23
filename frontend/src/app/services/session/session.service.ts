@@ -31,15 +31,28 @@ export class SessionService {
    */
   private readonly invitations: SessionToken[] = [];
 
+  /**
+   * The subscription to the offline mode observable from the SettingsService
+   */
   private readonly offlineModeSubscription;
+
+  /**
+   * If the user has joined a remote session
+   *
+   * @deprecated // TODO change this in the future
+   */
+  private joinedRemoteSession = false;
 
   constructor(
     private settings: SettingsService,
     private mbs: MessageBusService
   ) {
+    // this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
+    //   (offline) =>
+    //     offline ? mbs.enableOfflineMode() : mbs.disableOfflineMode()
+    // );
     this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
-      (offline) =>
-        offline ? mbs.enableOfflineMode() : mbs.disableOfflineMode()
+      () => this.updateOfflineMode()
     );
   }
 
@@ -53,13 +66,21 @@ export class SessionService {
    * @return The generated, now authorized session token
    */
   public autorizeInviteByUuid(guestUuid: string): SessionToken {
+    /**
+     * The new token
+     */
     const sessionToken: SessionToken = {
       guestUuid,
       joinCode: this.makeJoinCode(9),
     };
 
+    // Append the token to the lists
     this.invitations.push(sessionToken);
 
+    // Disable the offline mode if required
+    this.updateOfflineMode();
+
+    // Return the generated token
     return sessionToken;
   }
 
@@ -82,10 +103,19 @@ export class SessionService {
     // Remove the authorization from the list
     this.invitations.splice(i, 1);
 
+    // Enable the offline mode if required
+    this.updateOfflineMode();
+
     // Return trues
     return true;
   }
 
+  /**
+   * Generates a pseudo-random join code with the length specified
+   *
+   * @param length The amount of digits to be generated
+   * @return The generated pseudo-random join code
+   */
   private makeJoinCode(length: number): string {
     let joinCode = "";
 
@@ -96,5 +126,17 @@ export class SessionService {
     return joinCode;
   }
 
-  private updateOnlineMode() {}
+  /**
+   * Update the offline mode
+   */
+  private updateOfflineMode() {
+    if (
+      !this.settings.offlineMode &&
+      (this.joinedRemoteSession || this.invitations.length > 0)
+    ) {
+      this.mbs.disableOfflineMode();
+    } else {
+      this.mbs.enableOfflineMode();
+    }
+  }
 }
