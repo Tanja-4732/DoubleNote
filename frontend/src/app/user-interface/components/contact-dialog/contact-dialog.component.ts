@@ -90,7 +90,10 @@ export class ContactDialogComponent implements OnInit {
     this.dialogState = Status.pending;
   }
 
-  onRevokeInvite() {}
+  onRevokeInvite() {
+    this.session.revokeInviteByUuid(this.input.contact.uuid);
+    this.dialogRef.close({ confirmed: false } as ContactDialogOutput);
+  }
 
   onJoin() {
     this.dialogState = Status.pending;
