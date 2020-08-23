@@ -72,8 +72,6 @@ export class MessageBusService {
     return this.me.uuid;
   }
 
-  private readonly offlineModeSubscription;
-
   /**
    * A list of all known contacts
    */
@@ -100,11 +98,6 @@ export class MessageBusService {
 
   constructor(private settings: SettingsService) {
     // if (!this.settings.offlineMode && MessageBusService.myself == null) { }
-
-    this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
-      (offline) =>
-        offline ? this.enableOfflineMode() : this.disableOfflineMode()
-    );
   }
 
   /**
@@ -152,14 +145,14 @@ export class MessageBusService {
     }
   }
 
-  private enableOfflineMode() {
+  public enableOfflineMode() {
     log("Enabling offline mode");
 
     MessageBusService.myself?.destroy();
     MessageBusService.myself = null;
   }
 
-  private disableOfflineMode() {
+  public disableOfflineMode() {
     // Create a peer representing myself
     MessageBusService.myself = new Peer(this.me.uuid);
 

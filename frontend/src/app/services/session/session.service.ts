@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SessionToken } from "src/typings/session/SessionToken";
+import { SettingsService } from "../settings/settings.service";
+import { MessageBusService } from "../message-bus/message-bus.service";
 
 /**
  * # Session Service
@@ -29,7 +31,17 @@ export class SessionService {
    */
   private readonly invitations: SessionToken[] = [];
 
-  constructor() {}
+  private readonly offlineModeSubscription;
+
+  constructor(
+    private settings: SettingsService,
+    private mbs: MessageBusService
+  ) {
+    this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
+      (offline) =>
+        offline ? mbs.enableOfflineMode() : mbs.disableOfflineMode()
+    );
+  }
 
   /**
    * Allows a peer to join the local session
@@ -83,4 +95,6 @@ export class SessionService {
 
     return joinCode;
   }
+
+  private updateOnlineMode() {}
 }
