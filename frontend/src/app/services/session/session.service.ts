@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { SessionToken } from "src/typings/session/SessionToken";
 import { SettingsService } from "../settings/settings.service";
 import { MessageBusService } from "../message-bus/message-bus.service";
+import { Subscription } from "rxjs";
+import { filter } from "rxjs/operators";
+import { Message, SessionMessage } from "src/typings/core/Message";
 
 /**
  * # Session Service
@@ -43,6 +46,8 @@ export class SessionService {
    */
   private joinedRemoteSession = false;
 
+  private messageStreamSub: Subscription;
+
   constructor(
     private settings: SettingsService,
     private mbs: MessageBusService
@@ -54,6 +59,14 @@ export class SessionService {
     this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
       () => this.updateOfflineMode()
     );
+
+    this.messageStreamSub = this.mbs.messageStream
+      .pipe(
+        filter(
+          (m: Message) => m.messageType === "SessionMessage" // && m.uuid === this.page.uuid
+        )
+      )
+      .subscribe((message: SessionMessage) => this.handleMessage(message));
   }
 
   /**
@@ -139,4 +152,6 @@ export class SessionService {
       this.mbs.enableOfflineMode();
     }
   }
+
+  private handleMessage(message: SessionMessage) {}
 }

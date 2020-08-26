@@ -8,7 +8,11 @@ import { MdomNode } from "../markdown/MDOM";
  *
  * Messages come in multiple forms, but all derive from the same base interface.
  */
-export type Message = DemoTextMessage | TextBoxMessage | BcpMessage;
+export type Message =
+  | DemoTextMessage
+  | TextBoxMessage
+  | BcpMessage
+  | SessionMessage;
 
 /**
  * The base interface all Message interfaces derive from
@@ -29,7 +33,11 @@ interface BaseMessage {
   /**
    * The type of the message
    */
-  messageType: "DemoTextMessage" | "TextBoxMessage" | "BcpMessage";
+  messageType:
+    | "DemoTextMessage"
+    | "TextBoxMessage"
+    | "BcpMessage"
+    | "SessionMessage";
 }
 
 export interface DemoTextMessage extends BaseMessage {
@@ -112,4 +120,8 @@ export interface BcpMessage extends BaseMessage {
      */
     mdom: undefined;
   };
+}
+
+export interface SessionMessage extends BaseMessage {
+  messageType: "SessionMessage";
 }
