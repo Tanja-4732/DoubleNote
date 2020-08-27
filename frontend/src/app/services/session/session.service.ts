@@ -4,7 +4,12 @@ import { SettingsService } from "../settings/settings.service";
 import { MessageBusService } from "../message-bus/message-bus.service";
 import { Subscription } from "rxjs";
 import { filter } from "rxjs/operators";
-import { Message, SessionMessage } from "src/typings/core/Message";
+import {
+  Message,
+  SessionMessage,
+  SessionRequestType,
+} from "src/typings/core/Message";
+import { log } from "src/functions/console";
 
 /**
  * # Session Service
@@ -136,5 +141,28 @@ export class SessionService {
     }
   }
 
-  private handleMessage(message: SessionMessage) {}
+  /**
+   * Handles incoming session messages
+   *
+   * @param message The incoming SessionMessage
+   */
+  private handleMessage(message: SessionMessage) {
+    if (message.authorUuid !== this.mbs.myUuid) {
+      switch (message.requestType) {
+        case SessionRequestType.JoinRemote:
+          break;
+
+        case SessionRequestType.LeaveRemote:
+          break;
+
+        case SessionRequestType.RevokeInvite:
+          break;
+
+        default:
+          log("Could not handle session message:");
+          log(message);
+          break;
+      }
+    }
+  }
 }

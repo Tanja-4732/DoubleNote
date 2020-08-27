@@ -124,4 +124,17 @@ export interface BcpMessage extends BaseMessage {
 
 export interface SessionMessage extends BaseMessage {
   messageType: "SessionMessage";
+
+  /**
+   * The type of this request from the perspective of the sender
+   */
+  requestType: SessionRequestType;
+
+  joinCode?: string;
+}
+
+export enum SessionRequestType {
+  JoinRemote = "JoinRemote",
+  LeaveRemote = "LeaveRemote",
+  RevokeInvite = "RevokeInvite",
 }
