@@ -61,11 +61,7 @@ export class SessionService {
     );
 
     this.messageStreamSub = this.mbs.messageStream
-      .pipe(
-        filter(
-          (m: Message) => m.messageType === "SessionMessage" // && m.uuid === this.page.uuid
-        )
-      )
+      .pipe(filter((m: Message) => m.messageType === "SessionMessage"))
       .subscribe((message: SessionMessage) => this.handleMessage(message));
   }
 
