@@ -137,4 +137,5 @@ export enum SessionRequestType {
   JoinRemote = "JoinRemote",
   LeaveRemote = "LeaveRemote",
   RevokeInvite = "RevokeInvite",
+  JoinConfirmation = "JoinConfirmation",
 }

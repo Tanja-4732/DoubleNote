@@ -150,12 +150,15 @@ export class SessionService {
     if (message.authorUuid !== this.mbs.myUuid) {
       switch (message.requestType) {
         case SessionRequestType.JoinRemote:
+          this.handleIncomingJoinRequest(message);
           break;
 
         case SessionRequestType.LeaveRemote:
+          // TODO handle other peers leaving the local session
           break;
 
         case SessionRequestType.RevokeInvite:
+          // TODO handle other peers revoking access to remote sessions
           break;
 
         default:
@@ -164,5 +167,38 @@ export class SessionService {
           break;
       }
     }
+  }
+
+  /**
+   * Handles incoming join messages from peers attempting to join the local session
+   */
+  private handleIncomingJoinRequest(message: SessionMessage) {
+    /**
+     * The authorized invite (if any)
+     */
+    const invite = this.invitations.find(
+      (invitation) => invitation.guestUuid === message.authorUuid
+    );
+
+    // Reject unauthorized join requests
+    if (invite === undefined) {
+      log("Rejected unauthorized join request from " + message.authorUuid);
+      return;
+    }
+
+    // Reject invalid join codes
+    if (invite.joinCode !== message.joinCode) {
+      log("Rejected invalid join request from " + message.authorUuid);
+      return;
+    }
+
+    // Confirm the join
+    this.mbs.dispatchMessage({
+      messageType: "SessionMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      requestType: SessionRequestType.JoinConfirmation,
+    });
   }
 }
