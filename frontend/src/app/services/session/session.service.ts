@@ -35,11 +35,6 @@ export class SessionService {
   private readonly invitations: SessionToken[] = [];
 
   /**
-   * The subscription to the offline mode observable from the SettingsService
-   */
-  private readonly offlineModeSubscription;
-
-  /**
    * If the user has joined a remote session
    *
    * @deprecated // TODO change this in the future
@@ -52,14 +47,6 @@ export class SessionService {
     private settings: SettingsService,
     private mbs: MessageBusService
   ) {
-    // this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
-    //   (offline) =>
-    //     offline ? mbs.enableOfflineMode() : mbs.disableOfflineMode()
-    // );
-    this.offlineModeSubscription = this.settings.offlineModeObservable.subscribe(
-      () => this.updateOfflineMode()
-    );
-
     this.messageStreamSub = this.mbs.messageStream
       .pipe(filter((m: Message) => m.messageType === "SessionMessage"))
       .subscribe((message: SessionMessage) => this.handleMessage(message));
