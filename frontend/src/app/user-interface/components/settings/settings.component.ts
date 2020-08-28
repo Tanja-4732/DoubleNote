@@ -15,6 +15,7 @@ import {
 import { MatDialog } from "@angular/material/dialog";
 import { version } from "src/functions/version";
 import { SwUpdate } from "@angular/service-worker";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 
 @Component({
   selector: "app-settings",
@@ -22,6 +23,8 @@ import { SwUpdate } from "@angular/service-worker";
   styleUrls: ["./settings.component.scss"],
 })
 export class SettingsComponent implements OnInit, OnDestroy {
+  public exportText = "";
+
   formGroup: FormGroup;
   private sub: Subscription;
 
@@ -33,6 +36,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     "New updates may be available. Click the button below to check for updates.";
 
   constructor(
+    private bcpVcs: BcpVcsService,
     private settings: SettingsService,
     formBuilder: FormBuilder,
     public dialog: MatDialog,
@@ -104,5 +108,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.updateText = "Checking for updates...";
     await this.updates.checkForUpdate();
     this.updateText = "Checked for updates.";
+  }
+
+  public exportEverything(): void {
+    this.exportText = this.bcpVcs.exportEverything();
   }
 }

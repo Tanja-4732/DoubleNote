@@ -48,6 +48,20 @@
   <br />
   <br />
 
+  <h1>Export everything</h1>
+
+  <p>
+    The button below will export all box canvas page notebooks and display the
+    result below.
+  </p>
+
+  <button mat-raised-button color="accent" (click)="exportEverything()">
+    Export all BCP notebooks
+  </button>
+
+  <br />
+  <br />
+
   <h1>Delete everything</h1>
 
   <p>
@@ -63,3 +77,7 @@
     Delete all data
   </button>
 </div>
+
+<p>
+  <code>{{ exportText }}</code>
+</p>
