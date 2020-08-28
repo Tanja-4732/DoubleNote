@@ -535,10 +535,79 @@ export class BcpVcsService {
       : headString;
   }
 
+  public exportEverything(): string {
+    return JSON.stringify(
+      {
+        metadata: {
+          version,
+          exportType: "dump",
+          exportVersion: 1,
+          date: new Date().toISOString(),
+        },
+
+        content: {
+          notebooks: this.notebooks,
+          tags: this.tags,
+          commits: this.commits,
+          trees: this.trees,
+          pages: this.pages,
+          boxes: this.boxes,
+        },
+      },
+      fieldHider,
+      2
+    );
+  }
+
+  /**
+   * Exports all metadata, commits, trees, pages and boxes of a notebook
+   *
+   * @param notebook The notebook to be exported
+   */
+  public exportNotebookFlat(notebook: BcpNotebook): string {
+    const tags: { [hash: string]: BcpTag } = {};
+    const commits: { [hash: string]: BcpCommit } = {};
+    const trees: { [hash: string]: CategoryTree } = {};
+    const pages: { [hash: string]: BoxCanvasPage } = {};
+    const boxes: { [hash: string]: TextBox } = {};
+
+    // Add the required tags
+    for (const hash of notebook.strings.tags) {
+      tags[hash] = this.tags[hash];
+    }
+
+    // Add the required commits
+    // for (const hash of notebook.strings) {
+    // }
+
+    return JSON.stringify(
+      {
+        metadata: {
+          version,
+          exportType: "flat",
+          exportVersion: 1,
+          date: new Date().toISOString(),
+        },
+
+        content: {
+          notebook,
+          tags,
+          commits,
+          trees,
+          pages,
+          boxes,
+        },
+      },
+      fieldHider,
+      2
+    );
+  }
+
   /**
    * Returns the JSON representation of the specified notebook
    *
    * @param notebook The notebook to be exported
+   * @deprecated
    */
   exportNotebook(notebook: BcpNotebook): string {
     // const { trees, pages, boxes } = this.makeExportRecursive(notebook.objects.);
@@ -547,8 +616,10 @@ export class BcpVcsService {
     return JSON.stringify(
       {
         version,
-        ExportVersion: 1,
+        exportType: "deprecated",
+        exportVersion: 1,
         date: new Date().toISOString(),
+
         notebook,
       },
       null,
