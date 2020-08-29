@@ -535,6 +535,11 @@ export class BcpVcsService {
       : headString;
   }
 
+  /**
+   * Creates a dump of all BCP notebooks stored in localStorage
+   * by exporting all notebooks, tags, comments, trees, pages and boxes
+   * together with their corresponding hashes as a JSON string
+   */
   public exportEverything(): string {
     return JSON.stringify(
       {
