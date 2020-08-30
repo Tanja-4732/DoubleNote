@@ -577,6 +577,27 @@ export class BcpVcsService {
     const pages: { [hash: string]: BoxCanvasPage } = {};
     const boxes: { [hash: string]: TextBox } = {};
 
+    const processTree = (treeHash: string) => {
+      // Add the tree
+      trees[treeHash] = this.trees[treeHash];
+
+      // Add all pages
+      for (const pageHash of this.trees[treeHash].strings.pages) {
+        pages[pageHash] = this.pages[pageHash];
+
+        // Add all boxes
+        for (const boxHash of this.pages[pageHash].strings.boxes) {
+          boxes[boxHash] = this.boxes[boxHash];
+        }
+      }
+
+      // Iterate over all desending trees
+      for (const desendingTreeHash of this.trees[treeHash].strings.children) {
+        // Call recursively on all children
+        processTree(desendingTreeHash);
+      }
+    };
+
     // Add the required tags
     for (const hash of notebook.strings.tags) {
       tags[hash] = this.tags[hash];
@@ -585,13 +606,17 @@ export class BcpVcsService {
     // Add the required commits
     for (const [name, hash] of Object.entries(notebook.strings.branches)) {
       commits[hash] = this.commits[hash];
+      processTree(this.commits[hash].strings.rootCategory);
     }
 
-    // TODO Add the required trees
+    // Add the working tree
+    processTree(notebook.objects.workingTree);
 
-    // TODO Add the required pages
-
-    // TODO Add the required boxes
+    // Add the HEAD commit (if any)
+    if (notebook.objects.head.detached) {
+      commits[notebook.strings.head] = this.commits[notebook.strings.head];
+      processTree(this.commits[notebook.strings.head].strings.rootCategory);
+    }
 
     return JSON.stringify(
       {
