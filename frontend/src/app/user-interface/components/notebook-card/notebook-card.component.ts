@@ -80,7 +80,7 @@ export class NotebookCardComponent implements OnInit {
     switch (this.notebook.type) {
       case "BCP":
         const data: ExportDialogInput = {
-          jsonText: this.bcpVcs.exportNotebook(this.notebook),
+          jsonText: this.bcpVcs.exportNotebookFlat(this.notebook),
         };
 
         const dialogRef = this.dialog.open(ExportDialogComponent, {

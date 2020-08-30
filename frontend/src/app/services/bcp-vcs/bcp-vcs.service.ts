@@ -679,44 +679,6 @@ export class BcpVcsService {
   }
 
   /**
-   * Returns the JSON representation of the specified notebook
-   *
-   * @param notebook The notebook to be exported
-   * @deprecated
-   */
-  exportNotebook(notebook: BcpNotebook): string {
-    // const { trees, pages, boxes } = this.makeExportRecursive(notebook.objects.);
-    // return JSON.stringify({ notebook, trees, pages, boxes }, fieldHider, 2);
-
-    return JSON.stringify(
-      {
-        version,
-        exportType: "deprecated",
-        exportVersion: 1,
-        date: new Date().toISOString(),
-
-        notebook,
-      },
-      null,
-      2
-    );
-  }
-
-  private makeExportRecursive(
-    tree: CategoryTree
-  ): {
-    trees: CategoryTree[];
-    pages: BoxCanvasPage[];
-    boxes: TextBox[];
-  } {
-    const trees: CategoryTree[] = [];
-    const pages: BoxCanvasPage[] = [];
-    const boxes: TextBox[] = [];
-
-    return { trees, pages, boxes };
-  }
-
-  /**
    * Persists the notebooks to localStorage
    */
   private persistNotebooks(): void {
