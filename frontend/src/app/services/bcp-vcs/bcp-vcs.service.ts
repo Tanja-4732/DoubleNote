@@ -566,10 +566,11 @@ export class BcpVcsService {
 
   /**
    * Exports all metadata, commits, trees, pages and boxes of a notebook
+   * of its current state (older commits will not be included)
    *
    * @param notebook The notebook to be exported
    */
-  public exportNotebookFlat(notebook: BcpNotebook): string {
+  public exportNotebookFlatCurrent(notebook: BcpNotebook): string {
     const tags: { [hash: string]: BcpTag } = {};
     const commits: { [hash: string]: BcpCommit } = {};
     const trees: { [hash: string]: CategoryTree } = {};
@@ -582,8 +583,15 @@ export class BcpVcsService {
     }
 
     // Add the required commits
-    // for (const hash of notebook.strings) {
-    // }
+    for (const [name, hash] of Object.entries(notebook.strings.branches)) {
+      commits[hash] = this.commits[hash];
+    }
+
+    // TODO Add the required trees
+
+    // TODO Add the required pages
+
+    // TODO Add the required boxes
 
     return JSON.stringify(
       {
