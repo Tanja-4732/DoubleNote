@@ -648,7 +648,7 @@ export class BcpVcsService {
     Object.values(notebook.strings.branches).forEach((ch) => processCommit(ch));
 
     // Add the working tree
-    processTree(notebook.objects.workingTree);
+    processTree(notebook.strings.workingTree);
 
     // Add the HEAD commit (if any)
     if (notebook.objects.head.detached) {
