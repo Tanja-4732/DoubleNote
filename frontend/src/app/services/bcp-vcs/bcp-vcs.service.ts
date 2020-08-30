@@ -566,26 +566,40 @@ export class BcpVcsService {
 
   /**
    * Exports all metadata, commits, trees, pages and boxes of a notebook
-   * of its current state (older commits will not be included)
+   *
+   * If current is true, only its current state will be exported
+   * (older commits will not be included).
    *
    * @param notebook The notebook to be exported
+   * @param currentOnly Whether to limit the export to the current state
    */
-  public exportNotebookFlatCurrent(notebook: BcpNotebook): string {
+  public exportNotebookFlat(notebook: BcpNotebook, currentOnly = true): string {
     const tags: { [hash: string]: BcpTag } = {};
     const commits: { [hash: string]: BcpCommit } = {};
     const trees: { [hash: string]: CategoryTree } = {};
     const pages: { [hash: string]: BoxCanvasPage } = {};
     const boxes: { [hash: string]: TextBox } = {};
 
+    /**
+     * Includes a tree with a given hash in the export, along with
+     * its desending trees and all their pages and boxes
+     *
+     * @param treeHash The hash of the tree to be processed
+     */
     const processTree = (treeHash: string) => {
-      // Add the tree
+      // Avoid processing the tree if it's already included in the export
+      if (trees.hasOwnProperty(treeHash)) {
+        return;
+      }
+
+      // Add the tree to the export
       trees[treeHash] = this.trees[treeHash];
 
-      // Add all pages
+      // Add all pages to the export
       for (const pageHash of this.trees[treeHash].strings.pages) {
         pages[pageHash] = this.pages[pageHash];
 
-        // Add all boxes
+        // Add all boxes to the export
         for (const boxHash of this.pages[pageHash].strings.boxes) {
           boxes[boxHash] = this.boxes[boxHash];
         }
@@ -598,24 +612,47 @@ export class BcpVcsService {
       }
     };
 
+    /**
+     * Includes a commit with a given hash in the export, along with
+     * its previous commits (if specified)
+     *
+     * @param commitHash The hash of the commit to be processed
+     */
+    const processCommit = (commitHash: string) => {
+      // Avoid processing the commit if it's already included in the export
+      if (commits.hasOwnProperty(commitHash)) {
+        return;
+      }
+
+      // Add the commit to the export
+      commits[commitHash] = this.commits[commitHash];
+
+      // Process the root tree of the commit recursively
+      processTree(this.commits[commitHash].strings.rootCategory);
+
+      // If the export is not limited to the current state...
+      if (
+        !currentOnly &&
+        // ..and this isn't the root commit...
+        this.commits[commitHash].strings.previous !== "root"
+      ) {
+        // ...export the previous commit too
+        processCommit(this.commits[commitHash].strings.previous);
+      }
+    };
+
     // Add the required tags
-    for (const hash of notebook.strings.tags) {
-      tags[hash] = this.tags[hash];
-    }
+    notebook.strings.tags.forEach((th) => (tags[th] = this.tags[th]));
 
     // Add the required commits
-    for (const [name, hash] of Object.entries(notebook.strings.branches)) {
-      commits[hash] = this.commits[hash];
-      processTree(this.commits[hash].strings.rootCategory);
-    }
+    Object.values(notebook.strings.branches).forEach((ch) => processCommit(ch));
 
     // Add the working tree
     processTree(notebook.objects.workingTree);
 
     // Add the HEAD commit (if any)
     if (notebook.objects.head.detached) {
-      commits[notebook.strings.head] = this.commits[notebook.strings.head];
-      processTree(this.commits[notebook.strings.head].strings.rootCategory);
+      processCommit(notebook.strings.head);
     }
 
     return JSON.stringify(
