@@ -40,11 +40,18 @@ export class SessionService {
   public static readonly invitations: SessionToken[] = [];
 
   /**
-   * If the user has joined a remote session
+   * The state of the session management
    *
-   * @deprecated // TODO change this in the future
+   * Can one of the following:
+   * - Local (we are the host of our own session)
+   * - Remote (we are a guest in the session of another peer)
+   * - Joining (we are attempting to join another peers session)
    */
-  private joinedRemoteSession = false;
+  private sessionState: "local" | "remote" | "joining" = "local";
+
+  public get state() {
+    return this.sessionState;
+  }
 
   private messageStreamSub: Subscription;
 
@@ -139,7 +146,7 @@ export class SessionService {
   private updateOfflineMode() {
     if (
       !this.settings.offlineMode &&
-      (this.joinedRemoteSession || SessionService.invitations.length > 0)
+      (this.sessionState !== "local" || SessionService.invitations.length > 0)
     ) {
       this.mbs.disableOfflineMode();
     } else {

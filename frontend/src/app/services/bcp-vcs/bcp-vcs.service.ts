@@ -26,23 +26,14 @@ export const NO_SUCH_NOTEBOOK = "Notebook not found";
   providedIn: "root",
 })
 export class BcpVcsService {
-  public readonly notebooks: BcpNotebook[] =
-    JSON.parse(window.localStorage.getItem("dn.bcp.notebooks")) ?? [];
+  public notebooks: BcpNotebook[];
+  private commits: { [hash: string]: BcpCommit };
+  private trees: { [hash: string]: CategoryTree };
+  private pages: { [hash: string]: BoxCanvasPage };
+  private boxes: { [hash: string]: TextBox };
+  private tags: { [hash: string]: BcpTag };
 
-  private readonly commits: { [hash: string]: BcpCommit } =
-    JSON.parse(window.localStorage.getItem("dn.bcp.commits")) ?? {};
-
-  private readonly trees: { [hash: string]: CategoryTree } =
-    JSON.parse(window.localStorage.getItem("dn.bcp.trees")) ?? {};
-
-  private readonly pages: { [hash: string]: BoxCanvasPage } =
-    JSON.parse(window.localStorage.getItem("dn.bcp.pages")) ?? {};
-
-  private readonly boxes: { [hash: string]: TextBox } =
-    JSON.parse(window.localStorage.getItem("dn.bcp.boxes")) ?? {};
-
-  private readonly tags: { [hash: string]: BcpTag } =
-    JSON.parse(window.localStorage.getItem("dn.bcp.tags")) ?? {};
+  private isLocalSession: boolean;
 
   /**
    * ## Box Canvas Page version control system
@@ -58,6 +49,56 @@ export class BcpVcsService {
    * - Persist data to localStorage
    */
   constructor() {
+    this.loadDataFromLocalStorage();
+  }
+
+  /**
+   * Loads all BCP notebooks from localStorage, enables writing to localStorage
+   * and prepares the notebooks for usage
+   */
+  public loadDataFromLocalStorage(): void {
+    this.isLocalSession = true;
+
+    this.notebooks =
+      JSON.parse(window.localStorage.getItem("dn.bcp.notebooks")) ?? [];
+    this.commits =
+      JSON.parse(window.localStorage.getItem("dn.bcp.commits")) ?? {};
+    this.trees = JSON.parse(window.localStorage.getItem("dn.bcp.trees")) ?? {};
+    this.pages = JSON.parse(window.localStorage.getItem("dn.bcp.pages")) ?? {};
+    this.boxes = JSON.parse(window.localStorage.getItem("dn.bcp.boxes")) ?? {};
+    this.tags = JSON.parse(window.localStorage.getItem("dn.bcp.tags")) ?? {};
+
+    this.notebooks.forEach((n) => this.prepareNotebook(n));
+  }
+
+  /**
+   * Loads custom data into version control, disables writing to localStorage
+   * and prepares the notebooks for usage
+   *
+   * @param notebooks The notebooks to be loaded
+   * @param commits The commits to be loaded
+   * @param trees The trees to be loaded
+   * @param pages The pages to be loaded
+   * @param boxes The boxes to be loaded
+   * @param tags The tags to be loaded
+   */
+  public loadExternalData(
+    notebooks: BcpNotebook[],
+    commits: { [hash: string]: BcpCommit },
+    trees: { [hash: string]: CategoryTree },
+    pages: { [hash: string]: BoxCanvasPage },
+    boxes: { [hash: string]: TextBox },
+    tags: { [hash: string]: BcpTag }
+  ): void {
+    this.isLocalSession = true;
+
+    this.notebooks = notebooks ?? [];
+    this.commits = commits ?? {};
+    this.trees = trees ?? {};
+    this.pages = pages ?? {};
+    this.boxes = boxes ?? {};
+    this.tags = tags ?? {};
+
     this.notebooks.forEach((n) => this.prepareNotebook(n));
   }
 
@@ -682,59 +723,71 @@ export class BcpVcsService {
    * Persists the notebooks to localStorage
    */
   private persistNotebooks(): void {
-    window.localStorage.setItem(
-      "dn.bcp.notebooks",
-      JSON.stringify(this.notebooks, fieldHider)
-    );
+    if (this.isLocalSession) {
+      window.localStorage.setItem(
+        "dn.bcp.notebooks",
+        JSON.stringify(this.notebooks, fieldHider)
+      );
+    }
   }
 
   /**
    * Persists the commits to localStorage
    */
   private persistCommits(): void {
-    window.localStorage.setItem(
-      "dn.bcp.commits",
-      JSON.stringify(this.commits, fieldHider)
-    );
+    if (this.isLocalSession) {
+      window.localStorage.setItem(
+        "dn.bcp.commits",
+        JSON.stringify(this.commits, fieldHider)
+      );
+    }
   }
 
   /**
    * Persists the trees to localStorage
    */
   private persistTrees(): void {
-    window.localStorage.setItem(
-      "dn.bcp.trees",
-      JSON.stringify(this.trees, fieldHider)
-    );
+    if (this.isLocalSession) {
+      window.localStorage.setItem(
+        "dn.bcp.trees",
+        JSON.stringify(this.trees, fieldHider)
+      );
+    }
   }
 
   /**
    * Persists the pages to localStorage
    */
   private persistPages(): void {
-    window.localStorage.setItem(
-      "dn.bcp.pages",
-      JSON.stringify(this.pages, fieldHider)
-    );
+    if (this.isLocalSession) {
+      window.localStorage.setItem(
+        "dn.bcp.pages",
+        JSON.stringify(this.pages, fieldHider)
+      );
+    }
   }
 
   /**
    * Persists the boxes to localStorage
    */
   private persistBoxes(): void {
-    window.localStorage.setItem(
-      "dn.bcp.boxes",
-      JSON.stringify(this.boxes, fieldHider)
-    );
+    if (this.isLocalSession) {
+      window.localStorage.setItem(
+        "dn.bcp.boxes",
+        JSON.stringify(this.boxes, fieldHider)
+      );
+    }
   }
 
   /**
    * Persists the tags to localStorage
    */
   private persistTags(): void {
-    window.localStorage.setItem(
-      "dn.bcp.tags",
-      JSON.stringify(this.tags, fieldHider)
-    );
+    if (this.isLocalSession) {
+      window.localStorage.setItem(
+        "dn.bcp.tags",
+        JSON.stringify(this.tags, fieldHider)
+      );
+    }
   }
 }
