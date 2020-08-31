@@ -90,7 +90,7 @@ export class BcpVcsService {
     boxes: { [hash: string]: TextBox },
     tags: { [hash: string]: BcpTag }
   ): void {
-    this.isLocalSession = true;
+    this.isLocalSession = false;
 
     this.notebooks = notebooks ?? [];
     this.commits = commits ?? {};
