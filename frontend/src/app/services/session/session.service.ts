@@ -107,6 +107,9 @@ export class SessionService {
     // Remove the authorization from the list
     SessionService.invitations.splice(i, 1);
 
+    // Disconnect the MessageBusService from the peer
+    this.mbs.disconnectByUuid(uuid);
+
     // Enable the offline mode if required
     this.updateOfflineMode();
 

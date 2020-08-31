@@ -243,7 +243,7 @@ export class MessageBusService {
       // Don't connect
       return;
 
-      // TODO Maybe throw an error instead
+      // TODO maybe throw an error instead
     }
 
     /**
@@ -284,5 +284,31 @@ export class MessageBusService {
    */
   public isConnected(uuid: string): boolean {
     return MessageBusService.peerConnections.some((c) => c.label === uuid);
+  }
+
+  /**
+   * Disconnects from a peer with a specified UUID
+   *
+   * @param uuid The UUID of the peer from which to disconnect from
+   * @return True if the peer was disconnected from successfully, false otherwise
+   */
+  public disconnectByUuid(uuid: string): boolean {
+    const i = MessageBusService.peerConnections.findIndex(
+      (c) => c.peer === uuid
+    );
+
+    if (i === -1) {
+      // Indicate a failed disconnection
+      return false;
+    } else {
+      // Close the connection to the peer
+      MessageBusService.peerConnections[i].close();
+
+      // Remove the peer from the list of connected peers
+      MessageBusService.peerConnections.splice(i, 1);
+
+      // Indicate a successful disconnect
+      return true;
+    }
   }
 }
