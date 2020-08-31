@@ -12,6 +12,7 @@ import { SessionService } from "src/app/services/session/session.service";
 import { SessionToken } from "src/typings/session/SessionToken";
 import { registerLocaleData } from "@angular/common";
 import localeImport from "@angular/common/locales/de-AT";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 
 @Component({
   selector: "app-contact-dialog",
@@ -30,6 +31,7 @@ export class ContactDialogComponent implements OnInit {
   readonly locale = "de-AT";
 
   constructor(
+    private mbs: MessageBusService,
     public session: SessionService,
     formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ContactDialogComponent>,
@@ -97,6 +99,10 @@ export class ContactDialogComponent implements OnInit {
 
   onJoin() {
     this.dialogState = Status.pending;
+    this.session.attemptJoinByUuid(
+      this.input.contact.uuid,
+      this.formGroup.value.title
+    );
   }
 }
 

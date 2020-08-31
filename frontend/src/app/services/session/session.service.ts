@@ -198,4 +198,27 @@ export class SessionService {
       requestType: SessionRequestType.JoinConfirmation,
     });
   }
+
+  /**
+   * Attempts to join a remote session given a peer UUID and a one-time code
+   *
+   * @param uuid The UUID of the peer owning the session to join
+   * @param code The one-time code to join the remote session
+   */
+  public attemptJoinByUuid(uuid: string, code: string) {
+    this.sessionState = "joining";
+    this.updateOfflineMode();
+
+    this.mbs.connectToPeer(uuid);
+
+    log("Joining peer " + uuid + " with code " + code);
+    this.mbs.dispatchMessage({
+      messageType: "SessionMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      requestType: SessionRequestType.JoinRemote,
+      joinCode: code,
+    });
+  }
 }
