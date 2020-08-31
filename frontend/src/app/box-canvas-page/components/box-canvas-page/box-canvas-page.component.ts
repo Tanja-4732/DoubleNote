@@ -93,7 +93,6 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
 
     // Register the control+s key
     window.addEventListener("keydown", this.handleCtrlS);
-    log("registered");
   }
 
   ngOnDestroy(): void {
@@ -101,7 +100,6 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
 
     // Unregister the control+s key
     window.removeEventListener("keydown", this.handleCtrlS);
-    log("unregistered");
   }
 
   private handleCtrlS = (event: KeyboardEvent): void => {
