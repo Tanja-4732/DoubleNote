@@ -8,4 +8,9 @@ export interface SessionToken {
    * A one-time password to join the session
    */
   joinCode: string;
+
+  /**
+   * If the peer has authorized themselves yet
+   */
+  authorized: boolean;
 }

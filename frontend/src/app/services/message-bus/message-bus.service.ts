@@ -2,10 +2,16 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 import Peer, { DataConnection } from "peerjs";
 import { v4 } from "uuid";
-import { Message } from "../../../typings/core/Message";
+import {
+  Message,
+  SessionRequestType,
+  SessionMessage,
+} from "../../../typings/core/Message";
 import { SettingsService } from "../settings/settings.service";
 import { Contact } from "src/typings/core/Contact";
 import { log } from "src/functions/console";
+import { SessionService } from "../session/session.service";
+import { SessionToken } from "src/typings/session/SessionToken";
 
 /**
  * # MessageBusService
@@ -105,11 +111,18 @@ export class MessageBusService {
    * It's the callback for the on "connection" event
    */
   private static handleIncomingConnection(connection: DataConnection) {
-    // Wait for the connection to be established
-    connection.on("open", () =>
-      // Prepare the new connection
-      MessageBusService.prepareNewConnection(connection)
+    // Check for a invitation for the incoming connection
+    const invitation = SessionService.invitations.find(
+      (invite) => invite.guestUuid === connection.peer
     );
+
+    if (invitation !== undefined) {
+      // Wait for the connection to be established
+      connection.on("open", () =>
+        // Prepare the new connection
+        MessageBusService.prepareNewConnection(connection, invitation)
+      );
+    }
   }
 
   /**
@@ -118,14 +131,54 @@ export class MessageBusService {
    * - Register an event handler for incoming data
    * - Add to the list of connections
    */
-  private static prepareNewConnection(connection: DataConnection) {
+  private static prepareNewConnection(
+    connection: DataConnection,
+    invitation: SessionToken
+  ) {
+    /**
+     * The event handler for incoming messages from PeerJS
+     *
+     * Checks if the incoming message is authorized, and passes it to the
+     * internal message handler if it is, otherwise it will attempt authorization
+     * with the provided join code (if any), and allow future messages to be handled
+     * by the internal message handler (in case of successful authorization).
+     *
+     * @param message The message to be handled
+     */
+    const handleMessageIfAuthorized = (message: Message) => {
+      // Handle authorized messages
+      if (invitation.authorized) {
+        // TODO check if the message comes from who it claims to be from
+        MessageBusService.handleIncomingMessage(message);
+      } else if (
+        message.messageType === "SessionMessage" &&
+        message.requestType === SessionRequestType.JoinRemote
+      ) {
+        if (message.joinCode === invitation.joinCode) {
+          MessageBusService.authorizePeer(connection, message.authorUuid);
+        } else {
+          log("Rejected unauthorized join request from " + message.authorUuid);
+        }
+      } else {
+        log("Rejected invalid join request from " + message.authorUuid);
+      }
+    };
+
+    // Handle incoming messages
+    connection.on("data", (message) => handleMessageIfAuthorized(message));
+  }
+
+  /**
+   * Establishes an authorized connection with the peer
+   */
+  private static authorizePeer(
+    connection: Peer.DataConnection,
+    peerUuid: string
+  ) {
     // Add the connection to the list of connections
     MessageBusService.peerConnections.push(connection);
 
-    // Handle incoming messages
-    connection.on("data", (message) =>
-      MessageBusService.handleIncomingMessage(message)
-    );
+    log("Accepted join request from " + peerUuid);
   }
 
   /**
@@ -204,7 +257,7 @@ export class MessageBusService {
     // Wait for the connection to be established
     connection.on("open", () =>
       // Prepare the new connection
-      MessageBusService.prepareNewConnection(connection)
+      MessageBusService.authorizePeer(connection, uuid)
     );
   }
 

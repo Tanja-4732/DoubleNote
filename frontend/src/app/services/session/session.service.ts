@@ -37,7 +37,7 @@ export class SessionService {
   /**
    * The list of invited UUIDs in the form of session tokens
    */
-  private readonly invitations: SessionToken[] = [];
+  public static readonly invitations: SessionToken[] = [];
 
   /**
    * If the user has joined a remote session
@@ -73,10 +73,11 @@ export class SessionService {
     const sessionToken: SessionToken = {
       guestUuid,
       joinCode: this.makeJoinCode(9),
+      authorized: false,
     };
 
     // Append the token to the lists
-    this.invitations.push(sessionToken);
+    SessionService.invitations.push(sessionToken);
 
     // Disable the offline mode if required
     this.updateOfflineMode();
@@ -93,7 +94,9 @@ export class SessionService {
    */
   public revokeInviteByUuid(uuid: string): boolean {
     // Find the authorization, if any
-    const i = this.invitations.findIndex((token) => token.guestUuid === uuid);
+    const i = SessionService.invitations.findIndex(
+      (token) => token.guestUuid === uuid
+    );
 
     // Check if the authorization exists
     if (i === -1) {
@@ -102,7 +105,7 @@ export class SessionService {
     }
 
     // Remove the authorization from the list
-    this.invitations.splice(i, 1);
+    SessionService.invitations.splice(i, 1);
 
     // Enable the offline mode if required
     this.updateOfflineMode();
@@ -133,7 +136,7 @@ export class SessionService {
   private updateOfflineMode() {
     if (
       !this.settings.offlineMode &&
-      (this.joinedRemoteSession || this.invitations.length > 0)
+      (this.joinedRemoteSession || SessionService.invitations.length > 0)
     ) {
       this.mbs.disableOfflineMode();
     } else {
@@ -147,10 +150,11 @@ export class SessionService {
    * @param message The incoming SessionMessage
    */
   private handleMessage(message: SessionMessage) {
+    // Ignore self-authored messages
     if (message.authorUuid !== this.mbs.myUuid) {
       switch (message.requestType) {
         case SessionRequestType.JoinRemote:
-          this.handleIncomingJoinRequest(message);
+          // no-op: This has been moved to the MessageBusService
           break;
 
         case SessionRequestType.LeaveRemote:
@@ -171,27 +175,10 @@ export class SessionService {
 
   /**
    * Handles incoming join messages from peers attempting to join the local session
+   *
+   * @deprecated // TODO remove this method in a later version
    */
   private handleIncomingJoinRequest(message: SessionMessage) {
-    /**
-     * The authorized invite (if any)
-     */
-    const invite = this.invitations.find(
-      (invitation) => invitation.guestUuid === message.authorUuid
-    );
-
-    // Reject unauthorized join requests
-    if (invite === undefined) {
-      log("Rejected unauthorized join request from " + message.authorUuid);
-      return;
-    }
-
-    // Reject invalid join codes
-    if (invite.joinCode !== message.joinCode) {
-      log("Rejected invalid join request from " + message.authorUuid);
-      return;
-    }
-
     // Confirm the join
     this.mbs.dispatchMessage({
       messageType: "SessionMessage",
