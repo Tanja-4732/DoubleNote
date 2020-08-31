@@ -47,9 +47,26 @@
 <br />
 <br />
 
-<h1>
-  Icons
-</h1>
+<h1>Load external data from clipboard</h1>
+
+<p>
+  <button mat-stroked-button (click)="pasteJSON()" color="primary">
+    Paste JSON
+  </button>
+  &nbsp;
+  <button mat-stroked-button (click)="onLoadExternalData()" color="accent">
+    Import data
+  </button>
+</p>
+
+<code>
+  <pre>{{ pastedJSON }}</pre>
+</code>
+
+<br />
+<br />
+
+<h1>Icons</h1>
 <details>
   <summary>Toggle listing</summary>
 

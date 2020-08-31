@@ -10,6 +10,13 @@ import {
   Icons,
 } from "src/app/user-interface/components/crumb-trail/crumb-trail.component";
 import { log } from "src/functions/console";
+import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
+import { BcpCommit } from "src/typings/bcp/BcpCommit";
+import { CategoryTree } from "src/typings/bcp/CategoryTree";
+import { BoxCanvasPage } from "src/typings/bcp/BoxCanvasPage";
+import { TextBox } from "src/typings/bcp/TextBox";
+import { BcpTag } from "src/typings/bcp/BcpTag";
 
 @Component({
   selector: "app-demo",
@@ -29,7 +36,10 @@ export class DemoComponent implements OnInit, OnDestroy {
     this.mbs.dispatchMessage(this.makeMessage(message));
   }
 
+  public pastedJSON: string;
+
   constructor(
+    private vcs: BcpVcsService,
     public settings: SettingsService,
     public mbs: MessageBusService,
     private cdr: ChangeDetectorRef
@@ -75,5 +85,38 @@ export class DemoComponent implements OnInit, OnDestroy {
 
   get allIcons() {
     return Icons;
+  }
+
+  public async pasteJSON() {
+    this.pastedJSON = await navigator.clipboard.readText();
+  }
+
+  onLoadExternalData() {
+    const data: {
+      metadata: {
+        version: string;
+        exportType: string;
+        exportVersion: number;
+        date: string;
+      };
+
+      content: {
+        notebook: BcpNotebook;
+        commits: { [hash: string]: BcpCommit };
+        trees: { [hash: string]: CategoryTree };
+        pages: { [hash: string]: BoxCanvasPage };
+        boxes: { [hash: string]: TextBox };
+        tags: { [hash: string]: BcpTag };
+      };
+    } = JSON.parse(this.pastedJSON);
+
+    this.vcs.loadExternalData(
+      [data.content.notebook],
+      data.content.commits,
+      data.content.trees,
+      data.content.pages,
+      data.content.boxes,
+      data.content.tags
+    );
   }
 }
