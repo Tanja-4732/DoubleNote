@@ -1,6 +1,7 @@
 import Express from "express";
 import { Routes } from "./routes/routes";
 import { log } from "console";
+import SlowDown from "express-slow-down";
 
 export class Server {
   /**
@@ -16,9 +17,21 @@ export class Server {
   constructor(
     private config: ServerConfig = {
       mode: ServerModes.http_only,
-      ports: { http: 80, https: 443 }
+      ports: { http: 80, https: 443 },
     }
   ) {
+    // Allow reverse proxy operations
+    this.server.enable("trust proxy");
+
+    // Use a delay-based rate limit for all requests
+    this.server.use(
+      SlowDown({
+        windowMs: 15 * 60 * 1000,
+        delayAfter: 100,
+        delayMs: 500,
+      })
+    );
+
     // Configure the routes
     this.server.use(new Routes().router);
   }
@@ -105,5 +118,5 @@ export enum ServerModes {
   /**
    * Provide access via HTTPS and redirect HTTP to HTTPS
    */
-  "redirect"
+  "redirect",
 }
