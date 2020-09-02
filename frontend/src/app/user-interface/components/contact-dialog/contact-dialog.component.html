@@ -125,6 +125,18 @@
         <button mat-button color="accent" (click)="onSubmit()">Cancel</button>
       </div>
     </ng-container>
+
+    <ng-container *ngSwitchCase="Status.accepted">
+      <h1 mat-dialog-title>Joined "{{ input.contact.name }}"</h1>
+
+      <div mat-dialog-content>
+        <p>Successfully joined the session of "{{ input.contact.name }}".</p>
+        <p>You can now close this dialog.</p>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button color="primary" (click)="onSubmit()">Close</button>
+      </div>
+    </ng-container>
   </ng-container>
 
   <!-- Update the contact details -->

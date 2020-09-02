@@ -108,6 +108,7 @@ export class ContactDialogComponent implements OnInit {
     log("Await acceptance");
     await this.session.waitForRemoteJoinConfirmation();
     log("Awaited acceptance");
+    this.dialogState = Status.accepted;
   }
 }
 
