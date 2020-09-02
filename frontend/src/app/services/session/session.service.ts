@@ -143,12 +143,12 @@ export class SessionService {
   /**
    * Update the offline mode
    */
-  private updateOfflineMode() {
+  private async updateOfflineMode() {
     if (
       !this.settings.offlineMode &&
       (this.sessionState !== "local" || SessionService.invitations.length > 0)
     ) {
-      this.mbs.disableOfflineMode();
+      await this.mbs.disableOfflineMode();
     } else {
       this.mbs.enableOfflineMode();
     }
@@ -205,11 +205,20 @@ export class SessionService {
    * @param uuid The UUID of the peer owning the session to join
    * @param code The one-time code to join the remote session
    */
-  public attemptJoinByUuid(uuid: string, code: string) {
-    this.sessionState = "joining";
-    this.updateOfflineMode();
+  public async attemptJoinByUuid(uuid: string, code: string) {
+    if (code.length === 11) {
+      code = code.replace(" ", "").replace(" ", "");
+    }
 
-    this.mbs.connectToPeer(uuid);
+    log(code);
+
+    this.sessionState = "joining";
+    log("Updating offline mode");
+    await this.updateOfflineMode();
+
+    log("About to connect (1)");
+    await this.mbs.connectToPeer(uuid);
+    log("Connected (3)");
 
     log("Joining peer " + uuid + " with code " + code);
     this.mbs.dispatchMessage({

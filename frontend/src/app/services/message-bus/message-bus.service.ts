@@ -205,7 +205,7 @@ export class MessageBusService {
     MessageBusService.myself = null;
   }
 
-  public disableOfflineMode() {
+  public disableOfflineMode(): Promise<void> {
     log("Connecting to the peer server...");
 
     // Create a peer representing myself
@@ -215,21 +215,24 @@ export class MessageBusService {
       port: 443,
     });
 
-    MessageBusService.myself.on("open", () => {
-      log("Connected to the peer server");
+    return new Promise((resolve, reject) => {
+      MessageBusService.myself.on("open", () => {
+        log("Connected to the peer server");
 
-      // Handle disconnects by attempting to reconnect
-      MessageBusService.myself.on("disconnected", () =>
-        // Reconnect to the signaling server
-        MessageBusService.myself.reconnect()
-      );
+        // Handle disconnects by attempting to reconnect
+        MessageBusService.myself.on("disconnected", () =>
+          // Reconnect to the signaling server
+          MessageBusService.myself.reconnect()
+        );
 
-      // Handle incoming connections
-      MessageBusService.myself.on("connection", (connection) =>
-        MessageBusService.handleIncomingConnection(connection)
-      );
+        // Handle incoming connections
+        MessageBusService.myself.on("connection", (connection) =>
+          MessageBusService.handleIncomingConnection(connection)
+        );
 
-      log("Offline mode disabled");
+        log("Offline mode disabled");
+        resolve();
+      });
     });
   }
 
@@ -242,7 +245,7 @@ export class MessageBusService {
    *
    * @param uuid The UUID of the peer to connect to
    */
-  public connectToPeer(uuid: string) {
+  public connectToPeer(uuid: string): Promise<boolean> {
     // Check if the application is running in offline mode
     if (this.settings.offlineMode) {
       throw new Error("Operation not available in offline mode");
@@ -264,11 +267,16 @@ export class MessageBusService {
       label: uuid,
     });
 
-    // Wait for the connection to be established
-    connection.on("open", () =>
-      // Prepare the new connection
-      MessageBusService.authorizePeer(connection, uuid)
-    );
+    return new Promise((resolve, reject) => {
+      // Wait for the connection to be established
+      connection.on("open", async () => {
+        // Prepare the new connection
+        MessageBusService.authorizePeer(connection, uuid);
+
+        log("Connected now (2)");
+        resolve(true);
+      });
+    });
   }
 
   /**
