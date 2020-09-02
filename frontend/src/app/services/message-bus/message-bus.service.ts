@@ -120,7 +120,7 @@ export class MessageBusService {
       // Wait for the connection to be established
       connection.on("open", () =>
         // Prepare the new connection
-        MessageBusService.prepareNewConnection(connection, invitation)
+        MessageBusService.prepareNewConnection(connection, false, invitation)
       );
     }
   }
@@ -133,7 +133,8 @@ export class MessageBusService {
    */
   private static prepareNewConnection(
     connection: DataConnection,
-    invitation: SessionToken
+    isHostConnection: boolean,
+    invitation?: SessionToken
   ) {
     /**
      * The event handler for incoming messages from PeerJS
@@ -147,7 +148,7 @@ export class MessageBusService {
      */
     const handleMessageIfAuthorized = (message: Message) => {
       // Handle authorized messages
-      if (invitation.authorized) {
+      if (isHostConnection || invitation.authorized) {
         // TODO check if the message comes from who it claims to be from
         MessageBusService.handleIncomingMessage(message);
       } else if (
@@ -188,8 +189,6 @@ export class MessageBusService {
   ) {
     // Add the connection to the list of connections
     MessageBusService.peerConnections.push(connection);
-
-    log("Accepted join request from " + peerUuid);
   }
 
   /**
@@ -283,6 +282,9 @@ export class MessageBusService {
       connection.on("open", async () => {
         // Prepare the new connection
         MessageBusService.authorizePeer(connection, uuid);
+
+        // Handle messages from the host
+        MessageBusService.prepareNewConnection(connection, true);
 
         log("Connected now (2)");
         resolve(true);

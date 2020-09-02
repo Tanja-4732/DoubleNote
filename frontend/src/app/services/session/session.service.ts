@@ -11,6 +11,7 @@ import {
 } from "src/typings/core/Message";
 import { log } from "src/functions/console";
 import { promise } from "protractor";
+import { BcpVcsService } from "../bcp-vcs/bcp-vcs.service";
 
 /**
  * # Session Service
@@ -59,6 +60,7 @@ export class SessionService {
   private joinRemotePromiseResolveCB;
 
   constructor(
+    private bcpVcs: BcpVcsService,
     private settings: SettingsService,
     private mbs: MessageBusService
   ) {
@@ -226,20 +228,22 @@ export class SessionService {
       code = code.replace(" ", "").replace(" ", "");
     }
 
-    log(code);
+    // Log the join attempt
+    log("Joining peer " + uuid + " with code " + code);
 
     // Prevent the host from reading the local data
     this.bcpVcs.unloadData();
 
+    // Set the session state to joining
     this.sessionState = "joining";
-    log("Updating offline mode");
+
+    // Connect to the peer server (if required)
     await this.updateOfflineMode();
 
-    log("About to connect (1)");
+    // Establish a peer connection with the host
     await this.mbs.connectToPeer(uuid);
-    log("Connected (3)");
 
-    log("Joining peer " + uuid + " with code " + code);
+    // Authenticate using the one-time code
     this.mbs.dispatchMessage({
       messageType: "SessionMessage",
       authorUuid: this.mbs.myUuid,
