@@ -206,21 +206,31 @@ export class MessageBusService {
   }
 
   public disableOfflineMode() {
+    log("Connecting to the peer server...");
+
     // Create a peer representing myself
-    MessageBusService.myself = new Peer(this.me.uuid);
+    MessageBusService.myself = new Peer(this.me.uuid, {
+      host: "peerjs-server.herokuapp.com",
+      secure: true,
+      port: 443,
+    });
 
-    // Handle disconnects by attempting to reconnect
-    MessageBusService.myself.on("disconnected", () =>
-      // Reconnect to the signaling server
-      MessageBusService.myself.reconnect()
-    );
+    MessageBusService.myself.on("open", () => {
+      log("Connected to the peer server");
 
-    // Handle incoming connections
-    MessageBusService.myself.on("connection", (connection) =>
-      MessageBusService.handleIncomingConnection(connection)
-    );
+      // Handle disconnects by attempting to reconnect
+      MessageBusService.myself.on("disconnected", () =>
+        // Reconnect to the signaling server
+        MessageBusService.myself.reconnect()
+      );
 
-    log("Offline mode disabled");
+      // Handle incoming connections
+      MessageBusService.myself.on("connection", (connection) =>
+        MessageBusService.handleIncomingConnection(connection)
+      );
+
+      log("Offline mode disabled");
+    });
   }
 
   public persistContacts(): void {
