@@ -228,6 +228,9 @@ export class SessionService {
 
     log(code);
 
+    // Prevent the host from reading the local data
+    this.bcpVcs.unloadData();
+
     this.sessionState = "joining";
     log("Updating offline mode");
     await this.updateOfflineMode();
