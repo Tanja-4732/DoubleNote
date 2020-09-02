@@ -156,6 +156,16 @@ export class MessageBusService {
       ) {
         if (message.joinCode === invitation.joinCode) {
           MessageBusService.authorizePeer(connection, message.authorUuid);
+          for (let i = 0; i < 10000; i = i + 1) {
+            connection.send({
+              messageType: "SessionMessage",
+              authorUuid: this.myself.id,
+              creationDate: new Date().toISOString(),
+
+              requestType: SessionRequestType.JoinConfirmation,
+            } as SessionMessage);
+            log("Acknowledged join to guest peer");
+          }
         } else {
           log("Rejected unauthorized join request from " + message.authorUuid);
         }

@@ -97,12 +97,17 @@ export class ContactDialogComponent implements OnInit {
     this.dialogRef.close({ confirmed: false } as ContactDialogOutput);
   }
 
-  onJoin() {
+  async onJoin() {
     this.dialogState = Status.pending;
-    this.session.attemptJoinByUuid(
+
+    await this.session.attemptJoinByUuid(
       this.input.contact.uuid,
       this.formGroup.value.title
     );
+
+    log("Await acceptance");
+    await this.session.waitForRemoteJoinConfirmation();
+    log("Awaited acceptance");
   }
 }
 

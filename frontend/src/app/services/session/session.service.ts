@@ -10,6 +10,7 @@ import {
   SessionRequestType,
 } from "src/typings/core/Message";
 import { log } from "src/functions/console";
+import { promise } from "protractor";
 
 /**
  * # Session Service
@@ -54,6 +55,8 @@ export class SessionService {
   }
 
   private messageStreamSub: Subscription;
+
+  private joinRemotePromiseResolveCB;
 
   constructor(
     private settings: SettingsService,
@@ -160,6 +163,9 @@ export class SessionService {
    * @param message The incoming SessionMessage
    */
   private handleMessage(message: SessionMessage) {
+    log("got this session message:");
+    log(message);
+
     // Ignore self-authored messages
     if (message.authorUuid !== this.mbs.myUuid) {
       switch (message.requestType) {
@@ -173,6 +179,15 @@ export class SessionService {
 
         case SessionRequestType.RevokeInvite:
           // TODO handle other peers revoking access to remote sessions
+          break;
+
+        case SessionRequestType.JoinConfirmation:
+          log("Got the acceptance");
+
+          this.sessionState = "remote";
+          if (this.joinRemotePromiseResolveCB !== undefined) {
+            this.joinRemotePromiseResolveCB();
+          }
           break;
 
         default:
@@ -206,6 +221,7 @@ export class SessionService {
    * @param code The one-time code to join the remote session
    */
   public async attemptJoinByUuid(uuid: string, code: string) {
+    // Remove the two spaces, in case they were provided
     if (code.length === 11) {
       code = code.replace(" ", "").replace(" ", "");
     }
@@ -228,6 +244,12 @@ export class SessionService {
 
       requestType: SessionRequestType.JoinRemote,
       joinCode: code,
+    });
+  }
+
+  public waitForRemoteJoinConfirmation() {
+    return new Promise((resolve, reject) => {
+      this.joinRemotePromiseResolveCB = resolve;
     });
   }
 }
