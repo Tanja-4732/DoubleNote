@@ -103,6 +103,20 @@ export class BcpVcsService {
   }
 
   /**
+   * Unloads all data and disables writing to local storage
+   */
+  public unloadData() {
+    this.isLocalSession = false;
+
+    this.notebooks = [];
+    this.commits = {};
+    this.trees = {};
+    this.pages = {};
+    this.boxes = {};
+    this.tags = {};
+  }
+
+  /**
    * Creates a commit of the specified BCP notebook on its HEAD branch
    * copying its object-representation working tree into the commit to be
    * used as its root tree.
