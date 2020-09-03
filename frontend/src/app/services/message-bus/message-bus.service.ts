@@ -240,7 +240,6 @@ export class MessageBusService {
           MessageBusService.handleIncomingConnection(connection)
         );
 
-        log("Offline mode disabled");
         resolve();
       });
     });
