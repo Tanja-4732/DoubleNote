@@ -86,10 +86,17 @@ export class ContactDialogComponent implements OnInit {
     } as ContactDialogOutput);
   }
 
-  onAuthorizeInvite() {
-    this.token = this.session.autorizeInviteByUuid(this.input.contact.uuid);
-    log(this.token);
+  async onAuthorizeInvite() {
+    this.token = await this.session.autorizeInviteByUuid(
+      this.input.contact.uuid
+    );
+
     this.dialogState = Status.pending;
+
+    log("Await acceptance");
+    await this.session.waitForInviteAcceptConfirmation();
+    log("Awaited acceptance");
+    this.dialogState = Status.accepted;
   }
 
   onRevokeInvite() {

@@ -58,6 +58,7 @@ export class SessionService {
   private messageStreamSub: Subscription;
 
   private joinRemotePromiseResolveCB;
+  private acceptInvitePromiseResolveCB;
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -78,7 +79,7 @@ export class SessionService {
    * @param uuid The UUID of the peer to invite to the local session
    * @return The generated, now authorized session token
    */
-  public autorizeInviteByUuid(guestUuid: string): SessionToken {
+  public async autorizeInviteByUuid(guestUuid: string): Promise<SessionToken> {
     /**
      * The new token
      */
@@ -92,7 +93,7 @@ export class SessionService {
     SessionService.invitations.push(sessionToken);
 
     // Disable the offline mode if required
-    this.updateOfflineMode();
+    await this.updateOfflineMode();
 
     // Return the generated token
     return sessionToken;
@@ -165,9 +166,6 @@ export class SessionService {
    * @param message The incoming SessionMessage
    */
   private handleMessage(message: SessionMessage) {
-    log("got this session message:");
-    log(message);
-
     // Ignore self-authored messages
     if (message.authorUuid !== this.mbs.myUuid) {
       switch (message.requestType) {
@@ -189,6 +187,21 @@ export class SessionService {
           this.sessionState = "remote";
           if (this.joinRemotePromiseResolveCB !== undefined) {
             this.joinRemotePromiseResolveCB();
+          }
+
+          this.mbs.dispatchMessage({
+            messageType: "SessionMessage",
+            authorUuid: this.mbs.myUuid,
+            creationDate: new Date().toISOString(),
+
+            requestType: SessionRequestType.InviteAcceptConfirm,
+          });
+
+          break;
+
+        case SessionRequestType.InviteAcceptConfirm:
+          if (this.acceptInvitePromiseResolveCB !== undefined) {
+            this.acceptInvitePromiseResolveCB();
           }
           break;
 
@@ -257,6 +270,12 @@ export class SessionService {
   public waitForRemoteJoinConfirmation() {
     return new Promise((resolve, reject) => {
       this.joinRemotePromiseResolveCB = resolve;
+    });
+  }
+
+  public waitForInviteAcceptConfirmation() {
+    return new Promise((resolve, reject) => {
+      this.acceptInvitePromiseResolveCB = resolve;
     });
   }
 }

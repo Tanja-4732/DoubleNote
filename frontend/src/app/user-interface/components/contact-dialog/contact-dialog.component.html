@@ -50,6 +50,20 @@
         </button>
       </div>
     </ng-container>
+
+    <ng-container *ngSwitchCase="Status.accepted">
+      <h1 mat-dialog-title>"{{ input.contact.name }}" has joined</h1>
+
+      <div mat-dialog-content>
+        <p>
+          Successfully invited "{{ input.contact.name }}" to the local session.
+        </p>
+        <p>You can now close this dialog.</p>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button color="primary" (click)="onSubmit()">Close</button>
+      </div>
+    </ng-container>
   </ng-container>
 
   <!-- Join a remote session -->
