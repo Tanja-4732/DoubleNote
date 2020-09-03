@@ -36,7 +36,7 @@ Both the frontend and the backend have their respective packages on NPM: [double
 
 ## Development
 
-For more information on how to develop this application, push it beyond its current capabilities and realize your own features and/or bug fixes, see the [development section f the frontend README.md](/frontend/README.md#development)
+For more information on how to develop this application, push it beyond its current capabilities and realize your own features and/or bug fixes, see the [development section of the frontend README.md](/frontend/README.md#development)
 
 ## Further reading
 
