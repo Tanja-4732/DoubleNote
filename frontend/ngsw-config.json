@@ -7,6 +7,7 @@
       "installMode": "prefetch",
       "resources": {
         "files": [
+          "/3rdpartylicenses.txt",
           "/favicon.ico",
           "/index.html",
           "/manifest.webmanifest",
