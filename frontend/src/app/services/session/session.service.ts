@@ -187,6 +187,7 @@ export class SessionService {
           this.sessionState = "remote";
           if (this.joinRemotePromiseResolveCB !== undefined) {
             this.joinRemotePromiseResolveCB();
+            this.joinRemotePromiseResolveCB = undefined;
           }
 
           this.mbs.dispatchMessage({
@@ -202,6 +203,7 @@ export class SessionService {
         case SessionRequestType.InviteAcceptConfirm:
           if (this.acceptInvitePromiseResolveCB !== undefined) {
             this.acceptInvitePromiseResolveCB();
+            this.acceptInvitePromiseResolveCB = undefined;
           }
           break;
 
