@@ -1,4 +1,12 @@
 <ng-container *ngIf="!settings.offlineMode">
+  <h1>Peer-sync test</h1>
+  <p>
+    When connected using the
+    <a routerLink="../collaboration">Collaboration tab</a>, you can connect to
+    peers. This serves a quick demonstration of the peer-to-peer sync
+    capabilities.
+  </p>
+
   <p>
     My peerId is
     <code>
@@ -6,15 +14,8 @@
     </code>
   </p>
 
-  <p>
-    The other ID is
-    <input mat-input type="text" [(ngModel)]="peerId" />
-    <button (click)="connectToPeer()">Connect</button>
-  </p>
-
-  <!-- <p>Connected to {{ connection?.peer }}</p> -->
-
-  <input mat-input type="text" [(ngModel)]="peerMessage" />
+  <label for="peerMessageTest">Peer sync test message: </label>
+  <input id="peerMessageTest" mat-input type="text" [(ngModel)]="peerMessage" />
 
   <p>
     {{ peerMessage }}
