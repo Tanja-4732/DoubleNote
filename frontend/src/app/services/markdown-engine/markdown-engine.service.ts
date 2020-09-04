@@ -28,7 +28,7 @@ export class MarkdownEngineService {
         case Node.TEXT_NODE:
           mdom.push({
             nodeType: "text",
-            text: node.textContent,
+            text: node.textContent ?? "",
           });
           break;
 
@@ -125,12 +125,12 @@ export class MarkdownEngineService {
         case "heading":
           str += "#".repeat(node.level);
           str += " ";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "\n\n";
           break;
 
         case "paragraph":
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "\n\n";
           break;
 
@@ -140,13 +140,13 @@ export class MarkdownEngineService {
 
         case "blockCode":
           str += "```" + node.language + "\n";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "\n```\n\n";
           break;
 
         case "blockQuote":
           str += "> ";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "\n\n";
           break;
 
@@ -161,25 +161,25 @@ export class MarkdownEngineService {
 
         case "inlineCode":
           str += "`";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "`";
           break;
 
         case "italics":
           str += "_";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "_";
           break;
 
         case "bold":
           str += "**";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "**";
           break;
 
         case "comment":
           str += "<!--";
-          str += this.generateMarkdown(node.children);
+          str += this.generateMarkdown(node.children ?? []);
           str += "-->";
           break;
 
@@ -351,7 +351,7 @@ export class MarkdownEngineService {
 
     // Recursively iterate over all parseAgain elements
     parseAgain.forEach((node) =>
-      this.parseBlockElements(node.children, lineNumber)
+      this.parseBlockElements(node.children ?? [], lineNumber)
     );
   }
 
