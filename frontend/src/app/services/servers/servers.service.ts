@@ -8,8 +8,9 @@ import { LocationStrategy } from "@angular/common";
   providedIn: "root",
 })
 export class ServersService {
-  public servers: Server[] =
-    JSON.parse(localStorage.getItem("dn.servers")) ?? [];
+  public servers: Server[] = JSON.parse(
+    localStorage.getItem("dn.servers") ?? "[]"
+  );
 
   public persistServers(): void {
     localStorage.setItem("dn.servers", JSON.stringify(this.servers));
