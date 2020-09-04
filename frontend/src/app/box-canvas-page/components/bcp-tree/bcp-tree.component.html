@@ -6,12 +6,10 @@
 <br />
 
 <div
-  *ngIf="notebook.objects.workingTree.objects.children.length === 0"
+  *ngIf="notebook.objects?.workingTree.objects.children.length === 0"
   class="bulk-text"
 >
-  <p>
-    No pages or categories found.
-  </p>
+  <p>No pages or categories found.</p>
   <p>
     Use the button "Create new category" above to create a new top-level
     category. You can then create pages or sub categories. You can rename them
