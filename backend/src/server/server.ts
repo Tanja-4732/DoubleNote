@@ -18,19 +18,22 @@ export class Server {
     private config: ServerConfig = {
       mode: ServerModes.http_only,
       ports: { http: 80, https: 443 },
+      enableSlowdown: false,
     }
   ) {
     // Allow reverse proxy operations
     this.server.enable("trust proxy");
 
     // Use a delay-based rate limit for all requests
-    this.server.use(
-      SlowDown({
-        windowMs: 15 * 60 * 1000,
-        delayAfter: 100,
-        delayMs: 500,
-      })
-    );
+    if (config.enableSlowdown) {
+      this.server.use(
+        SlowDown({
+          windowMs: 15 * 60 * 1000,
+          delayAfter: 100,
+          delayMs: 500,
+        })
+      );
+    }
 
     // Configure the routes
     this.server.use(new Routes().router);
@@ -94,6 +97,8 @@ export interface ServerConfig {
   };
 
   mode: ServerModes;
+
+  enableSlowdown: boolean;
 }
 
 /**
