@@ -7,7 +7,7 @@
       <br />
       Root tree at head commit:
       <code>{{
-        notebook.objects.head.commit.strings.rootCategory | slice: 0:7
+        notebook.objects?.head.commit.strings.rootCategory | slice: 0:7
       }}</code>
       <br />
       Working tree hash:
@@ -24,7 +24,7 @@
     <mat-card-title>Branches & Tags</mat-card-title>
     <mat-card-content>
       <ul>
-        <li *ngFor="let branch of notebook.objects.branches | keyvalue">
+        <li *ngFor="let branch of notebook.objects?.branches | keyvalue">
           {{ branch.key }}: <code>{{ branch.value | hash | slice: 0:7 }}</code>
         </li>
       </ul>
@@ -43,9 +43,7 @@
         <button mat-menu-item [matMenuTriggerFor]="selectBranch">
           Branches
         </button>
-        <button mat-menu-item [matMenuTriggerFor]="selectTag">
-          Tags
-        </button>
+        <button mat-menu-item [matMenuTriggerFor]="selectTag">Tags</button>
       </mat-menu>
 
       <!-- Branches -->
@@ -65,9 +63,7 @@
 
       <!-- Tags -->
       <mat-menu #selectTag>
-        <button mat-menu-item disabled>
-          TODO 🤷
-        </button>
+        <button mat-menu-item disabled>TODO 🤷</button>
         <button mat-menu-item disabled>
           You can't create them either 🤷🤷
         </button>
