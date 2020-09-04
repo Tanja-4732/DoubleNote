@@ -26,7 +26,7 @@ import { BcpTag } from "src/typings/bcp/BcpTag";
 export class DemoComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private otherPeerMessage = "";
-  public peerId: string;
+  public peerId = "";
 
   get peerMessage(): string {
     return this.otherPeerMessage;
@@ -36,14 +36,23 @@ export class DemoComponent implements OnInit, OnDestroy {
     this.mbs.dispatchMessage(this.makeMessage(message));
   }
 
-  public pastedJSON: string;
+  public pastedJSON = "";
 
   constructor(
     private vcs: BcpVcsService,
     public settings: SettingsService,
     public mbs: MessageBusService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.subscription = this.mbs.messageStream
+      .pipe(filter((m: Message) => m.messageType === "DemoTextMessage"))
+      .subscribe((message) => {
+        log(message);
+
+        this.otherPeerMessage = (message as DemoTextMessage).text;
+        this.cdr.detectChanges();
+      });
+  }
 
   height = 100;
   width = 200;
@@ -55,15 +64,6 @@ export class DemoComponent implements OnInit, OnDestroy {
         title: "Demo",
       },
     ];
-
-    this.subscription = this.mbs.messageStream
-      .pipe(filter((m: Message) => m.messageType === "DemoTextMessage"))
-      .subscribe((message: DemoTextMessage) => {
-        log(message);
-
-        this.otherPeerMessage = message.text;
-        this.cdr.detectChanges();
-      });
   }
 
   ngOnDestroy(): void {
