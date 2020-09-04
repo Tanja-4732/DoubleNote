@@ -3,7 +3,7 @@ import {
   Input,
   ElementRef,
   AfterViewInit,
-  ViewChild
+  ViewChild,
 } from "@angular/core";
 
 import { fromEvent, merge } from "rxjs";
@@ -17,22 +17,22 @@ import { switchMap, takeUntil, pairwise } from "rxjs/operators";
 @Component({
   selector: "app-draw",
   templateUrl: "./draw.component.html",
-  styleUrls: ["./draw.component.scss"]
+  styleUrls: ["./draw.component.scss"],
 })
 export class DrawComponent implements AfterViewInit {
   // a reference to the canvas element from our template
-  @ViewChild("canvas") public canvas: ElementRef;
+  @ViewChild("canvas") public canvas!: ElementRef;
 
   // setting a width and height for the canvas
   @Input() public width = 400;
   @Input() public height = 400;
 
-  private cx: CanvasRenderingContext2D;
+  private cx!: CanvasRenderingContext2D;
 
   public ngAfterViewInit() {
     // get the context
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    this.cx = canvasEl.getContext("2d");
+    this.cx = canvasEl.getContext("2d")!;
 
     // set the width and height
     canvasEl.width = this.width;
@@ -51,7 +51,7 @@ export class DrawComponent implements AfterViewInit {
     // this will capture all mousedown events from the canvas element
     merge(fromEvent(canvasEl, "mousedown"), fromEvent(canvasEl, "touchstart"))
       .pipe(
-        switchMap(e => {
+        switchMap((e) => {
           // after a mouse down, we'll record all mouse moves
           return merge(
             fromEvent(canvasEl, "mousemove"),
@@ -78,35 +78,37 @@ export class DrawComponent implements AfterViewInit {
           );
         })
       )
-      .subscribe((res: [MouseEvent, MouseEvent] | [TouchEvent, TouchEvent]) => {
-        const rect = canvasEl.getBoundingClientRect();
+      .subscribe((result) =>
+        ((res: [MouseEvent, MouseEvent] | [TouchEvent, TouchEvent]) => {
+          const rect = canvasEl.getBoundingClientRect();
 
-        // previous and current position with the offset
-        const prevPos =
-          res[0] instanceof MouseEvent
-            ? {
-                x: res[0].clientX - rect.left,
-                y: res[0].clientY - rect.top
-              }
-            : {
-                x: res[0].touches[0].clientX - rect.left,
-                y: res[0].touches[0].clientY - rect.top
-              };
+          // previous and current position with the offset
+          const prevPos =
+            res[0] instanceof MouseEvent
+              ? {
+                  x: res[0].clientX - rect.left,
+                  y: res[0].clientY - rect.top,
+                }
+              : {
+                  x: res[0].touches[0].clientX - rect.left,
+                  y: res[0].touches[0].clientY - rect.top,
+                };
 
-        const currentPos =
-          res[1] instanceof MouseEvent
-            ? {
-                x: res[1].clientX - rect.left,
-                y: res[1].clientY - rect.top
-              }
-            : {
-                x: res[1].touches[0].clientX - rect.left,
-                y: res[1].touches[0].clientY - rect.top
-              };
+          const currentPos =
+            res[1] instanceof MouseEvent
+              ? {
+                  x: res[1].clientX - rect.left,
+                  y: res[1].clientY - rect.top,
+                }
+              : {
+                  x: res[1].touches[0].clientX - rect.left,
+                  y: res[1].touches[0].clientY - rect.top,
+                };
 
-        // this method we'll implement soon to do the actual drawing
-        this.drawOnCanvas(prevPos, currentPos);
-      });
+          // this method we'll implement soon to do the actual drawing
+          this.drawOnCanvas(prevPos, currentPos);
+        })(result as [MouseEvent, MouseEvent] | [TouchEvent, TouchEvent])
+      );
   }
 
   private drawOnCanvas(
