@@ -23,7 +23,7 @@ import { log } from "src/functions/console";
 })
 export class NotebookCardComponent implements OnInit {
   @Input()
-  notebook: Notebook;
+  notebook!: Notebook;
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -94,6 +94,12 @@ export class NotebookCardComponent implements OnInit {
 
         if (result?.confirmed) {
           const newTab = window.open(result.url);
+
+          // Null check
+          if (newTab == null) {
+            throw new Error("newTab is nullish");
+          }
+
           window.addEventListener(
             "message",
             () => newTab.postMessage(this.notebook, newTab.origin),
