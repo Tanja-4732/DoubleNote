@@ -41,7 +41,7 @@
   -->
 
   <app-pm-box
-    *ngFor="let box of page.objects.boxes; trackBy: trackByBox"
+    *ngFor="let box of page.objects?.boxes; trackBy: trackByBox"
     [box]="box"
     [foreignBoxMove]="foreignBoxMove.asObservable()"
     [saveInstruction]="saveInstruction.asObservable()"
