@@ -15,7 +15,7 @@ import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
   styleUrls: ["./bcp-notebook.component.scss"],
 })
 export class BcpNotebookComponent implements OnInit {
-  notebook: BcpNotebook;
+  notebook!: BcpNotebook;
 
   constructor(
     private bcpVcs: BcpVcsService,
