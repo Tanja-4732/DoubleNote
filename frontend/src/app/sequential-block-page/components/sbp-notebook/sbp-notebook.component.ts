@@ -17,7 +17,7 @@ import { Notebook } from "src/typings/core/Notebook";
 export class SbpNotebookComponent implements OnInit {
   // This will get implemented after BCP
 
-  notebook: SbpNotebook;
+  notebook!: SbpNotebook;
 
   constructor(
     private bcpVcs: BcpVcsService,
