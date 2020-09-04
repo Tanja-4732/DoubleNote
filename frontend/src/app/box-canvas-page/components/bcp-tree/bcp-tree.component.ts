@@ -143,6 +143,12 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
       throw new Error("this.notebook.objects?.workingTree is nullish");
     }
 
+    // When creating a new root category ...
+    if (target === null) {
+      // ... provide the root category
+      target = this.notebook.objects.workingTree;
+    }
+
     const data: CategoryDialogInput = {
       target,
       opcode: "Create",

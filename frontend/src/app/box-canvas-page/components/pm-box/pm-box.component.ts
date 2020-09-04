@@ -55,7 +55,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * The subscription to be notified of save instructions
    */
-  private saveInstructionSub: Subscription;
+  private saveInstructionSub!: Subscription;
 
   /**
    * The subscription to the MessageBus
@@ -74,7 +74,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * The subscription to the foreignBoxMove observable
    */
-  private fbmSub: Subscription;
+  private fbmSub!: Subscription;
 
   /**
    * An output which fires when the state of the box has changed
@@ -137,13 +137,6 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((message: TextBoxMessage) =>
         this.handleIncomingMessage(message)
       );
-
-    // Register to the observable to be notified when the box gets moved
-    this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
-
-    this.saveInstructionSub = this.saveInstruction.subscribe(() =>
-      this.saveDocument()
-    );
   }
 
   // #region Angular life cycle hooks
@@ -156,6 +149,13 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // TODO Refresh the Markdown string
     // this.markdownText = this.engine.generateMarkdown(this.box.mdom);
+
+    // Register to the observable to be notified when the box gets moved
+    this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
+
+    this.saveInstructionSub = this.saveInstruction.subscribe(() =>
+      this.saveDocument()
+    );
   }
 
   ngAfterViewInit(): void {
