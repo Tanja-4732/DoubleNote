@@ -36,7 +36,9 @@ export class CollaborationComponent implements OnInit {
     public settings: SettingsService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.myName = this.mbs.myName;
+  }
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [
@@ -45,8 +47,6 @@ export class CollaborationComponent implements OnInit {
         icon: Icons.MultiUser6,
       },
     ];
-
-    this.myName = this.mbs.myName;
   }
 
   get myUuid(): string {
