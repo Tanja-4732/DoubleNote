@@ -72,6 +72,9 @@
           <code> {{ contact.uuid }} </code>
         </mat-panel-description> -->
       </mat-expansion-panel-header>
+
+      <p>Status: {{ getConnectionStatus(contact.uuid) }}</p>
+
       <p>
         <code> {{ contact.uuid }} </code>
       </p>
@@ -109,16 +112,10 @@
   <!-- <ng-container *ngIf="contacts.length === 0"> -->
   <mat-expansion-panel [expanded]="contacts.length === 0">
     <mat-expansion-panel-header>
-      <mat-panel-title>
-        Collaboration guide
-      </mat-panel-title>
-      <mat-panel-description>
-        (Tutorial)
-      </mat-panel-description>
+      <mat-panel-title> Collaboration guide </mat-panel-title>
+      <mat-panel-description> (Tutorial) </mat-panel-description>
     </mat-expansion-panel-header>
-    <p>
-      DoubleNote supports collaboration in real time.
-    </p>
+    <p>DoubleNote supports collaboration in real time.</p>
 
     <p>
       Use the interface above to add contacts, and to invite them to your

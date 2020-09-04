@@ -20,6 +20,7 @@ import {
   ContactDialogOutput,
   ContactDialogOpcode,
 } from "../contact-dialog/contact-dialog.component";
+import { SessionService } from "src/app/services/session/session.service";
 
 @Component({
   selector: "app-collaboration",
@@ -31,7 +32,14 @@ export class CollaborationComponent implements OnInit {
   uuid = "";
   myName: string;
 
+  readonly HAS_JOINED = "They joined us as guest";
+  readonly IS_HOST = "We joined them as guest";
+  readonly NO_CONNECTION = "Not connected";
+  readonly PENDING_JOIN = "Trying to joining them...";
+  readonly PENDING_INVITE = "Waiting for them to join...";
+
   constructor(
+    private session: SessionService,
     public mbs: MessageBusService,
     public settings: SettingsService,
     private snackBar: MatSnackBar,
@@ -160,5 +168,30 @@ export class CollaborationComponent implements OnInit {
         this.mbs.connectToPeer(result.contact.uuid);
       }
     });
+  }
+
+  getConnectionStatus(uuid: string): string {
+    const invite = SessionService.invitations.find(
+      (invitation) => invitation.guestUuid === uuid
+    );
+
+    switch (this.session.state) {
+      case "local":
+        return invite === undefined
+          ? this.NO_CONNECTION
+          : invite.authorized
+          ? this.HAS_JOINED
+          : this.PENDING_INVITE;
+
+      case "joining":
+        return this.session.connectedTo === uuid
+          ? this.PENDING_JOIN
+          : this.NO_CONNECTION;
+
+      case "remote":
+        return this.session.connectedTo === uuid
+          ? this.IS_HOST
+          : this.NO_CONNECTION;
+    }
   }
 }

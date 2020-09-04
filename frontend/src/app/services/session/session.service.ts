@@ -50,8 +50,17 @@ export class SessionService {
    */
   private sessionState: "local" | "remote" | "joining" = "local";
 
+  /**
+   * The UUID of the host (if not self)
+   */
+  private connectedToState = "";
+
   public get state() {
     return this.sessionState;
+  }
+
+  public get connectedTo() {
+    return this.connectedToState;
   }
 
   private messageStreamSub: Subscription;
@@ -251,6 +260,9 @@ export class SessionService {
 
     // Set the session state to joining
     this.sessionState = "joining";
+
+    // Set the remote host UUID
+    this.connectedToState = uuid;
 
     // Connect to the peer server (if required)
     await this.updateOfflineMode();
