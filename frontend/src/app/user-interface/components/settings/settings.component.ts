@@ -54,6 +54,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       { emitEvent: false }
     );
+
+    this.sub = this.formGroup.valueChanges.subscribe((value) => {
+      this.settings.offlineMode = value.enableOfflineMode;
+      this.settings.formatBars = value.displayFormatBars;
+    });
   }
 
   ngOnInit(): void {
@@ -63,11 +68,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         title: "Settings",
       },
     ];
-
-    this.sub = this.formGroup.valueChanges.subscribe((value) => {
-      this.settings.offlineMode = value.enableOfflineMode;
-      this.settings.formatBars = value.displayFormatBars;
-    });
   }
 
   ngOnDestroy(): void {
