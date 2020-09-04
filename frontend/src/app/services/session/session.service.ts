@@ -10,7 +10,6 @@ import {
   SessionRequestType,
 } from "src/typings/core/Message";
 import { log } from "src/functions/console";
-import { promise } from "protractor";
 import { BcpVcsService } from "../bcp-vcs/bcp-vcs.service";
 
 /**
@@ -57,8 +56,9 @@ export class SessionService {
 
   private messageStreamSub: Subscription;
 
-  private joinRemotePromiseResolveCB;
-  private acceptInvitePromiseResolveCB;
+  private joinRemotePromiseResolveCB: ((_?: unknown) => void) | null = null;
+
+  private acceptInvitePromiseResolveCB: ((_?: unknown) => void) | null = null;
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -67,7 +67,7 @@ export class SessionService {
   ) {
     this.messageStreamSub = this.mbs.messageStream
       .pipe(filter((m: Message) => m.messageType === "SessionMessage"))
-      .subscribe((message: SessionMessage) => this.handleMessage(message));
+      .subscribe((message) => this.handleMessage(message as SessionMessage));
   }
 
   /**
@@ -165,7 +165,7 @@ export class SessionService {
    *
    * @param message The incoming SessionMessage
    */
-  private handleMessage(message: SessionMessage) {
+  private handleMessage(message: SessionMessage): void {
     // Ignore self-authored messages
     if (message.authorUuid !== this.mbs.myUuid) {
       switch (message.requestType) {
@@ -185,9 +185,9 @@ export class SessionService {
           log("Got the acceptance");
 
           this.sessionState = "remote";
-          if (this.joinRemotePromiseResolveCB !== undefined) {
+          if (this.joinRemotePromiseResolveCB !== null) {
             this.joinRemotePromiseResolveCB();
-            this.joinRemotePromiseResolveCB = undefined;
+            this.joinRemotePromiseResolveCB = null;
           }
 
           this.mbs.dispatchMessage({
@@ -201,9 +201,9 @@ export class SessionService {
           break;
 
         case SessionRequestType.InviteAcceptConfirm:
-          if (this.acceptInvitePromiseResolveCB !== undefined) {
+          if (this.acceptInvitePromiseResolveCB !== null) {
             this.acceptInvitePromiseResolveCB();
-            this.acceptInvitePromiseResolveCB = undefined;
+            this.acceptInvitePromiseResolveCB = null;
           }
           break;
 
