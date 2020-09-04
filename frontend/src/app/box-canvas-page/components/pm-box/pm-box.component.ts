@@ -11,6 +11,7 @@ import {
   Output,
   ViewChild,
 } from "@angular/core";
+// @ts-ignore
 import { exampleSetup } from "prosemirror-example-setup";
 import { DOMParser, Schema, MarkType, Node } from "prosemirror-model";
 import { schema } from "prosemirror-schema-basic";
@@ -43,13 +44,13 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * An input which represents the state of the box.
    */
   @Input()
-  readonly box: TextBox;
+  readonly box!: TextBox;
 
   /**
    * An input which triggers when the box should save its content
    */
   @Input()
-  saveInstruction: Observable<void>;
+  saveInstruction!: Observable<void>;
 
   /**
    * The subscription to be notified of save instructions
@@ -68,7 +69,7 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * this observable will fire an event, which does not contain the target coordinates.
    */
   @Input()
-  foreignBoxMove: Observable<void>;
+  foreignBoxMove!: Observable<void>;
 
   /**
    * The subscription to the foreignBoxMove observable
@@ -98,10 +99,10 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
    * A reference to the WYSIWYG editor (ProseMirror) of this component
    */
   @ViewChild("pmEditorRef")
-  pmEditorRef: ElementRef;
+  pmEditorRef!: ElementRef;
 
-  private view: EditorView;
-  private mySchema: Schema<
+  private view!: EditorView;
+  private mySchema!: Schema<
     | "get"
     | "update"
     | "remove"
@@ -122,15 +123,12 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
     private engine: MarkdownEngineService,
     private cdr: ChangeDetectorRef,
     public settings: SettingsService
-  ) {}
-
-  // #region Angular life cycle hooks
-  ngOnInit(): void {
+  ) {
     // Get the message bus observable
     this.mbSub = this.mb.messageStream
       .pipe(
         // Filter for TextBoxMessages only
-        filter((m: Message) => m.messageType === "TextBoxMessage"),
+        filter((m: any) => m.messageType === "TextBoxMessage"),
 
         // Filter for messages about this TextBox only
         filter((m: TextBoxMessage) => m.uuid === this.box.uuid)
@@ -140,21 +138,24 @@ export class PmBoxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.handleIncomingMessage(message)
       );
 
+    // Register to the observable to be notified when the box gets moved
+    this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
+
+    this.saveInstructionSub = this.saveInstruction.subscribe(() =>
+      this.saveDocument()
+    );
+  }
+
+  // #region Angular life cycle hooks
+  ngOnInit(): void {
     // Detect changes once, manually
     this.cdr.detectChanges();
 
     // Update the position of the box on the page, once, manually
     this.setBoxPosition();
 
-    // Register to the observable to be notified when the box gets moved
-    this.fbmSub = this.foreignBoxMove.subscribe(() => this.setBoxPosition());
-
     // TODO Refresh the Markdown string
     // this.markdownText = this.engine.generateMarkdown(this.box.mdom);
-
-    this.saveInstructionSub = this.saveInstruction.subscribe(() =>
-      this.saveDocument()
-    );
   }
 
   ngAfterViewInit(): void {
