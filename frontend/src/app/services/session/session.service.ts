@@ -48,19 +48,19 @@ export class SessionService {
    * - Remote (we are a guest in the session of another peer)
    * - Joining (we are attempting to join another peers session)
    */
-  private sessionState: "local" | "remote" | "joining" = "local";
+  private sessionStatePrivate: "local" | "remote" | "joining" = "local";
 
   /**
    * The UUID of the host (if not self)
    */
-  private connectedToState = "";
+  private connectedToPrivate = "";
 
-  public get state() {
-    return this.sessionState;
+  public get sessionState() {
+    return this.sessionStatePrivate;
   }
 
   public get connectedTo() {
-    return this.connectedToState;
+    return this.connectedToPrivate;
   }
 
   private messageStreamSub: Subscription;
@@ -161,7 +161,8 @@ export class SessionService {
   private async updateOfflineMode() {
     if (
       !this.settings.offlineMode &&
-      (this.sessionState !== "local" || SessionService.invitations.length > 0)
+      (this.sessionStatePrivate !== "local" ||
+        SessionService.invitations.length > 0)
     ) {
       await this.mbs.disableOfflineMode();
     } else {
@@ -193,7 +194,7 @@ export class SessionService {
         case SessionRequestType.JoinConfirmation:
           log("Got the acceptance");
 
-          this.sessionState = "remote";
+          this.sessionStatePrivate = "remote";
           if (this.joinRemotePromiseResolveCB !== null) {
             this.joinRemotePromiseResolveCB();
             this.joinRemotePromiseResolveCB = null;
@@ -259,10 +260,10 @@ export class SessionService {
     this.bcpVcs.unloadData();
 
     // Set the session state to joining
-    this.sessionState = "joining";
+    this.sessionStatePrivate = "joining";
 
     // Set the remote host UUID
-    this.connectedToState = uuid;
+    this.connectedToPrivate = uuid;
 
     // Connect to the peer server (if required)
     await this.updateOfflineMode();
@@ -282,14 +283,31 @@ export class SessionService {
   }
 
   public waitForRemoteJoinConfirmation() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
       this.joinRemotePromiseResolveCB = resolve;
     });
   }
 
   public waitForInviteAcceptConfirmation() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
       this.acceptInvitePromiseResolveCB = resolve;
     });
+  }
+
+  /**
+   * Disconnects the user from a remote session
+   */
+  public async leaveRemoteSession() {
+    if (
+      this.connectedToPrivate !== "" &&
+      this.sessionStatePrivate === "remote" &&
+      this.mbs.disconnectByUuid(this.connectedToPrivate)
+    ) {
+      this.connectedToPrivate = "";
+      this.sessionStatePrivate = "local";
+
+      await this.updateOfflineMode();
+      this.bcpVcs.loadDataFromLocalStorage();
+    }
   }
 }

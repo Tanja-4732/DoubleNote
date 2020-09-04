@@ -175,7 +175,7 @@ export class CollaborationComponent implements OnInit {
       (invitation) => invitation.guestUuid === uuid
     );
 
-    switch (this.session.state) {
+    switch (this.session.sessionState) {
       case "local":
         return invite === undefined
           ? this.NO_CONNECTION
@@ -193,5 +193,13 @@ export class CollaborationComponent implements OnInit {
           ? this.IS_HOST
           : this.NO_CONNECTION;
     }
+  }
+
+  onRevokeInvite(uuid: string) {
+    this.session.revokeInviteByUuid(uuid);
+  }
+
+  async onLeaveSession() {
+    await this.session.leaveRemoteSession();
   }
 }

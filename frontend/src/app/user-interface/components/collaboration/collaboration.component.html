@@ -88,21 +88,51 @@
           Edit
         </button>
 
-        <button
-          mat-button
-          (click)="openInviteContactDialog(contact)"
-          color="accent"
-        >
-          Invite
-        </button>
+        <ng-container [ngSwitch]="getConnectionStatus(contact.uuid)">
+          <ng-container *ngSwitchCase="NO_CONNECTION">
+            <button
+              mat-button
+              (click)="openInviteContactDialog(contact)"
+              color="accent"
+            >
+              Invite
+            </button>
 
-        <button
-          mat-button
-          (click)="openJoinContactDialog(contact)"
-          color="primary"
-        >
-          Join session
-        </button>
+            <button
+              mat-button
+              (click)="openJoinContactDialog(contact)"
+              color="primary"
+            >
+              Join session
+            </button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="HAS_JOINED">
+            <button
+              mat-button
+              (click)="onRevokeInvite(contact.uuid)"
+              color="accent"
+            >
+              Revoke invitation
+            </button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="IS_HOST">
+            <button mat-button (click)="onLeaveSession()" color="accent">
+              Leave session
+            </button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="PENDING_JOIN">
+            <!-- TODO cancel join -->
+            <button mat-button disabled>{{ PENDING_JOIN }}</button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="PENDING_INVITE">
+            <!-- TODO cancel invite -->
+            <button mat-button disabled>{{ PENDING_INVITE }}</button>
+          </ng-container>
+        </ng-container>
       </mat-action-row>
     </mat-expansion-panel>
   </ng-container>
