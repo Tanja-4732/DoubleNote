@@ -12,6 +12,7 @@ import { Contact } from "src/typings/core/Contact";
 import { log } from "src/functions/console";
 import { SessionService } from "../session/session.service";
 import { SessionToken } from "src/typings/session/SessionToken";
+import { reject } from "lodash";
 
 /**
  * # MessageBusService
@@ -41,7 +42,7 @@ export class MessageBusService {
    *
    * It is the "me" in the peer to peer network
    */
-  private static myself: Peer;
+  private static myself: Peer | null;
 
   /**
    * The messages in this subject are either incoming ones or have been broadcast already.
@@ -81,18 +82,20 @@ export class MessageBusService {
   /**
    * A list of all known contacts
    */
-  public contacts: Contact[] =
-    JSON.parse(localStorage.getItem("dn.contacts.others")) ?? [];
+  public contacts: Contact[] = JSON.parse(
+    localStorage.getItem("dn.contacts.others") ?? "[]"
+  );
 
   private static prepareMe(): Contact {
-    let me: Contact = JSON.parse(localStorage.getItem("dn.contacts.me"));
+    const meString = localStorage.getItem("dn.contacts.me");
 
-    if (me === null) {
-      me = { uuid: v4(), name: "Myself" };
+    if (meString === null) {
+      const me = { uuid: v4(), name: "Myself" };
       localStorage.setItem("dn.contacts.me", JSON.stringify(me));
+      return me;
+    } else {
+      return JSON.parse(meString);
     }
-
-    return me;
   }
 
   /**
@@ -148,14 +151,20 @@ export class MessageBusService {
      */
     const handleMessageIfAuthorized = (message: Message) => {
       // Handle authorized messages
-      if (isHostConnection || invitation.authorized) {
+      if (isHostConnection || invitation?.authorized) {
         // TODO check if the message comes from who it claims to be from
         MessageBusService.handleIncomingMessage(message);
       } else if (
         message.messageType === "SessionMessage" &&
-        message.requestType === SessionRequestType.JoinRemote
+        message.requestType === SessionRequestType.JoinRemote &&
+        invitation != null
       ) {
         if (message.joinCode === invitation.joinCode) {
+          // Null check
+          if (this.myself == null) {
+            throw new Error("this.myself is nullish");
+          }
+
           MessageBusService.authorizePeer(connection, message.authorUuid);
           invitation.authorized = true;
 
@@ -226,14 +235,29 @@ export class MessageBusService {
     });
 
     return new Promise((resolve, reject) => {
+      // Null check
+      if (MessageBusService.myself == null) {
+        throw new Error("MessageBusService.myself is nullish");
+      }
+
       MessageBusService.myself.on("open", () => {
         log("Connected to the peer server");
 
+        // Null check
+        if (MessageBusService.myself == null) {
+          throw new Error("MessageBusService.myself is nullish");
+        }
+
         // Handle disconnects by attempting to reconnect
-        MessageBusService.myself.on("disconnected", () =>
+        MessageBusService.myself.on("disconnected", () => {
+          // Null check
+          if (MessageBusService.myself == null) {
+            throw new Error("MessageBusService.myself is nullish");
+          }
+
           // Reconnect to the signaling server
-          MessageBusService.myself.reconnect()
-        );
+          return MessageBusService.myself.reconnect();
+        });
 
         // Handle incoming connections
         MessageBusService.myself.on("connection", (connection) =>
@@ -254,7 +278,7 @@ export class MessageBusService {
    *
    * @param uuid The UUID of the peer to connect to
    */
-  public connectToPeer(uuid: string): Promise<boolean> {
+  public async connectToPeer(uuid: string): Promise<boolean> {
     // Check if the application is running in offline mode
     if (this.settings.offlineMode) {
       throw new Error("Operation not available in offline mode");
@@ -263,9 +287,14 @@ export class MessageBusService {
     // Check if we are already connected to the peer
     if (MessageBusService.peerConnections.some((c) => c.peer === uuid)) {
       // Don't connect
-      return;
+      return false;
 
       // TODO maybe throw an error instead
+    }
+
+    // Null check
+    if (MessageBusService.myself == null) {
+      throw new Error("MessageBusService.myself is nullish");
     }
 
     /**
@@ -276,7 +305,7 @@ export class MessageBusService {
       label: uuid,
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
       // Wait for the connection to be established
       connection.on("open", async () => {
         // Prepare the new connection
