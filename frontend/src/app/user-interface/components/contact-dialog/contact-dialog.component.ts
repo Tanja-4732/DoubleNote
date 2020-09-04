@@ -24,7 +24,7 @@ export class ContactDialogComponent implements OnInit {
 
   readonly joinCode: string = "";
 
-  token: SessionToken;
+  token: SessionToken | undefined;
 
   formGroup: FormGroup;
 
