@@ -49,13 +49,17 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
    * The notebook to be displayed as a tree
    */
   @Input()
-  notebook: BcpNotebook;
+  notebook!: BcpNotebook;
 
-  treeControl = new NestedTreeControl<TreeNode>((node) =>
-    "name" in node
+  treeControl = new NestedTreeControl<TreeNode>((node) => {
+    if (node.objects == null) {
+      throw new Error("node.objects is nullish");
+    }
+
+    return "name" in node
       ? node.objects.children.concat(node.objects.pages as any)
-      : []
-  );
+      : [];
+  });
 
   dataSource = new MatTreeNestedDataSource<TreeNode>();
 
@@ -72,11 +76,20 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.sub = BcpTreeComponent.setDataSub.subscribe(() => this.setData());
+  }
 
-  hasChild = (_: number, node: TreeNode) =>
-    "name" in node &&
-    (node.objects.children.length > 0 || node.objects.pages.length > 0);
+  hasChild(_: number, node: TreeNode) {
+    if (node.objects == null) {
+      throw new Error("node.objects is nullish");
+    }
+
+    return (
+      "name" in node &&
+      (node.objects.children.length > 0 || node.objects.pages.length > 0)
+    );
+  }
 
   isCategory(node: TreeNode) {
     return "name" in node;
@@ -84,7 +97,6 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setData();
-    this.sub = BcpTreeComponent.setDataSub.subscribe(() => this.setData());
   }
 
   ngOnDestroy() {
@@ -94,10 +106,13 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
   }
 
   private setData() {
-    // log(this.notebook.objects.workingTree);
+    if (this.notebook.objects == null) {
+      throw new Error("this.notebook.objects is nullish");
+    }
 
-    // Reset the data (workaround for an Angular bug)
-    this.dataSource.data = null;
+    // Reset the data (workaround for an Angular bug (or probably just triggering CD))
+    // TODO check if the [] value works the same way as the previous null value
+    this.dataSource.data = [];
 
     const nodes = this.notebook.objects.workingTree.objects.children.concat(
       this.notebook.objects.workingTree.objects.pages as any
@@ -116,21 +131,24 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
   /**
    * Opens a dialog to create a new category given a parent category
    *
+   * If no target is specified, the root category will be used.
+   *
    * @param target The parent of the node to be created
    */
-  openCreateCategoryDialog(target?: CategoryTree): void {
+  openCreateCategoryDialog(target = this.notebook.objects?.workingTree): void {
     log("Create category dialog");
 
-    // When creating a new root category ...
-    if (target === null) {
-      // ... provide the root category
-      target = this.notebook.objects.workingTree;
+    // Null check
+    if (this.notebook.objects?.workingTree == null) {
+      throw new Error("this.notebook.objects?.workingTree is nullish");
     }
 
     const data: CategoryDialogInput = {
       target,
       opcode: "Create",
-      takenNames: target.objects.children.map((child) => child.name),
+      takenNames: target.objects.children.map(
+        (child: CategoryTree) => child.name
+      ),
     };
 
     const dialogRef = this.dialog.open(CategoryDialogComponent, {
@@ -143,12 +161,12 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
         if (result.takenNames.includes(result.name)) {
           throw new Error("Category name already taken");
         } else {
-          const category: CategoryTree = {
+          const category: any = {
             name: result.name,
             objects: { pages: [], children: [] },
           };
 
-          result.target.objects.children.push(category);
+          result.target.objects?.children.push(category);
 
           this.vcs.persistWorkingTree(this.notebook);
           this.setData();
@@ -159,6 +177,12 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
 
   openEditCategoryDialog(target: CategoryTree): void {
     log("Edit category dialog");
+
+    // Null check
+    if (this.notebook.objects == null) {
+      throw new Error("this.notebook.objects is nullish");
+    }
+
     // When creating a new root category ...
     if (target === this.notebook.objects.workingTree) {
       // ... throw an error
@@ -191,8 +215,14 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
    *
    * @param target The parent of the page to be created
    */
-  openCreatePageDialog(target?: CategoryTree): void {
+  openCreatePageDialog(target = this.notebook.objects?.workingTree): void {
     log("Create page dialog");
+
+    // Null check
+    if (this.notebook.objects == null) {
+      throw new Error("this.notebook.objects is nullish");
+    }
+
     // When creating a new root category ...
     if (target === null) {
       // ... provide the root category
@@ -203,7 +233,9 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
     const data: PageDialogInput = {
       target,
       opcode: "Create",
-      takenTitles: target.objects.pages.map((page) => page.title),
+      takenTitles: target.objects.pages.map(
+        (page: BoxCanvasPage) => page.title
+      ),
     };
 
     const dialogRef = this.dialog.open(PageDialogComponent, {
@@ -217,13 +249,13 @@ export class BcpTreeComponent implements OnInit, OnDestroy {
         if (result.takenNames.includes(result.title)) {
           throw new Error("Category name already taken");
         } else {
-          const page: BoxCanvasPage = {
+          const page: any = {
             title: result.title,
             uuid: v4(),
             objects: { boxes: [] },
           };
 
-          result.target.objects.pages.push(page);
+          result.target.objects?.pages.push(page);
 
           this.vcs.persistWorkingTree(this.notebook);
           this.setData();
