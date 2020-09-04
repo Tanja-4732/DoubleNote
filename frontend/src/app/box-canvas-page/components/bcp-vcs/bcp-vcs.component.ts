@@ -29,7 +29,7 @@ import { BranchHead } from "src/typings/core/Head";
 })
 export class BcpVcsComponent implements OnInit {
   @Input()
-  notebook: BcpNotebook;
+  notebook!: BcpNotebook;
 
   get isDevMode(): boolean {
     return !environment.production;
@@ -41,7 +41,7 @@ export class BcpVcsComponent implements OnInit {
 
   get disableCommit(): boolean {
     return (
-      this.notebook.objects.head.commit.strings.rootCategory ===
+      this.notebook.objects?.head.commit.strings.rootCategory ===
       this.notebook.strings.workingTree
     );
   }
@@ -55,11 +55,11 @@ export class BcpVcsComponent implements OnInit {
   }
 
   get branchText(): string {
-    return (this.notebook.objects.head as BranchHead).name || "Detached";
+    return (this.notebook.objects?.head as BranchHead).name || "Detached";
   }
 
   calcDisableBranchButton(name: string): boolean {
-    return (this.notebook.objects.head as BranchHead).name !== name;
+    return (this.notebook.objects?.head as BranchHead).name !== name;
   }
 
   onCheckoutBranch(name: string): void {
@@ -137,13 +137,13 @@ export class BcpVcsComponent implements OnInit {
 
   debug(): void {
     log("Root tree at head commit");
-    log(hash(this.notebook.objects.head.commit.objects.rootCategory));
-    log(this.notebook.objects.head.commit.objects.rootCategory);
+    log(hash(this.notebook.objects?.head.commit.objects?.rootCategory));
+    log(this.notebook.objects?.head.commit.objects?.rootCategory);
     log("");
 
     log("Working tree");
-    log(hash(this.notebook.objects.workingTree));
-    log(this.notebook.objects.workingTree);
+    log(hash(this.notebook.objects?.workingTree));
+    log(this.notebook.objects?.workingTree);
     log("");
 
     // log("Root tree == working tree");
