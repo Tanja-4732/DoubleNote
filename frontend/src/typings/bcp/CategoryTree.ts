@@ -9,7 +9,7 @@ export interface CategoryTree {
   /**
    * String-based references to the objects of this tree
    */
-  strings?: {
+  strings: {
     /**
      * The hashes of the child trees
      */

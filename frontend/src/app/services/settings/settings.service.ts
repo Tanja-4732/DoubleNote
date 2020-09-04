@@ -32,7 +32,8 @@ export class SettingsService {
   public readonly formatBarsObservable: Observable<boolean>;
 
   constructor() {
-    this.loadSettings();
+    // Read the settings from localStorage
+    this.settings = JSON.parse(localStorage.getItem("dn.settings") ?? "{}");
 
     // Offline mode
     this.offlineModeSubject = new BehaviorSubject(this.offlineMode);
@@ -47,13 +48,6 @@ export class SettingsService {
    * The cached settings
    */
   private settings: Settings;
-
-  /**
-   * Reads the settings from localStorage
-   */
-  private loadSettings() {
-    this.settings = JSON.parse(localStorage.getItem("dn.settings")) ?? {};
-  }
 
   /**
    * Persist the settings to localStorage

@@ -26,14 +26,14 @@ export const NO_SUCH_NOTEBOOK = "Notebook not found";
   providedIn: "root",
 })
 export class BcpVcsService {
-  public notebooks: BcpNotebook[];
-  private commits: { [hash: string]: BcpCommit };
-  private trees: { [hash: string]: CategoryTree };
-  private pages: { [hash: string]: BoxCanvasPage };
-  private boxes: { [hash: string]: TextBox };
-  private tags: { [hash: string]: BcpTag };
+  public notebooks: BcpNotebook[] = [];
+  private commits: { [hash: string]: BcpCommit } = {};
+  private trees: { [hash: string]: CategoryTree } = {};
+  private pages: { [hash: string]: BoxCanvasPage } = {};
+  private boxes: { [hash: string]: TextBox } = {};
+  private tags: { [hash: string]: BcpTag } = {};
 
-  private isLocalSession: boolean;
+  private isLocalSession = false;
 
   /**
    * ## Box Canvas Page version control system
@@ -59,14 +59,27 @@ export class BcpVcsService {
   public loadDataFromLocalStorage(): void {
     this.isLocalSession = true;
 
-    this.notebooks =
-      JSON.parse(window.localStorage.getItem("dn.bcp.notebooks")) ?? [];
-    this.commits =
-      JSON.parse(window.localStorage.getItem("dn.bcp.commits")) ?? {};
-    this.trees = JSON.parse(window.localStorage.getItem("dn.bcp.trees")) ?? {};
-    this.pages = JSON.parse(window.localStorage.getItem("dn.bcp.pages")) ?? {};
-    this.boxes = JSON.parse(window.localStorage.getItem("dn.bcp.boxes")) ?? {};
-    this.tags = JSON.parse(window.localStorage.getItem("dn.bcp.tags")) ?? {};
+    this.notebooks = JSON.parse(
+      window.localStorage.getItem("dn.bcp.notebooks") ?? "[]"
+    );
+
+    this.commits = JSON.parse(
+      window.localStorage.getItem("dn.bcp.commits") ?? "{}"
+    );
+
+    this.trees = JSON.parse(
+      window.localStorage.getItem("dn.bcp.trees") ?? "{}"
+    );
+
+    this.pages = JSON.parse(
+      window.localStorage.getItem("dn.bcp.pages") ?? "{}"
+    );
+
+    this.boxes = JSON.parse(
+      window.localStorage.getItem("dn.bcp.boxes") ?? "{}"
+    );
+
+    this.tags = JSON.parse(window.localStorage.getItem("dn.bcp.tags") ?? "{}");
 
     this.notebooks.forEach((n) => this.prepareNotebook(n));
   }
@@ -133,6 +146,11 @@ export class BcpVcsService {
     persistWorkingTree = true,
     allowDetached = false
   ): void {
+    // Null check
+    if (notebook.objects == null) {
+      throw new Error("notebook.objects is nullish");
+    }
+
     // Persist the working tree if requested
     if (persistWorkingTree) {
       this.persistWorkingTree(notebook);
@@ -206,6 +224,11 @@ export class BcpVcsService {
     source: string,
     checkout: boolean
   ): void {
+    // Null check
+    if (notebook.objects == null) {
+      throw new Error("notebook.objects is nullish");
+    }
+
     // Check if the branch exists already
     if (notebook.strings.branches.hasOwnProperty(name)) {
       throw new Error(BRANCH_NAME_TAKEN);
@@ -250,6 +273,13 @@ export class BcpVcsService {
    * @param force Whether to force the checkout process (may result in data loss)
    */
   checkoutBranch(notebook: BcpNotebook, branch: string, force = false): void {
+    // Null check
+    if (notebook.objects?.head.commit.objects?.rootCategory == null) {
+      throw new Error(
+        "notebook.objects?.head.commit.objects?.rootCategory is nullish"
+      );
+    }
+
     // Check if the branch exists
     if (!notebook.strings.branches.hasOwnProperty(branch)) {
       throw new Error(NO_SUCH_BRANCH);
@@ -270,6 +300,11 @@ export class BcpVcsService {
     notebook.objects.head.detached = false;
     (notebook.objects.head as BranchHead).name = branch;
 
+    // Null check
+    if (notebook.objects.head.commit.objects == null) {
+      throw new Error("notebook.objects.head.commit.objects is nullish");
+    }
+
     // Copy the working tree
     notebook.objects.workingTree = cloneDeep(
       notebook.objects.head.commit.objects.rootCategory
@@ -287,6 +322,11 @@ export class BcpVcsService {
    * @param notebook The notebook of which to save the working tree
    */
   persistWorkingTree(notebook: BcpNotebook): void {
+    // Null check
+    if (notebook.objects == null) {
+      throw new Error("notebook.objects is nullish");
+    }
+
     const hash = this.saveTree(notebook.objects.workingTree);
     notebook.strings.workingTree = hash;
 
@@ -393,13 +433,40 @@ export class BcpVcsService {
    * @param notebook The notebook to prepare
    */
   private prepareNotebook(notebook: BcpNotebook) {
-    // Prepare the target data structure
-    notebook.objects = {
-      branches: {},
-      head: { commit: null, detached: null },
-      workingTree: null,
-      tags: [],
-    };
+    /**
+     * The resolved HEAD commit hash
+     */
+    const resolvedHead = this.resolveHead(notebook.strings.head, notebook);
+
+    // Check, if the HEAD is detached
+    if (notebook.strings.branches.hasOwnProperty(notebook.strings.head)) {
+      // Prepare the target data structure
+      notebook.objects = {
+        branches: {},
+        head: {
+          commit: this.commits[resolvedHead],
+          detached: false,
+          name: notebook.strings.head,
+        },
+        workingTree: cloneDeep(this.trees[notebook.strings.workingTree]),
+        tags: [],
+      };
+    } else {
+      // Prepare the target data structure
+      notebook.objects = {
+        branches: {},
+        head: {
+          commit: this.commits[resolvedHead],
+          detached: true,
+        },
+        workingTree: cloneDeep(this.trees[notebook.strings.workingTree]),
+        tags: [],
+      };
+    }
+
+    if (notebook.objects == null) {
+      throw new Error("Notebook is nullish");
+    }
 
     // Initialize every branch
     for (const [branchName, latestCommitHash] of Object.entries(
@@ -410,49 +477,32 @@ export class BcpVcsService {
 
       // Prepare the target data structure
       notebook.objects.branches[branchName].objects = {
-        previous: null,
-        rootCategory: null,
+        previous: this.commits[
+          notebook.objects.branches[branchName].strings.previous
+        ],
+        rootCategory: this.trees[
+          notebook.objects.branches[branchName].strings.rootCategory
+        ],
       };
 
-      // Set the root category
-      notebook.objects.branches[branchName].objects.rootCategory = this.trees[
-        notebook.objects.branches[branchName].strings.rootCategory
-      ];
-
       // Load the branch tree
-      this.loadTree(notebook.objects.branches[branchName].objects.rootCategory);
+      this.loadTree(
+        notebook.objects.branches[branchName].objects!.rootCategory
+      );
     }
 
     // Initialize every tag
     for (const tagHash of notebook.strings.tags) {
       const tag = this.tags[tagHash];
+
+      // Null check
+      if (tag.objects == null) {
+        throw new Error("tag.objects is nullish");
+      }
+
       tag.objects.target = this.commits[tag.strings.target];
       notebook.objects.tags.push(tag);
     }
-
-    /**
-     * The resolved HEAD commit hash
-     */
-    const resolvedHead = this.resolveHead(notebook.strings.head, notebook);
-
-    // Load the commit the HEAD points to
-    notebook.objects.head.commit = this.commits[resolvedHead];
-
-    // Set the HEAD's detached status
-    notebook.objects.head.detached = !notebook.strings.branches.hasOwnProperty(
-      notebook.strings.head
-    );
-
-    // Set the branch name in the HEAD if applicable
-    switch (notebook.objects.head.detached) {
-      case false:
-        notebook.objects.head.name = notebook.strings.head;
-    }
-
-    // Get the working tree ready
-    notebook.objects.workingTree = cloneDeep(
-      this.trees[notebook.strings.workingTree]
-    );
 
     // Prepare the deeper levels of the working tree recursively
     this.loadWorkingTree(notebook.objects.workingTree);
@@ -536,6 +586,11 @@ export class BcpVcsService {
     // Since this method id recursive, a shallow clone should be sufficient
     category = Object.assign({}, category);
 
+    // Null check
+    if (category.objects == null) {
+      throw new Error("category.objects is nullish");
+    }
+
     // Prepare the target data structure
     category.strings = { pages: [], children: [] };
 
@@ -543,6 +598,11 @@ export class BcpVcsService {
     for (let page of category.objects.pages) {
       // Perform a shallow clone on the page
       page = Object.assign({}, page);
+
+      // Null check
+      if (page.objects == null) {
+        throw new Error("page.objects is nullish");
+      }
 
       // Prepare the target data structure
       page.strings = { boxes: [] };
@@ -629,6 +689,11 @@ export class BcpVcsService {
    * @param currentOnly Whether to limit the export to the current state
    */
   public exportNotebookFlat(notebook: BcpNotebook, currentOnly = true): string {
+    // Null check
+    if (notebook.objects == null) {
+      throw new Error("notebook.objects is nullish");
+    }
+
     const tags: { [hash: string]: BcpTag } = {};
     const commits: { [hash: string]: BcpCommit } = {};
     const trees: { [hash: string]: CategoryTree } = {};

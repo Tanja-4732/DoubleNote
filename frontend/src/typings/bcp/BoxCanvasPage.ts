@@ -12,7 +12,7 @@ export interface BoxCanvasPage {
    */
   uuid: string;
 
-  strings?: {
+  strings: {
     /**
      * The hashes of the boxes of this page
      */
