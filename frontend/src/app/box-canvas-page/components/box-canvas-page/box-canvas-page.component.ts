@@ -27,17 +27,17 @@ import { BOX_CONTENT_EMPTY } from "../pm-box/pm-box.component";
   styleUrls: ["./box-canvas-page.component.scss"],
 })
 export class BoxCanvasPageComponent implements OnInit, OnDestroy {
-  notebook: BcpNotebook;
-  page: BoxCanvasPage;
-  boxes: TextBox[];
+  notebook!: BcpNotebook;
+  page!: BoxCanvasPage;
+  boxes!: TextBox[];
 
-  private subscription: Subscription;
+  private subscription!: Subscription;
 
   foreignBoxMove = new Subject<void>();
 
   saveInstruction = new Subject<void>();
 
-  workingTitle: string;
+  workingTitle!: string;
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -63,6 +63,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
         return;
     }
 
+    // Null check
+    if (this.notebook.objects == null) {
+      throw new Error("this.notebook.objects is nullish");
+    }
+
     const retrievedPage = this.getPageByUuid(
       route.snapshot.params.pageUuid,
       this.notebook.objects.workingTree
@@ -74,14 +79,13 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
       this.page = retrievedPage;
     }
 
+    // Null check
+    if (this.page.objects == null) {
+      throw new Error("this.page.objects is nullish");
+    }
+
     this.workingTitle = this.page.title;
     this.boxes = this.page.objects.boxes;
-  }
-
-  // #region Setup
-
-  ngOnInit(): void {
-    this.setCrumbTrail();
 
     this.subscription = this.mbs.messageStream
       .pipe(
@@ -89,7 +93,13 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
           (m: Message) => m.messageType === "BcpMessage" // && m.uuid === this.page.uuid
         )
       )
-      .subscribe((message: BcpMessage) => this.handleMessage(message));
+      .subscribe((message) => this.handleMessage(message as BcpMessage));
+  }
+
+  // #region Setup
+
+  ngOnInit(): void {
+    this.setCrumbTrail();
 
     // Register the control+s key
     window.addEventListener("keydown", this.handleCtrlS);
@@ -120,6 +130,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
     uuid: string,
     tree: CategoryTree
   ): BoxCanvasPage | undefined {
+    // Null check
+    if (tree.objects == null) {
+      throw new Error("tree.objects is nullish");
+    }
+
     // Try all local pages
     for (const page of tree.objects.pages) {
       // Check for a match
@@ -148,6 +163,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
 
   // #region Commit
   get disableCommit(): boolean {
+    // Null check
+    if (this.notebook.objects == null) {
+      throw new Error("this.notebook.objects is nullish");
+    }
+
     return (
       this.notebook.objects.head.detached ||
       this.notebook.objects.head.commit.strings.rootCategory ===
@@ -156,6 +176,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   }
 
   get commitText(): string {
+    // Null check
+    if (this.notebook.objects == null) {
+      throw new Error("this.notebook.objects is nullish");
+    }
+
     return this.notebook.objects.head.detached
       ? "HEAD detached"
       : this.disableCommit
@@ -189,11 +214,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
       case "create":
         this.boxes.push({
           uuid: message.box.uuid,
-          state: message.box.state,
-          x: message.box.x,
-          y: message.box.y,
-          width: message.box.width,
-          height: message.box.height,
+          state: message.box.state ?? "wysiwyg",
+          x: message.box.x ?? 0,
+          y: message.box.y ?? 0,
+          width: message.box.width ?? 100,
+          height: message.box.height ?? 350,
           pmDoc: BOX_CONTENT_EMPTY,
         });
         break;
