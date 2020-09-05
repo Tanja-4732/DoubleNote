@@ -10,9 +10,7 @@ import {
 import { SettingsService } from "../settings/settings.service";
 import { Contact } from "src/typings/core/Contact";
 import { log } from "src/functions/console";
-import { SessionService } from "../session/session.service";
-import { SessionToken } from "src/typings/session/SessionToken";
-import { reject } from "lodash";
+import { SessionGuest } from "src/typings/session/SessionGuest";
 
 /**
  * # MessageBusService
@@ -58,6 +56,8 @@ export class MessageBusService {
    * A list of all open connections to other peers
    */
   private static readonly peerConnections: DataConnection[] = [];
+
+  private static readonly allowedGuests: SessionGuest[] = [];
 
   /**
    * My own contact
@@ -115,15 +115,15 @@ export class MessageBusService {
    */
   private static handleIncomingConnection(connection: DataConnection) {
     // Check for a invitation for the incoming connection
-    const invitation = SessionService.invitations.find(
-      (invite) => invite.guestUuid === connection.peer
+    const guest = MessageBusService.allowedGuests.find(
+      (g) => g.contact.uuid === connection.peer
     );
 
-    if (invitation !== undefined) {
+    if (guest !== undefined) {
       // Wait for the connection to be established
       connection.on("open", () =>
         // Prepare the new connection
-        MessageBusService.prepareNewConnection(connection, false, invitation)
+        MessageBusService.prepareNewConnection(connection, false, guest)
       );
     }
   }
@@ -137,7 +137,7 @@ export class MessageBusService {
   private static prepareNewConnection(
     connection: DataConnection,
     isHostConnection: boolean,
-    invitation?: SessionToken
+    guest?: SessionGuest
   ) {
     /**
      * The event handler for incoming messages from PeerJS
@@ -151,22 +151,22 @@ export class MessageBusService {
      */
     const handleMessageIfAuthorized = (message: Message) => {
       // Handle authorized messages
-      if (isHostConnection || invitation?.authorized) {
+      if (isHostConnection || guest?.authorized) {
         // TODO check if the message comes from who it claims to be from
         MessageBusService.handleIncomingMessage(message);
       } else if (
         message.messageType === "SessionMessage" &&
         message.requestType === SessionRequestType.JoinRemote &&
-        invitation != null
+        guest != null
       ) {
-        if (message.joinCode === invitation.joinCode) {
+        if (message.joinCode === guest.joinCode) {
           // Null check
           if (this.myself == null) {
             throw new Error("this.myself is nullish");
           }
 
           MessageBusService.authorizePeer(connection, message.authorUuid);
-          invitation.authorized = true;
+          guest.authorized = true;
 
           connection.send({
             messageType: "SessionMessage",
@@ -214,6 +214,24 @@ export class MessageBusService {
   private static broadcastMessage(message: Message) {
     for (const connection of MessageBusService.peerConnections) {
       connection.send(message);
+    }
+  }
+
+  public static addAllowedGuest(guest: SessionGuest) {
+    if (
+      !this.allowedGuests.some((g) => g.contact.uuid === guest.contact.uuid)
+    ) {
+      this.allowedGuests.push(guest);
+    }
+  }
+
+  public static removeAllowedGuest(guest: SessionGuest) {
+    const i = this.allowedGuests.findIndex(
+      (g) => g.contact.uuid === guest.contact.uuid
+    );
+
+    if (i !== -1) {
+      this.allowedGuests.splice(i, 1);
     }
   }
 
