@@ -1,33 +1,11 @@
-export interface Session {
-  /**
-   * The UUID of the session host/owner
-   */
-  hostUuid: string;
+import { LocalSession } from "./LocalSession";
+import { RemoteSession } from "./RemoteSession";
 
-  /**
-   * If the user is the host of the session
-   */
-  amHost: boolean;
+export type Session = LocalSession | RemoteSession;
 
+export interface BaseSession {
   /**
-   * The notebooks to share
+   * The type of session
    */
-  shares: NotebookShare[];
-}
-
-export interface NotebookShare {
-  /**
-   * The type of the shared notebook
-   */
-  type: "BCP" | "SBP";
-
-  /**
-   * The UUID of the shared notebook
-   */
-  uuid: string;
-
-  /**
-   * If write access is enabled
-   */
-  writable: boolean;
+  type: "local" | "remote";
 }
