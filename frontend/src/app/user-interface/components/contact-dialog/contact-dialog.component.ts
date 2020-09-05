@@ -90,9 +90,9 @@ export class ContactDialogComponent implements OnInit {
 
     this.joinCode = guest.joinCode;
 
-    log("Await acceptance");
+    log("Await acceptance from guest");
     await guest.connection.connectPromise;
-    log("Awaited acceptance");
+    log("Awaited acceptance from guest");
     this.dialogState = Status.accepted;
   }
 
@@ -109,9 +109,9 @@ export class ContactDialogComponent implements OnInit {
       this.formGroup.value.title
     );
 
-    log("Await acceptance");
+    log("Await acceptance from host");
     await host.connection.connectPromise;
-    log("Awaited acceptance");
+    log("Awaited acceptance from host");
     this.dialogState = Status.accepted;
   }
 }
