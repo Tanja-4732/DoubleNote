@@ -170,33 +170,49 @@ export class CollaborationComponent implements OnInit {
     });
   }
 
-  getConnectionStatus(uuid: string): string {
-    const invite = SessionService.invitations.find(
-      (invitation) => invitation.guestUuid === uuid
-    );
-
-    switch (this.session.sessionState) {
+  /**
+   * Generates a string for the UI to display next to a given contact
+   *
+   * @param contact The contact for which to generate the string for
+   */
+  getConnectionStatus(contact: Contact): string {
+    switch (this.session.sessionState.type) {
       case "local":
-        return invite === undefined
-          ? this.NO_CONNECTION
-          : invite.authorized
-          ? this.HAS_JOINED
-          : this.PENDING_INVITE;
+        const guest = this.session.sessionState.guests.find(
+          (g) => g.contact.uuid === contact.uuid
+        );
 
-      case "joining":
-        return this.session.connectedTo === uuid
-          ? this.PENDING_JOIN
-          : this.NO_CONNECTION;
+        switch (guest?.connection.state) {
+          case "connected":
+            return this.HAS_JOINED;
+
+          case "connecting":
+            return this.PENDING_INVITE;
+
+          default:
+            return this.NO_CONNECTION;
+        }
 
       case "remote":
-        return this.session.connectedTo === uuid
-          ? this.IS_HOST
-          : this.NO_CONNECTION;
+        if (this.session.sessionState.host.contact.uuid !== contact.uuid) {
+          return this.NO_CONNECTION;
+        }
+
+        switch (this.session.sessionState.host.connection.state) {
+          case "connected":
+            return this.IS_HOST;
+
+          case "connecting":
+            return this.PENDING_JOIN;
+
+          default:
+            return this.NO_CONNECTION;
+        }
     }
   }
 
-  onRevokeInvite(uuid: string) {
-    this.session.revokeInvite(uuid);
+  onRevokeInvite(contact: Contact) {
+    this.session.revokeInvite(contact);
   }
 
   async onLeaveSession() {

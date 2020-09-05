@@ -73,7 +73,7 @@
         </mat-panel-description> -->
       </mat-expansion-panel-header>
 
-      <p>Status: {{ getConnectionStatus(contact.uuid) }}</p>
+      <p>Status: {{ getConnectionStatus(contact) }}</p>
 
       <p>
         <code> {{ contact.uuid }} </code>
@@ -88,7 +88,7 @@
           Edit
         </button>
 
-        <ng-container [ngSwitch]="getConnectionStatus(contact.uuid)">
+        <ng-container [ngSwitch]="getConnectionStatus(contact)">
           <ng-container *ngSwitchCase="NO_CONNECTION">
             <button
               mat-button
@@ -108,11 +108,7 @@
           </ng-container>
 
           <ng-container *ngSwitchCase="HAS_JOINED">
-            <button
-              mat-button
-              (click)="onRevokeInvite(contact.uuid)"
-              color="accent"
-            >
+            <button mat-button (click)="onRevokeInvite(contact)" color="accent">
               Revoke invitation
             </button>
           </ng-container>
