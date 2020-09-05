@@ -106,6 +106,9 @@ export class SessionService {
     // Disable the offline mode if required
     await this.updateOfflineMode();
 
+    // Allow the guest to connect
+    MessageBusService.addAllowedGuest(guest);
+
     // Return the generated token
     return guest;
   }
@@ -134,7 +137,10 @@ export class SessionService {
     }
 
     // Remove the authorization from the list
-    this.sessionStatePrivate.guests.splice(i, 1);
+    const guest = this.sessionStatePrivate.guests.splice(i, 1);
+
+    // Disallow the guest to connect
+    MessageBusService.removeAllowedGuest(guest[0]);
 
     // Disconnect the MessageBusService from the peer
     this.mbs.disconnectByUuid(contact.uuid);

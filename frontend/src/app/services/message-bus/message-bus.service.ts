@@ -59,6 +59,8 @@ export class MessageBusService {
 
   private static readonly allowedGuests: SessionGuest[] = [];
 
+  private shouldReconnect = false;
+
   /**
    * My own contact
    *
@@ -240,6 +242,8 @@ export class MessageBusService {
 
     MessageBusService.myself?.destroy();
     MessageBusService.myself = null;
+
+    this.shouldReconnect = false;
   }
 
   public disableOfflineMode(): Promise<void> {
@@ -273,8 +277,13 @@ export class MessageBusService {
             throw new Error("MessageBusService.myself is nullish");
           }
 
-          // Reconnect to the signaling server
-          return MessageBusService.myself.reconnect();
+          if (this.shouldReconnect) {
+            // Reconnect to the signaling server
+            return MessageBusService.myself.reconnect();
+            log("Reconnected to the peer server");
+          } else {
+            log("Peer server disconnected");
+          }
         });
 
         // Handle incoming connections
@@ -285,6 +294,8 @@ export class MessageBusService {
         resolve();
       });
     });
+
+    this.shouldReconnect = true;
   }
 
   public persistContacts(): void {
