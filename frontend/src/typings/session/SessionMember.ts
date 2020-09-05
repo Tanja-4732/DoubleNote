@@ -1,4 +1,5 @@
 import { Contact } from "../core/Contact";
+import { Resolver } from "./Resolver";
 
 export interface SessionMember {
   /**
@@ -29,6 +30,6 @@ export interface SessionMember {
     /**
      * The `connectPromise` resolve callback
      */
-    resolver: ((_?: unknown) => void) | null;
+    resolver: Resolver;
   };
 }

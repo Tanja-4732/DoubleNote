@@ -87,9 +87,7 @@ export class ContactDialogComponent implements OnInit {
   }
 
   async onAuthorizeInvite() {
-    this.token = await this.session.autorizeInviteByUuid(
-      this.input.contact.uuid
-    );
+    this.token = await this.session.autorizeInvite(this.input.contact.uuid);
 
     this.dialogState = Status.pending;
 
@@ -100,7 +98,7 @@ export class ContactDialogComponent implements OnInit {
   }
 
   onRevokeInvite() {
-    this.session.revokeInviteByUuid(this.input.contact.uuid);
+    this.session.revokeInvite(this.input.contact.uuid);
     this.dialogRef.close({ confirmed: false } as ContactDialogOutput);
   }
 

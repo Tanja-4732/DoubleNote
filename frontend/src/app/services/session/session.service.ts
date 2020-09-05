@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { SessionToken } from "src/typings/session/SessionToken";
 import { SettingsService } from "../settings/settings.service";
 import { MessageBusService } from "../message-bus/message-bus.service";
 import { Subscription } from "rxjs";
@@ -11,6 +10,18 @@ import {
 } from "src/typings/core/Message";
 import { log } from "src/functions/console";
 import { BcpVcsService } from "../bcp-vcs/bcp-vcs.service";
+import { Session } from "src/typings/session/Session";
+import { SessionGuest } from "src/typings/session/SessionGuest";
+import { Contact } from "src/typings/core/Contact";
+import { Resolver } from "src/typings/session/Resolver";
+
+export const INVITE_REQUIRES_LOCAL_SESSION =
+  "Issuing invites requires a local session";
+
+export const REVOKE_REQUIRES_LOCAL_SESSION =
+  "Revoking invites requires a local session";
+
+export const NO_SUCH_PEER = "The specified peer was not found";
 
 /**
  * # Session Service
@@ -35,39 +46,17 @@ import { BcpVcsService } from "../bcp-vcs/bcp-vcs.service";
   providedIn: "root",
 })
 export class SessionService {
-  /**
-   * The list of invited UUIDs in the form of session tokens
-   */
-  public static readonly invitations: SessionToken[] = [];
-
-  /**
-   * The state of the session management
-   *
-   * Can one of the following:
-   * - Local (we are the host of our own session)
-   * - Remote (we are a guest in the session of another peer)
-   * - Joining (we are attempting to join another peers session)
-   */
-  private sessionStatePrivate: "local" | "remote" | "joining" = "local";
-
-  /**
-   * The UUID of the host (if not self)
-   */
-  private connectedToPrivate = "";
+  private sessionStatePrivate: Session = {
+    type: "local",
+    shares: [],
+    guests: [],
+  };
 
   public get sessionState() {
     return this.sessionStatePrivate;
   }
 
-  public get connectedTo() {
-    return this.connectedToPrivate;
-  }
-
   private messageStreamSub: Subscription;
-
-  private joinRemotePromiseResolveCB: ((_?: unknown) => void) | null = null;
-
-  private acceptInvitePromiseResolveCB: ((_?: unknown) => void) | null = null;
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -88,24 +77,37 @@ export class SessionService {
    * @param uuid The UUID of the peer to invite to the local session
    * @return The generated, now authorized session token
    */
-  public async autorizeInviteByUuid(guestUuid: string): Promise<SessionToken> {
+  public async autorizeInvite(contact: Contact): Promise<SessionGuest> {
+    // Only invite peers in a local session
+    if (this.sessionStatePrivate.type !== "local") {
+      throw new Error(INVITE_REQUIRES_LOCAL_SESSION);
+    }
+
+    // Prepare the connection promise
+    const { connectPromise, resolver } = this.makePromise();
+
     /**
      * The new token
      */
-    const sessionToken: SessionToken = {
-      guestUuid,
+    const guest: SessionGuest = {
+      contact,
+      connection: {
+        state: "disconnected",
+        connectPromise,
+        resolver,
+      },
       joinCode: this.makeJoinCode(9),
       authorized: false,
     };
 
     // Append the token to the lists
-    SessionService.invitations.push(sessionToken);
+    this.sessionStatePrivate.guests.push(guest);
 
     // Disable the offline mode if required
     await this.updateOfflineMode();
 
     // Return the generated token
-    return sessionToken;
+    return guest;
   }
 
   /**
@@ -114,10 +116,15 @@ export class SessionService {
    * @param uuid The UUID of the peer to be revoked access to the local session
    * @return True, if the peer access was revoked, false if there was no such peer
    */
-  public revokeInviteByUuid(uuid: string): boolean {
+  public revokeInvite(contact: Contact): boolean {
+    // Only revoke invites in a local session
+    if (this.sessionStatePrivate.type !== "local") {
+      throw new Error(INVITE_REQUIRES_LOCAL_SESSION);
+    }
+
     // Find the authorization, if any
-    const i = SessionService.invitations.findIndex(
-      (token) => token.guestUuid === uuid
+    const i = this.sessionStatePrivate.guests.findIndex(
+      (guest) => guest.contact.uuid === contact.uuid
     );
 
     // Check if the authorization exists
@@ -127,10 +134,10 @@ export class SessionService {
     }
 
     // Remove the authorization from the list
-    SessionService.invitations.splice(i, 1);
+    this.sessionStatePrivate.guests.splice(i, 1);
 
     // Disconnect the MessageBusService from the peer
-    this.mbs.disconnectByUuid(uuid);
+    this.mbs.disconnectByUuid(contact.uuid);
 
     // Enable the offline mode if required
     this.updateOfflineMode();
@@ -192,15 +199,19 @@ export class SessionService {
           // TODO handle other peers revoking access to remote sessions
           break;
 
+        // When we are a guest and the host confirms
         case SessionRequestType.JoinConfirmation:
-          log("Got the acceptance");
-
-          this.sessionStatePrivate = "remote";
-          if (this.joinRemotePromiseResolveCB !== null) {
-            this.joinRemotePromiseResolveCB();
-            this.joinRemotePromiseResolveCB = null;
+          // Make sure this is a remote session
+          if (this.sessionStatePrivate.type !== "remote") {
+            return;
           }
 
+          log("Got the acceptance");
+
+          this.sessionStatePrivate.host.connection.state = "connected";
+          this.sessionStatePrivate.host.connection.resolver();
+
+          // Tell the host that we are connected
           this.mbs.dispatchMessage({
             messageType: "SessionMessage",
             authorUuid: this.mbs.myUuid,
@@ -211,11 +222,24 @@ export class SessionService {
 
           break;
 
+        // When we are the host and someone joins
         case SessionRequestType.InviteAcceptConfirm:
-          if (this.acceptInvitePromiseResolveCB !== null) {
-            this.acceptInvitePromiseResolveCB();
-            this.acceptInvitePromiseResolveCB = null;
+          // Make sure this is a local session
+          if (this.sessionStatePrivate.type !== "local") {
+            return;
           }
+
+          const peer = this.sessionStatePrivate.guests.find(
+            (g) => g.contact.uuid === message.authorUuid
+          );
+
+          if (peer === undefined) {
+            throw new Error(NO_SUCH_PEER);
+          }
+
+          peer.connection.state = "connected";
+          peer.connection.resolver();
+
           break;
 
         default:
@@ -248,29 +272,35 @@ export class SessionService {
    * @param uuid The UUID of the peer owning the session to join
    * @param code The one-time code to join the remote session
    */
-  public async attemptJoinByUuid(uuid: string, code: string) {
+  public async attemptJoin(contact: Contact, code: string) {
     // Remove the two spaces, in case they were provided
     if (code.length === 11) {
       code = code.replace(" ", "").replace(" ", "");
     }
 
     // Log the join attempt
-    log("Joining peer " + uuid + " with code " + code);
+    log(`Joining peer ${contact.name} (${contact.uuid}) with code ${code}`);
 
     // Prevent the host from reading the local data
     this.bcpVcs.unloadData();
 
-    // Set the session state to joining
-    this.sessionStatePrivate = "joining";
+    // Prepare the connection promise
+    const { connectPromise, resolver } = this.makePromise();
 
-    // Set the remote host UUID
-    this.connectedToPrivate = uuid;
+    // Set the state
+    this.sessionStatePrivate = {
+      type: "remote",
+      host: {
+        contact,
+        connection: { state: "connecting", connectPromise, resolver },
+      },
+    };
 
     // Connect to the peer server (if required)
     await this.updateOfflineMode();
 
     // Establish a peer connection with the host
-    await this.mbs.connectToPeer(uuid);
+    await this.mbs.connectToPeer(contact.uuid);
 
     // Authenticate using the one-time code
     this.mbs.dispatchMessage({
@@ -283,16 +313,19 @@ export class SessionService {
     });
   }
 
-  public waitForRemoteJoinConfirmation() {
-    return new Promise((resolve, _) => {
-      this.joinRemotePromiseResolveCB = resolve;
-    });
-  }
+  /**
+   * Generates a new Promise and returns it together with its `resolve` method
+   */
+  private makePromise(): {
+    connectPromise: Promise<void>;
+    resolver: Resolver;
+  } {
+    let resolver!: Resolver;
+    const connectPromise = new Promise<void>(
+      (resolve, _) => (resolver = resolve)
+    );
 
-  public waitForInviteAcceptConfirmation() {
-    return new Promise((resolve, _) => {
-      this.acceptInvitePromiseResolveCB = resolve;
-    });
+    return { connectPromise, resolver };
   }
 
   /**
@@ -300,14 +333,20 @@ export class SessionService {
    */
   public async leaveRemoteSession() {
     if (
-      this.connectedToPrivate !== "" &&
-      this.sessionStatePrivate === "remote" &&
-      this.mbs.disconnectByUuid(this.connectedToPrivate)
+      this.sessionStatePrivate.type === "remote" &&
+      this.mbs.disconnectByUuid(this.sessionStatePrivate.host.contact.uuid)
     ) {
-      this.connectedToPrivate = "";
-      this.sessionStatePrivate = "local";
+      // Reset the session state
+      this.sessionStatePrivate = {
+        type: "local",
+        shares: [],
+        guests: [],
+      };
 
+      // Disconnect from the peer server if a connection is no longer required
       await this.updateOfflineMode();
+
+      // Load the local data
       this.bcpVcs.loadDataFromLocalStorage();
     }
   }

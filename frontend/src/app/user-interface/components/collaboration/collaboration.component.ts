@@ -196,7 +196,7 @@ export class CollaborationComponent implements OnInit {
   }
 
   onRevokeInvite(uuid: string) {
-    this.session.revokeInviteByUuid(uuid);
+    this.session.revokeInvite(uuid);
   }
 
   async onLeaveSession() {
