@@ -9,7 +9,6 @@ import {
   AbstractControl,
 } from "@angular/forms";
 import { SessionService } from "src/app/services/session/session.service";
-import { SessionToken } from "src/typings/session/SessionToken";
 import { registerLocaleData } from "@angular/common";
 import localeImport from "@angular/common/locales/de-AT";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
@@ -22,9 +21,7 @@ import { MessageBusService } from "src/app/services/message-bus/message-bus.serv
 export class ContactDialogComponent implements OnInit {
   public dialogState = Status.awaiting_input;
 
-  readonly joinCode: string = "";
-
-  token: SessionToken | undefined;
+  joinCode = "";
 
   formGroup: FormGroup;
 
@@ -87,31 +84,33 @@ export class ContactDialogComponent implements OnInit {
   }
 
   async onAuthorizeInvite() {
-    this.token = await this.session.autorizeInvite(this.input.contact.uuid);
+    const guest = await this.session.autorizeInvite(this.input.contact);
 
     this.dialogState = Status.pending;
 
+    this.joinCode = guest.joinCode;
+
     log("Await acceptance");
-    await this.session.waitForInviteAcceptConfirmation();
+    await guest.connection.connectPromise;
     log("Awaited acceptance");
     this.dialogState = Status.accepted;
   }
 
   onRevokeInvite() {
-    this.session.revokeInvite(this.input.contact.uuid);
+    this.session.revokeInvite(this.input.contact);
     this.dialogRef.close({ confirmed: false } as ContactDialogOutput);
   }
 
   async onJoin() {
     this.dialogState = Status.pending;
 
-    await this.session.attemptJoinByUuid(
-      this.input.contact.uuid,
+    const host = await this.session.attemptJoin(
+      this.input.contact,
       this.formGroup.value.title
     );
 
     log("Await acceptance");
-    await this.session.waitForRemoteJoinConfirmation();
+    await host.connection.connectPromise;
     log("Awaited acceptance");
     this.dialogState = Status.accepted;
   }

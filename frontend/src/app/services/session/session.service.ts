@@ -311,6 +311,8 @@ export class SessionService {
       requestType: SessionRequestType.JoinRemote,
       joinCode: code,
     });
+
+    return this.sessionStatePrivate.host;
   }
 
   /**
