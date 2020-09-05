@@ -161,8 +161,9 @@ export class SessionService {
   private async updateOfflineMode() {
     if (
       !this.settings.offlineMode &&
-      (this.sessionStatePrivate !== "local" ||
-        SessionService.invitations.length > 0)
+      (this.sessionState.type === "remote" ||
+        (this.sessionState.type === "local" &&
+          this.sessionState.guests.length > 0))
     ) {
       await this.mbs.disableOfflineMode();
     } else {
