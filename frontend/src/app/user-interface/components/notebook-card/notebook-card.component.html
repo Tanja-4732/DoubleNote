@@ -1,6 +1,11 @@
 <mat-card>
   <mat-card-title>{{ notebook.name }}</mat-card-title>
   <mat-card-subtitle>{{ typeString }}</mat-card-subtitle>
+
+  <mat-slide-toggle [(ngModel)]="shareNotebook" *ngIf="canShare">
+    Share notebook
+  </mat-slide-toggle>
+
   <mat-card-actions>
     <button
       mat-raised-button

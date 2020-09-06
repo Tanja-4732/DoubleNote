@@ -15,6 +15,7 @@ import {
   ExportDialogOutput,
 } from "../export-dialog/export-dialog.component";
 import { log } from "src/functions/console";
+import { SessionService } from "src/app/services/session/session.service";
 
 @Component({
   selector: "app-notebook-card",
@@ -26,6 +27,7 @@ export class NotebookCardComponent implements OnInit {
   notebook!: Notebook;
 
   constructor(
+    private session: SessionService,
     private bcpVcs: BcpVcsService,
     private sbpVcs: SbpVcsService,
     public dialog: MatDialog
@@ -115,5 +117,50 @@ export class NotebookCardComponent implements OnInit {
       case undefined:
         throw new Error("Something went wrong");
     }
+  }
+
+  public get shareNotebook() {
+    if (this.session.sessionState.type !== "local") {
+      return false;
+    }
+
+    return (
+      this.session.sessionState.shares.find(
+        (share) => share.uuid === this.notebook.uuid
+      ) !== undefined
+    );
+  }
+
+  public set shareNotebook(shareDesired) {
+    if (this.session.sessionState.type !== "local") {
+      return;
+    }
+
+    const i = this.session.sessionState.shares.findIndex(
+      (s) => s.uuid === this.notebook.uuid
+    );
+
+    if ((i === -1) === shareDesired) {
+      if (shareDesired) {
+        log("Sharing notebook");
+        this.session.sessionState.shares.push({
+          type: this.notebook.type,
+          uuid: this.notebook.uuid,
+          writable: true,
+        });
+      } else {
+        log("Stop sharing notebook");
+        this.session.sessionState.shares.splice(i, 1);
+      }
+    } else {
+      log("Sharing not changed");
+    }
+  }
+
+  get canShare() {
+    return (
+      this.session.sessionState.type === "local" &&
+      this.session.sessionState.guests.length > 0
+    );
   }
 }
