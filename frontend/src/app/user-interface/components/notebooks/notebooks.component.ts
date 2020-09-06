@@ -87,6 +87,8 @@ export class NotebooksComponent implements OnInit, OnDestroy {
           throw new Error("Something went wrong");
       }
     }
+
+    this.handleSharesUpdate();
   }
 
   openDialog(type: string): void {
