@@ -257,22 +257,6 @@ export class SessionService {
   }
 
   /**
-   * Handles incoming join messages from peers attempting to join the local session
-   *
-   * @deprecated // TODO remove this method in a later version
-   */
-  private handleIncomingJoinRequest(message: SessionMessage) {
-    // Confirm the join
-    this.mbs.dispatchMessage({
-      messageType: "SessionMessage",
-      authorUuid: this.mbs.myUuid,
-      creationDate: new Date().toISOString(),
-
-      requestType: SessionRequestType.JoinConfirmation,
-    });
-  }
-
-  /**
    * Attempts to join a remote session given a peer UUID and a one-time code
    *
    * @param uuid The UUID of the peer owning the session to join
