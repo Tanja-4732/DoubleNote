@@ -106,7 +106,9 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    try {
+      this.subscription.unsubscribe();
+    } catch (_) {}
 
     // Unregister the control+s key
     window.removeEventListener("keydown", this.handleCtrlS);
