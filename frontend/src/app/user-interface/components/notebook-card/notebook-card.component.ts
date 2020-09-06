@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, NgZone } from "@angular/core";
 import { Notebook } from "src/typings/core/Notebook";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -19,6 +19,7 @@ import { SessionService } from "src/app/services/session/session.service";
 import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
 import { SessionRequestType } from "src/typings/core/Message";
 import { NotebookWrapper } from "src/typings/core/NotebookWrapper";
+import { Router } from "@angular/router";
 
 export const NOTEBOOK_OWNERSHIP_REQUIRED =
   "This operation requires owning the notebook";
@@ -44,6 +45,8 @@ export class NotebookCardComponent implements OnInit {
   }
 
   constructor(
+    private ngZone: NgZone,
+    private router: Router,
     private mbs: MessageBusService,
     private session: SessionService,
     private bcpVcs: BcpVcsService,
@@ -66,6 +69,27 @@ export class NotebookCardComponent implements OnInit {
       default:
         throw new Error("No such type");
     }
+  }
+
+  /**
+   * NAvigAtIoN TriGgeReD oUtsiDe aNgulaR zOne, did yOU fORgeT TO cAll 'NGzONE.RUN()'?
+   *
+   * see <https://stackoverflow.com/a/53213909/5954839>
+   *
+   * The template used to contain the following:
+   *
+   * ```
+   * routerLink="/notebooks/{{ notebook.type.toLowerCase() }}/{{
+   *   notebook.uuid
+   * }}"
+   * ```
+   *
+   * but now it calls this method instead of using the `routerLink` directive, because Angular is buggy.
+   */
+  public NAvigAtIoN_TriGgeReD_oUtsiDe_aNgulaR_zOne_did_yOU_fORgeT_TO_cAll_NGzONE_RUN(
+    url: string
+  ) {
+    this.ngZone.run(() => this.router.navigateByUrl(url));
   }
 
   onEdit(): void {

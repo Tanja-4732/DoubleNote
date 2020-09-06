@@ -22,9 +22,11 @@
     <ng-container *ngSwitchCase="true">
       <button
         mat-raised-button
-        routerLink="/notebooks/{{ notebook.type.toLowerCase() }}/{{
-          notebook.uuid
-        }}"
+        (click)="
+          NAvigAtIoN_TriGgeReD_oUtsiDe_aNgulaR_zOne_did_yOU_fORgeT_TO_cAll_NGzONE_RUN(
+            '/notebooks/' + notebook.type.toLowerCase() + '/' + notebook.uuid
+          )
+        "
         color="primary"
       >
         Open
