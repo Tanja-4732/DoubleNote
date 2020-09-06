@@ -210,6 +210,11 @@ export class BoxCanvasPageComponent implements OnInit, OnDestroy {
   private handleMessage(message: BcpMessage) {
     log(message);
 
+    // Make sure this message applies to the current page
+    if (message.uuid !== this.page.uuid) {
+      return;
+    }
+
     const index = this.boxes.findIndex((b) => b.uuid === message.box.uuid);
 
     switch (message.operation) {
