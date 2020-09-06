@@ -45,8 +45,9 @@
         mat-raised-button
         color="primary"
         (click)="onRequestSharedNotebook()"
+        [disabled]="fetching"
       >
-        Fetch
+        {{ fetching ? "Fetch" : "Fetching..." }}
       </button>
     </ng-container>
   </mat-card-actions>
