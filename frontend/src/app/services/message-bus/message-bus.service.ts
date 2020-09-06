@@ -256,7 +256,9 @@ export class MessageBusService {
       port: 443,
     });
 
-    return new Promise((resolve, reject) => {
+    this.shouldReconnect = true;
+
+    return new Promise((resolve, _) => {
       // Null check
       if (MessageBusService.myself == null) {
         throw new Error("MessageBusService.myself is nullish");
@@ -294,8 +296,6 @@ export class MessageBusService {
         resolve();
       });
     });
-
-    this.shouldReconnect = true;
   }
 
   public persistContacts(): void {
