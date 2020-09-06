@@ -35,6 +35,10 @@ export class BcpVcsService {
 
   private isLocalSession = false;
 
+  public get localSession(): boolean {
+    return this.isLocalSession;
+  }
+
   /**
    * ## Box Canvas Page version control system
    *

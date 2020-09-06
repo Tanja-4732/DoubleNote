@@ -30,11 +30,21 @@
         Open
       </button>
 
-      <button mat-stroked-button (click)="onEdit()" class="no-right-margin">
+      <button
+        mat-stroked-button
+        (click)="onEdit()"
+        class="no-right-margin"
+        [disabled]="!localSession"
+      >
         Edit
       </button>
 
-      <button mat-stroked-button (click)="onExport()" class="no-right-margin">
+      <button
+        mat-stroked-button
+        (click)="onExport()"
+        class="no-right-margin"
+        [disabled]="!localSession"
+      >
         Export
       </button>
     </ng-container>

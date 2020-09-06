@@ -39,6 +39,10 @@ export class NotebookCardComponent implements OnInit {
 
   public fetching = false;
 
+  get localSession(): boolean {
+    return this.bcpVcs.localSession;
+  }
+
   constructor(
     private mbs: MessageBusService,
     private session: SessionService,
