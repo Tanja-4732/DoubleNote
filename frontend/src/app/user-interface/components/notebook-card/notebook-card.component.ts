@@ -23,6 +23,9 @@ import { NotebookWrapper } from "src/typings/core/NotebookWrapper";
 export const NOTEBOOK_OWNERSHIP_REQUIRED =
   "This operation requires owning the notebook";
 
+export const CANNOT_REQUEST_LOCAL_NOTEBOOK =
+  "Local notebooks cannot be requested";
+
 @Component({
   selector: "app-notebook-card",
   templateUrl: "./notebook-card.component.html",
@@ -33,6 +36,8 @@ export class NotebookCardComponent implements OnInit {
   notebook!: NotebookWrapper;
 
   public isRealNotebook!: boolean;
+
+  public fetching = false;
 
   constructor(
     private mbs: MessageBusService,
@@ -165,8 +170,6 @@ export class NotebookCardComponent implements OnInit {
 
     if ((i === -1) === shareDesired) {
       if (shareDesired) {
-        log("Sharing notebook");
-
         // Mark the notebook as shared
         this.session.sessionState.shares.push({
           type: this.notebook.type,
@@ -175,8 +178,6 @@ export class NotebookCardComponent implements OnInit {
           name: this.notebook.name,
         });
       } else {
-        log("Stop sharing notebook");
-
         // Mark the notebook as no longer shared
         this.session.sessionState.shares.splice(i, 1);
       }
@@ -190,8 +191,6 @@ export class NotebookCardComponent implements OnInit {
         requestType: SessionRequestType.SharesListing,
         shares: this.session.sessionState.shares,
       });
-    } else {
-      log("Sharing not changed");
     }
   }
 
@@ -202,5 +201,23 @@ export class NotebookCardComponent implements OnInit {
     );
   }
 
-  public onRequestSharedNotebook() {}
+  public onRequestSharedNotebook() {
+    if (!("writable" in this.notebook)) {
+      throw new Error(CANNOT_REQUEST_LOCAL_NOTEBOOK);
+    }
+
+    log("Requesting notebook");
+
+    // Notify other peers about the change in availability
+    this.mbs.dispatchMessage({
+      messageType: "SessionMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      requestType: SessionRequestType.NotebookRequest,
+      uuidOfRequestedNotebook: this.notebook.uuid,
+    });
+
+    this.fetching = true;
+  }
 }

@@ -26,6 +26,7 @@ export class NotebooksComponent implements OnInit, OnDestroy {
   private sharedNotebooksSubscription!: Subscription;
 
   public notebooks: NotebookWrapper[] = [];
+  private sharesCache: NotebookShare[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -52,7 +53,13 @@ export class NotebooksComponent implements OnInit, OnDestroy {
     this.sharedNotebooksSubscription.unsubscribe();
   }
 
-  private handleSharesUpdate(shares: NotebookShare[]) {
+  private handleSharesUpdate(shares?: NotebookShare[]) {
+    if (shares === undefined) {
+      shares = this.sharesCache;
+    } else {
+      this.sharesCache = shares;
+    }
+
     const realNotebooks = this.bcpVcs.notebooks.concat(
       this.sbpVcs.getNotebooks()
     );

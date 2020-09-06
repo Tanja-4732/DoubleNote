@@ -6,10 +6,16 @@
     Share notebook
   </mat-slide-toggle>
 
-  <p *ngIf="!isRealNotebook">
-    This is a shared notebook. <br />
-    It needs to be fetched before it can be opened.
-  </p>
+  <ng-container *ngIf="!isRealNotebook">
+    <p *ngIf="!fetching">
+      This is a shared notebook. <br />
+      It needs to be fetched before it can be opened.
+    </p>
+    <p *ngIf="fetching">
+      Fetching the notebook... <br />
+      This might take a while.
+    </p>
+  </ng-container>
 
   <mat-card-actions [ngSwitch]="isRealNotebook">
     <!-- For notebooks which are ready -->

@@ -134,6 +134,10 @@ export interface SessionMessage extends BaseMessage {
   joinCode?: string;
 
   shares?: NotebookShare[];
+
+  uuidOfRequestedNotebook?: string;
+
+  requestedNotebookAsExport?: string;
 }
 
 export enum SessionRequestType {
@@ -144,4 +148,5 @@ export enum SessionRequestType {
   InviteAcceptConfirm = "InviteAcceptConfirm",
   SharesListing = "SharesListing",
   NotebookRequest = "NotebookRequest",
+  NotebookResponse = "NotebookResponse",
 }

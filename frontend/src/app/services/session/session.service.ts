@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SettingsService } from "../settings/settings.service";
 import { MessageBusService } from "../message-bus/message-bus.service";
-import { Subscription, Subject, BehaviorSubject } from "rxjs";
+import { Subscription, Subject, BehaviorSubject, async } from "rxjs";
 import { filter } from "rxjs/operators";
 import {
   Message,
@@ -9,12 +9,18 @@ import {
   SessionRequestType,
 } from "src/typings/core/Message";
 import { log } from "src/functions/console";
-import { BcpVcsService } from "../bcp-vcs/bcp-vcs.service";
+import { BcpVcsService, NO_SUCH_NOTEBOOK } from "../bcp-vcs/bcp-vcs.service";
 import { Session } from "src/typings/session/Session";
 import { SessionGuest } from "src/typings/session/SessionGuest";
 import { Contact } from "src/typings/core/Contact";
 import { Resolver } from "src/typings/session/Resolver";
 import { NotebookShare } from "src/typings/session/NotebookShare";
+import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
+import { BcpCommit } from "src/typings/bcp/BcpCommit";
+import { CategoryTree } from "src/typings/bcp/CategoryTree";
+import { BoxCanvasPage } from "src/typings/bcp/BoxCanvasPage";
+import { TextBox } from "src/typings/bcp/TextBox";
+import { BcpTag } from "src/typings/bcp/BcpTag";
 
 export const INVITE_REQUIRES_LOCAL_SESSION =
   "Issuing invites requires a local session";
@@ -60,7 +66,7 @@ export class SessionService {
   private messageStreamSub: Subscription;
 
   private readonly sharedNotebooksSubject = new BehaviorSubject<
-    NotebookShare[]
+    NotebookShare[] | undefined
   >([]);
 
   /**
@@ -263,12 +269,109 @@ export class SessionService {
           this.handleSharesUpdate(message);
           break;
 
+        // When notebooks are requested from us
+        case SessionRequestType.NotebookRequest:
+          this.handleNotebookRequest(message);
+          break;
+
+        // When we get the notebook we requested previously
+        case SessionRequestType.NotebookResponse:
+          this.handleNotebookResponse(message);
+          break;
+
         default:
           log("Could not handle session message:");
           log(message);
           break;
       }
     }
+  }
+
+  /**
+   * Handle incoming responses from our notebook requests
+   *
+   * @param message The message triggering this method
+   */
+  private handleNotebookResponse(message: SessionMessage) {
+    if (message.requestedNotebookAsExport === undefined) {
+      return;
+    }
+
+    log("Handling incoming notebook response");
+
+    const data: {
+      metadata: {
+        version: string;
+        exportType: string;
+        exportVersion: number;
+        date: string;
+      };
+
+      content: {
+        notebook: BcpNotebook;
+        commits: { [hash: string]: BcpCommit };
+        trees: { [hash: string]: CategoryTree };
+        pages: { [hash: string]: BoxCanvasPage };
+        boxes: { [hash: string]: TextBox };
+        tags: { [hash: string]: BcpTag };
+      };
+    } = JSON.parse(message.requestedNotebookAsExport);
+
+    this.bcpVcs.loadExternalData(
+      [data.content.notebook],
+      data.content.commits,
+      data.content.trees,
+      data.content.pages,
+      data.content.boxes,
+      data.content.tags
+    );
+
+    this.sharedNotebooksSubject.next(undefined);
+  }
+
+  /**
+   * Handle incoming requests for our notebooks
+   *
+   * @param message The message triggering this method
+   */
+  private handleNotebookRequest(message: SessionMessage) {
+    // Make sure this is a local session
+    if (this.sessionStatePrivate.type !== "local") {
+      return;
+    }
+
+    log("Handling incoming notebook request");
+
+    if (message.uuidOfRequestedNotebook === undefined) {
+      // TODO maybe throw an error instead
+      log("Could not load remote shares");
+      return;
+    }
+
+    const share = this.sessionStatePrivate.shares.find(
+      (s) => s.uuid === message.uuidOfRequestedNotebook
+    );
+
+    if (share === undefined) {
+      // TODO maybe throw an error instead
+      log("Denying access to requested notebook");
+      return;
+    }
+
+    const notebook = this.bcpVcs.notebooks.find((n) => n.uuid === share.uuid);
+
+    if (notebook === undefined) {
+      throw new Error(NO_SUCH_NOTEBOOK);
+    }
+
+    this.mbs.dispatchMessage({
+      messageType: "SessionMessage",
+      authorUuid: this.mbs.myUuid,
+      creationDate: new Date().toISOString(),
+
+      requestType: SessionRequestType.NotebookResponse,
+      requestedNotebookAsExport: this.bcpVcs.exportNotebookFlat(notebook),
+    });
   }
 
   /**
