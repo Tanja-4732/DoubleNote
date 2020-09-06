@@ -1,4 +1,5 @@
 import { MdomNode } from "../markdown/MDOM";
+import { NotebookShare } from "../session/NotebookShare";
 
 /**
  * A message is a unit of information which should be sent to other peers.
@@ -131,6 +132,8 @@ export interface SessionMessage extends BaseMessage {
   requestType: SessionRequestType;
 
   joinCode?: string;
+
+  shares?: NotebookShare[];
 }
 
 export enum SessionRequestType {
