@@ -13,4 +13,9 @@ export interface NotebookShare {
    * If write access is enabled
    */
   writable: boolean;
+
+  /**
+   * The name of the shared notebook
+   */
+  name: string;
 }

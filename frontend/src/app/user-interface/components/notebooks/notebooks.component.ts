@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import {
   CrumbTrailComponent,
@@ -12,14 +12,24 @@ import {
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
 import { SbpVcsService } from "src/app/services/sbp-vcs/sbp-vcs.service";
 import { Notebook } from "src/typings/core/Notebook";
+import { SessionService } from "src/app/services/session/session.service";
+import { Subscription } from "rxjs";
+import { NotebookShare } from "src/typings/session/NotebookShare";
+import { NotebookWrapper } from "src/typings/core/NotebookWrapper";
 
 @Component({
   selector: "app-notebooks",
   templateUrl: "./notebooks.component.html",
   styleUrls: ["./notebooks.component.scss"],
 })
-export class NotebooksComponent implements OnInit {
+export class NotebooksComponent implements OnInit, OnDestroy {
+  private sharedNotebooksSubscription!: Subscription;
+
+  public notebooks: NotebookWrapper[] = [];
+
   constructor(
+    private cdr: ChangeDetectorRef,
+    private session: SessionService,
     private bcpVcs: BcpVcsService,
     private sbpVcs: SbpVcsService,
     public dialog: MatDialog
@@ -32,10 +42,28 @@ export class NotebooksComponent implements OnInit {
         title: "Notebooks",
       },
     ];
+
+    this.sharedNotebooksSubscription = this.session.sharedNotebooksObservable.subscribe(
+      (shares) => this.handleSharesUpdate(shares)
+    );
   }
 
-  get notebooks(): Notebook[] {
-    return this.bcpVcs.notebooks.concat(this.sbpVcs.getNotebooks());
+  ngOnDestroy(): void {
+    this.sharedNotebooksSubscription.unsubscribe();
+  }
+
+  private handleSharesUpdate(shares: NotebookShare[]) {
+    const realNotebooks = this.bcpVcs.notebooks.concat(
+      this.sbpVcs.getNotebooks()
+    );
+
+    const filteredShares = shares.filter(
+      (share) => !realNotebooks.some((nb) => nb.uuid === share.uuid)
+    );
+
+    this.notebooks = realNotebooks.concat(filteredShares as any);
+
+    this.cdr.detectChanges();
   }
 
   private handleCreate(result: NotebookDialogOutput) {

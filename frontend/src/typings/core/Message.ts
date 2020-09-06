@@ -142,4 +142,6 @@ export enum SessionRequestType {
   RevokeInvite = "RevokeInvite",
   JoinConfirmation = "JoinConfirmation",
   InviteAcceptConfirm = "InviteAcceptConfirm",
+  SharesListing = "SharesListing",
+  NotebookRequest = "NotebookRequest",
 }

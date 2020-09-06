@@ -16,6 +16,12 @@ import {
 } from "../export-dialog/export-dialog.component";
 import { log } from "src/functions/console";
 import { SessionService } from "src/app/services/session/session.service";
+import { MessageBusService } from "src/app/services/message-bus/message-bus.service";
+import { SessionRequestType } from "src/typings/core/Message";
+import { NotebookWrapper } from "src/typings/core/NotebookWrapper";
+
+export const NOTEBOOK_OWNERSHIP_REQUIRED =
+  "This operation requires owning the notebook";
 
 @Component({
   selector: "app-notebook-card",
@@ -24,16 +30,21 @@ import { SessionService } from "src/app/services/session/session.service";
 })
 export class NotebookCardComponent implements OnInit {
   @Input()
-  notebook!: Notebook;
+  notebook!: NotebookWrapper;
+
+  public isRealNotebook!: boolean;
 
   constructor(
+    private mbs: MessageBusService,
     private session: SessionService,
     private bcpVcs: BcpVcsService,
     private sbpVcs: SbpVcsService,
     public dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isRealNotebook = !("writable" in this.notebook);
+  }
 
   get typeString(): string {
     switch (this.notebook.type) {
@@ -63,6 +74,10 @@ export class NotebookCardComponent implements OnInit {
   }
 
   private handleUpdate(result: NotebookDialogOutput) {
+    if ("writable" in this.notebook) {
+      throw new Error(NOTEBOOK_OWNERSHIP_REQUIRED);
+    }
+
     if (result?.confirmed && result.name) {
       switch (this.notebook.type) {
         case "BCP":
@@ -79,6 +94,10 @@ export class NotebookCardComponent implements OnInit {
   }
 
   async onExport() {
+    if ("writable" in this.notebook) {
+      throw new Error(NOTEBOOK_OWNERSHIP_REQUIRED);
+    }
+
     switch (this.notebook.type) {
       case "BCP":
         const data: ExportDialogInput = {
@@ -132,6 +151,10 @@ export class NotebookCardComponent implements OnInit {
   }
 
   public set shareNotebook(shareDesired) {
+    if ("writable" in this.notebook) {
+      throw new Error(NOTEBOOK_OWNERSHIP_REQUIRED);
+    }
+
     if (this.session.sessionState.type !== "local") {
       return;
     }
@@ -143,15 +166,30 @@ export class NotebookCardComponent implements OnInit {
     if ((i === -1) === shareDesired) {
       if (shareDesired) {
         log("Sharing notebook");
+
+        // Mark the notebook as shared
         this.session.sessionState.shares.push({
           type: this.notebook.type,
           uuid: this.notebook.uuid,
           writable: true,
+          name: this.notebook.name,
         });
       } else {
         log("Stop sharing notebook");
+
+        // Mark the notebook as no longer shared
         this.session.sessionState.shares.splice(i, 1);
       }
+
+      // Notify other peers about the change in availability
+      this.mbs.dispatchMessage({
+        messageType: "SessionMessage",
+        authorUuid: this.mbs.myUuid,
+        creationDate: new Date().toISOString(),
+
+        requestType: SessionRequestType.SharesListing,
+        shares: this.session.sessionState.shares,
+      });
     } else {
       log("Sharing not changed");
     }
@@ -163,4 +201,6 @@ export class NotebookCardComponent implements OnInit {
       this.session.sessionState.guests.length > 0
     );
   }
+
+  public onRequestSharedNotebook() {}
 }

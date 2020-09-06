@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { SettingsService } from "../settings/settings.service";
 import { MessageBusService } from "../message-bus/message-bus.service";
-import { Subscription } from "rxjs";
+import { Subscription, Subject, BehaviorSubject } from "rxjs";
 import { filter } from "rxjs/operators";
 import {
   Message,
@@ -14,6 +14,7 @@ import { Session } from "src/typings/session/Session";
 import { SessionGuest } from "src/typings/session/SessionGuest";
 import { Contact } from "src/typings/core/Contact";
 import { Resolver } from "src/typings/session/Resolver";
+import { NotebookShare } from "src/typings/session/NotebookShare";
 
 export const INVITE_REQUIRES_LOCAL_SESSION =
   "Issuing invites requires a local session";
@@ -57,6 +58,15 @@ export class SessionService {
   }
 
   private messageStreamSub: Subscription;
+
+  private readonly sharedNotebooksSubject = new BehaviorSubject<
+    NotebookShare[]
+  >([]);
+
+  /**
+   * Fires every time a new list of shared notebooks is available
+   */
+  public readonly sharedNotebooksObservable = this.sharedNotebooksSubject.asObservable();
 
   constructor(
     private bcpVcs: BcpVcsService,
@@ -127,7 +137,7 @@ export class SessionService {
 
     // Find the authorization, if any
     const i = this.sessionStatePrivate.guests.findIndex(
-      (guest) => guest.contact.uuid === contact.uuid
+      (g) => g.contact.uuid === contact.uuid
     );
 
     // Check if the authorization exists
@@ -248,12 +258,37 @@ export class SessionService {
 
           break;
 
+        // When we get a change in the list of notebooks shared with us
+        case SessionRequestType.SharesListing:
+          this.handleSharesUpdate(message);
+          break;
+
         default:
           log("Could not handle session message:");
           log(message);
           break;
       }
     }
+  }
+
+  /**
+   * Handle changes in the list of notebooks shared with us
+   *
+   * @param message The message triggering this method
+   */
+  private handleSharesUpdate(message: SessionMessage) {
+    // Make sure this is a remote session
+    if (this.sessionStatePrivate.type !== "remote") {
+      return;
+    }
+
+    if (message.shares === undefined) {
+      // TODO maybe throw an error instead
+      log("Could not load remote shares");
+      return;
+    }
+
+    this.sharedNotebooksSubject.next(message.shares);
   }
 
   /**

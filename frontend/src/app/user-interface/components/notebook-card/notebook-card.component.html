@@ -6,19 +6,42 @@
     Share notebook
   </mat-slide-toggle>
 
-  <mat-card-actions>
-    <button
-      mat-raised-button
-      routerLink="/notebooks/{{ notebook.type.toLowerCase() }}/{{
-        notebook.uuid
-      }}"
-      color="primary"
-    >
-      Open
-    </button>
-    <button mat-stroked-button (click)="onEdit()" class="no-right-margin">
-      Edit
-    </button>
-    <button mat-stroked-button (click)="onExport()">Export</button>
+  <p *ngIf="!isRealNotebook">
+    This is a shared notebook. <br />
+    It needs to be fetched before it can be opened.
+  </p>
+
+  <mat-card-actions [ngSwitch]="isRealNotebook">
+    <!-- For notebooks which are ready -->
+    <ng-container *ngSwitchCase="true">
+      <button
+        mat-raised-button
+        routerLink="/notebooks/{{ notebook.type.toLowerCase() }}/{{
+          notebook.uuid
+        }}"
+        color="primary"
+      >
+        Open
+      </button>
+
+      <button mat-stroked-button (click)="onEdit()" class="no-right-margin">
+        Edit
+      </button>
+
+      <button mat-stroked-button (click)="onExport()" class="no-right-margin">
+        Export
+      </button>
+    </ng-container>
+
+    <!-- For available notebooks -->
+    <ng-container *ngSwitchCase="false">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onRequestSharedNotebook()"
+      >
+        Fetch
+      </button>
+    </ng-container>
   </mat-card-actions>
 </mat-card>
