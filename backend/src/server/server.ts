@@ -2,6 +2,8 @@ import Express from "express";
 import { Routes } from "./routes/routes";
 import { log } from "console";
 import SlowDown from "express-slow-down";
+import { version } from "./functions/version";
+import { licenseNotice } from "./functions/license";
 
 export class Server {
   /**
@@ -43,6 +45,10 @@ export class Server {
    * Start the server according to its config
    */
   start = () => {
+    log(`DoubleNote backend version ${version} starting...`);
+
+    log(licenseNotice);
+
     switch (this.config.mode) {
       case ServerModes.http_only:
         this.startHttpServer();
@@ -62,6 +68,8 @@ export class Server {
         this.startRedirectServer();
         break;
     }
+
+    log(`\nDoubleNote backend version ${version} started.`);
   };
 
   /**
