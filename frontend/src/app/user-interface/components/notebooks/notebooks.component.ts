@@ -53,6 +53,16 @@ export class NotebooksComponent implements OnInit, OnDestroy {
     this.sharedNotebooksSubscription.unsubscribe();
   }
 
+  /**
+   * Handles changes in the shared notebooks
+   *
+   * If a notebook is to be shared, or is no longer to be shared,
+   * this method will update the shared notebooks.
+   *
+   * If `undefined` is provided, the cached shared notebooks will
+   * be used instead.
+   * @param shares The list of shared notebooks
+   */
   private handleSharesUpdate(shares?: NotebookShare[]) {
     if (shares === undefined) {
       shares = this.sharesCache;
