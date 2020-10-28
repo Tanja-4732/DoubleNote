@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { licenseNotice } from "src/functions/license";
 import {
   CrumbTrailComponent,
   Icons,
@@ -11,6 +12,10 @@ import {
 })
 export class WelcomeComponent implements OnInit {
   constructor() {}
+
+  get licenseNotice() {
+    return licenseNotice;
+  }
 
   ngOnInit(): void {
     CrumbTrailComponent.crumbs = [

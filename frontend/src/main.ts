@@ -6,6 +6,7 @@ import { environment } from "./environments/environment";
 
 import { logLicenseNotice } from "./functions/license";
 
+// Display a license notice in the console
 logLicenseNotice();
 
 if (environment.production) {
