@@ -9,7 +9,7 @@
       </em>
     </p>
 
-    <p>
+    <!-- <p>
       You can export this notebook using
       <a routerLink="notebooks/import" (click)="onNoClick()"
         >DoubleNote's native migration tools</a
@@ -28,28 +28,23 @@
         cdkFocusInitial
       />
       <mat-error *ngIf="formGroup.invalid">A URL must be provided</mat-error>
-    </mat-form-field>
+    </mat-form-field> -->
   </div>
   <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()" type="button">
-      Cancel
-    </button>
-    <button
-      mat-stroked-button
-      (click)="onCopyJson()"
-      type="button"
-      color="accent"
-    >
+    <button mat-button (click)="onNoClick()" type="button">Cancel</button>
+    <button mat-button (click)="onCopyJson()" type="button" color="primary">
+      <!-- mat-stroked-button
+    color="accent" -->
       Copy JSON
     </button>
 
-    <button
+    <!-- <button
       mat-button
       [disabled]="formGroup.invalid"
       type="submit"
       color="primary"
     >
       Confirm
-    </button>
+    </button> -->
   </div>
 </form>
