@@ -1,11 +1,4 @@
 <div class="bulk-text">
-  <p>
-    Per default, all data is stored in the browser storage. This means that your
-    data will not sync across your devices and may be lost when you re-install
-    your browser. <br />
-    To prevent this from happening, you can synchronize your data with a server.
-  </p>
-
   <ng-container [ngSwitch]="originServerStatus">
     <p *ngSwitchCase="'working'">
       Attempting to add the host of this application as a server...
@@ -116,14 +109,15 @@ todo...
   <!-- <ng-container *ngIf="servers.length === 0"> -->
   <mat-expansion-panel [expanded]="servers.length === 0">
     <mat-expansion-panel-header>
-      <mat-panel-title> Collaboration guide </mat-panel-title>
+      <mat-panel-title> Server guide </mat-panel-title>
       <mat-panel-description> (Tutorial) </mat-panel-description>
     </mat-expansion-panel-header>
-    <p>DoubleNote supports collaboration in real time.</p>
-
     <p>
-      Use the interface above to add servers, and to invite them to your
-      session, or join others in their sessions if you are invited.
+      Per default, all data is stored in the browser storage. This means that
+      your data will not sync across your devices and may be lost when you
+      re-install your browser. <br />
+      To prevent this from happening, you can synchronize your data with a
+      server.
     </p>
 
     <!-- <mat-action-row>
