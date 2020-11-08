@@ -18,22 +18,6 @@
   </ng-container>
 </div>
 
-<h2>Register a new API server</h2>
-
-todo...
-
-<!-- TODO support adding API servers -->
-
-<h2>List of registered servers:</h2>
-
-<ul *ngIf="servers.length > 0">
-  <li>
-    <code *ngFor="let server of servers">
-      {{ server.apiUrl }}
-    </code>
-  </li>
-</ul>
-
 <p *ngIf="servers.length === 0">None so far.</p>
 
 <br />
@@ -51,10 +35,10 @@ todo...
         </mat-panel-description> -->
       </mat-expansion-panel-header>
 
-      <p>
+      <!-- <p>
         Status:
-        <!-- {{ getConnectionStatus(server) }} -->
-      </p>
+        {{ getConnectionStatus(server) }}
+      </p> -->
 
       <p>
         <code> {{ server.apiUrl }} </code>
@@ -67,39 +51,13 @@ todo...
 
         <button mat-button (click)="openEditServerDialog(server)">Edit</button>
 
-        <ng-container [ngSwitch]="getConnectionStatus(server)">
-          <ng-container *ngSwitchCase="NO_CONNECTION">
-            <button mat-button (click)="openPushDialog(server)" color="accent">
-              Push
-            </button>
+        <button mat-button (click)="openPushDialog(server)" color="accent">
+          Push
+        </button>
 
-            <button mat-button (click)="openPullDialog(server)" color="primary">
-              Pull
-            </button>
-          </ng-container>
-
-          <!-- <ng-container *ngSwitchCase="HAS_JOINED"> -->
-          <button mat-button (click)="onRevokeInvite(server)" color="accent">
-            Revoke invitation
-          </button>
-          <!-- </ng-container> -->
-
-          <!-- <ng-container *ngSwitchCase="IS_HOST"> -->
-          <button mat-button (click)="onLeaveSession()" color="accent">
-            Leave session
-          </button>
-          <!-- </ng-container> -->
-
-          <!-- <ng-container *ngSwitchCase="PENDING_JOIN"> -->
-          <!-- TODO cancel join
-          <button mat-button disabled>{{ PENDING_JOIN }}</button>
-           </ng-container> -->
-
-          <!-- <ng-container *ngSwitchCase="PENDING_INVITE">
-            <!-- TODO cancel invite
-            <button mat-button disabled>{{ PENDING_INVITE }}</button>
-          </ng-container> -->
-        </ng-container>
+        <button mat-button (click)="openPullDialog(server)" color="primary">
+          Pull
+        </button>
       </mat-action-row>
     </mat-expansion-panel>
   </ng-container>
