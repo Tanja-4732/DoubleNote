@@ -25,17 +25,13 @@
   </ng-container>
 </div>
 
-<h2>
-  Register a new API server
-</h2>
+<h2>Register a new API server</h2>
 
 todo...
 
 <!-- TODO support adding API servers -->
 
-<h2>
-  List of registered servers:
-</h2>
+<h2>List of registered servers:</h2>
 
 <ul *ngIf="servers.length > 0">
   <li>
@@ -45,6 +41,94 @@ todo...
   </li>
 </ul>
 
-<p *ngIf="servers.length === 0">
-  None so far.
-</p>
+<p *ngIf="servers.length === 0">None so far.</p>
+
+<br />
+<h2>servers</h2>
+
+<mat-accordion>
+  <ng-container *ngFor="let server of servers">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ server.name }}
+        </mat-panel-title>
+        <!-- <mat-panel-description>
+          <code> {{ server.uuid }} </code>
+        </mat-panel-description> -->
+      </mat-expansion-panel-header>
+
+      <p>
+        Status:
+        <!-- {{ getConnectionStatus(server) }} -->
+      </p>
+
+      <p>
+        <code> {{ server.apiUrl }} </code>
+      </p>
+
+      <mat-action-row>
+        <button mat-button (click)="deleteServer(server)" color="warn">
+          Remove
+        </button>
+
+        <button mat-button (click)="openEditServerDialog(server)">Edit</button>
+
+        <ng-container [ngSwitch]="getConnectionStatus(server)">
+          <ng-container *ngSwitchCase="NO_CONNECTION">
+            <button mat-button (click)="openPushDialog(server)" color="accent">
+              Push
+            </button>
+
+            <button mat-button (click)="openPullDialog(server)" color="primary">
+              Pull
+            </button>
+          </ng-container>
+
+          <!-- <ng-container *ngSwitchCase="HAS_JOINED"> -->
+          <button mat-button (click)="onRevokeInvite(server)" color="accent">
+            Revoke invitation
+          </button>
+          <!-- </ng-container> -->
+
+          <!-- <ng-container *ngSwitchCase="IS_HOST"> -->
+          <button mat-button (click)="onLeaveSession()" color="accent">
+            Leave session
+          </button>
+          <!-- </ng-container> -->
+
+          <!-- <ng-container *ngSwitchCase="PENDING_JOIN"> -->
+          <!-- TODO cancel join
+          <button mat-button disabled>{{ PENDING_JOIN }}</button>
+           </ng-container> -->
+
+          <!-- <ng-container *ngSwitchCase="PENDING_INVITE">
+            <!-- TODO cancel invite
+            <button mat-button disabled>{{ PENDING_INVITE }}</button>
+          </ng-container> -->
+        </ng-container>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </ng-container>
+
+  <!-- Tutorial -->
+
+  <!-- <ng-container *ngIf="servers.length === 0"> -->
+  <mat-expansion-panel [expanded]="servers.length === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Collaboration guide </mat-panel-title>
+      <mat-panel-description> (Tutorial) </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>DoubleNote supports collaboration in real time.</p>
+
+    <p>
+      Use the interface above to add servers, and to invite them to your
+      session, or join others in their sessions if you are invited.
+    </p>
+
+    <!-- <mat-action-row>
+        <button mat-button color="primary">Learn more</button>
+      </mat-action-row> -->
+  </mat-expansion-panel>
+  <!-- </ng-container> -->
+</mat-accordion>
