@@ -16,6 +16,18 @@ export class ServersService {
     localStorage.setItem("dn.servers", JSON.stringify(this.servers));
   }
 
+  /**
+   * Removes a server from the list of saved servers
+   * using the API URL in the required server object
+   *
+   * @param server The server to removed
+   */
+  public removeServer(server: Server): void {
+    const i = this.servers.findIndex((s) => s.apiUrl === server.apiUrl);
+    this.servers.splice(i, 1);
+    this.persistServers();
+  }
+
   get baseHref(): string {
     return this.locationStrategy.getBaseHref();
   }
