@@ -34,4 +34,20 @@ export class ServersComponent implements OnInit {
       .tryAddOrigin()
       .then((result) => (this.originServerStatus = result));
   }
+
+  deleteServer(server: Server) {
+    // TODO implement deleteServer
+  }
+
+  openEditServerDialog(server: Server) {
+    // TODO implement openEditServerDialog
+  }
+
+  openPushDialog(server: Server) {
+    // TODO implement openPushDialog
+  }
+
+  openPullDialog(server: Server) {
+    // TODO implement openPullDialog
+  }
 }
