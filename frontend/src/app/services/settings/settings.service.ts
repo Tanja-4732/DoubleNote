@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
+import { TabBehaviour } from "src/typings/settings/TabBehaviour";
 
 @Injectable({
   providedIn: "root",
@@ -31,6 +32,16 @@ export class SettingsService {
    */
   public readonly formatBarsObservable: Observable<boolean>;
 
+  /**
+   * A subject of the tab behavior
+   */
+  private readonly tabBehaviourSubject: BehaviorSubject<TabBehaviour>;
+
+  /**
+   * An observable of the tab behavior
+   */
+  public readonly tabBehaviourObservable: Observable<TabBehaviour>;
+
   constructor() {
     // Read the settings from localStorage
     this.settings = JSON.parse(localStorage.getItem("dn.settings") ?? "{}");
@@ -42,6 +53,10 @@ export class SettingsService {
     // Format bars
     this.formatBarsSubject = new BehaviorSubject(this.formatBars);
     this.formatBarsObservable = this.formatBarsSubject.asObservable();
+
+    // Tab behavior
+    this.tabBehaviourSubject = new BehaviorSubject(this.tabBehaviour);
+    this.tabBehaviourObservable = this.tabBehaviourSubject.asObservable();
   }
 
   /**
@@ -76,6 +91,16 @@ export class SettingsService {
     this.formatBarsSubject.next(value);
   }
 
+  get tabBehaviour(): TabBehaviour {
+    return this.settings.tabBehaviour ?? TabBehaviour.Responsive;
+  }
+
+  set tabBehaviour(value: TabBehaviour) {
+    this.settings.tabBehaviour = value;
+    this.saveData();
+    this.tabBehaviourSubject.next(value);
+  }
+
   get sideNavOpened(): boolean {
     return this.settings.sideNavOpened ?? true;
   }
@@ -93,4 +118,5 @@ interface Settings {
   enableOfflineMode: boolean;
   enableFormatBars: boolean;
   sideNavOpened: boolean;
+  tabBehaviour: TabBehaviour;
 }
