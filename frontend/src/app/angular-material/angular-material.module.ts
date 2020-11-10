@@ -18,7 +18,8 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatTreeModule } from "@angular/material/tree";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatExpansionModule } from "@angular/material/expansion";
-
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatSelectModule } from "@angular/material/select";
 @NgModule({
   declarations: [],
   imports: [],
@@ -44,6 +45,8 @@ import { MatExpansionModule } from "@angular/material/expansion";
     MatTreeModule,
     MatSnackBarModule,
     MatExpansionModule,
+    MatTabsModule,
+    MatSelectModule,
   ],
 })
 export class AngularMaterialModule {}

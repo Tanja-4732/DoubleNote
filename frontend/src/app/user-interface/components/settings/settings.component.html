@@ -10,7 +10,38 @@
     <mat-slide-toggle formControlName="displayFormatBars">
       Display format bars in text boxes
     </mat-slide-toggle>
+
+    <br />
+    <br />
+    <p>
+      The VCS component is used to show the current status of a notebook, create
+      branches and tags, as well as to push and pull changes. To fit various
+      screen sizes, it supports both a tabbed appearance and a card-grid layout.
+      By default, it switches between them to best fit your screen (Responsive).
+      If you have a preferred tab behavior, you can change the value below:
+      <br />
+      <br />
+
+      <mat-form-field appearance="outline">
+        <mat-label>Preferred tab behavior</mat-label>
+
+        <mat-select formControlName="preferredTabBehavior">
+          <mat-option [value]="TB.OnlyUseCards">Never use tabs</mat-option>
+          <mat-option [value]="TB.Responsive">Responsive</mat-option>
+          <mat-option [value]="TB.AlwaysUseTabs">Always use tabs</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
   </form>
+
+  <!--
+
+
+  OnlyUseCards = "Never use tabs",
+  Responsive = "Responsive",
+  AlwaysUseTabs = "Always use tabs",
+
+ -->
 
   <br />
 

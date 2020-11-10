@@ -16,6 +16,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { version } from "src/functions/version";
 import { SwUpdate } from "@angular/service-worker";
 import { BcpVcsService } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { TabBehaviour } from "src/typings/settings/TabBehaviour";
 
 @Component({
   selector: "app-settings",
@@ -32,6 +33,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     return version;
   }
 
+  get TB() {
+    return TabBehaviour;
+  }
+
   public updateText =
     "New updates may be available. Click the button below to check for updates.";
 
@@ -45,12 +50,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.formGroup = formBuilder.group({
       enableOfflineMode: true,
       displayFormatBars: true,
+      preferredTabBehavior: TabBehaviour.Responsive,
     });
 
     this.formGroup.setValue(
       {
         enableOfflineMode: this.settings.offlineMode,
         displayFormatBars: this.settings.formatBars,
+        preferredTabBehavior: this.settings.tabBehaviour,
       },
       { emitEvent: false }
     );
@@ -58,6 +65,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.sub = this.formGroup.valueChanges.subscribe((value) => {
       this.settings.offlineMode = value.enableOfflineMode;
       this.settings.formatBars = value.displayFormatBars;
+      this.settings.tabBehaviour = value.preferredTabBehavior;
     });
   }
 
