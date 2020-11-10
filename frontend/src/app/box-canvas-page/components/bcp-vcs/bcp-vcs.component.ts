@@ -21,6 +21,8 @@ import {
   ConfirmDialogComponent,
 } from "../confirm-dialog/confirm-dialog.component";
 import { BranchHead } from "src/typings/core/Head";
+import { SettingsService } from "src/app/services/settings/settings.service";
+import { TabBehaviour } from "src/typings/settings/TabBehaviour";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -35,7 +37,15 @@ export class BcpVcsComponent implements OnInit {
     return !environment.production;
   }
 
-  constructor(public vcs: BcpVcsService, public dialog: MatDialog) {}
+  get TB() {
+    return TabBehaviour;
+  }
+
+  constructor(
+    public settings: SettingsService,
+    public vcs: BcpVcsService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {}
 
