@@ -1,7 +1,4 @@
-<mat-tab-group
-  dynamicHeight
-  *ngIf="(settings.tabBehaviourObservable | async) === TB.AlwaysUseTabs"
->
+<mat-tab-group dynamicHeight *ngIf="useTabbed$ | async">
   <mat-tab label="VCS Status">
     <div class="example-small-box mat-elevation-z4">
       <ng-container *ngTemplateOutlet="VcsStatus"> </ng-container>
@@ -14,10 +11,7 @@
   </mat-tab>
 </mat-tab-group>
 
-<div
-  class="card-grid"
-  *ngIf="(settings.tabBehaviourObservable | async) !== TB.AlwaysUseTabs"
->
+<div class="card-grid" *ngIf="!(useTabbed$ | async)">
   <!-- (span>lorem)*100 -->
   <ng-container *ngTemplateOutlet="VcsStatus"> </ng-container>
   <ng-container *ngTemplateOutlet="BranchesAndTags"> </ng-container>

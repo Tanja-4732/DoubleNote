@@ -14,7 +14,7 @@ import {
 } from "../create-branch/create-branch.component";
 import { hash } from "src/functions/functions";
 import { BcpTreeComponent } from "../bcp-tree/bcp-tree.component";
-import { filter } from "rxjs/operators";
+import { map, shareReplay } from "rxjs/operators";
 import {
   ConfirmDialogOutput,
   ConfirmDialogInput,
@@ -23,6 +23,8 @@ import {
 import { BranchHead } from "src/typings/core/Head";
 import { SettingsService } from "src/app/services/settings/settings.service";
 import { TabBehaviour } from "src/typings/settings/TabBehaviour";
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { combineLatest, Observable } from "rxjs";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -33,15 +35,40 @@ export class BcpVcsComponent implements OnInit {
   @Input()
   notebook!: BcpNotebook;
 
+  private isHandset$: Observable<boolean> = this.breakpointObserver
+    .observe(Breakpoints.Handset)
+    .pipe(
+      map((result) => result.matches),
+      shareReplay()
+    );
+
   get isDevMode(): boolean {
     return !environment.production;
   }
 
-  get TB() {
-    return TabBehaviour;
+  /**
+   * Determine if a tabbed layout should be used
+   *
+   * If never is specified, then cards will be used;
+   * If always is specified, tabs will be used;
+   * If responsive is specified, the screen width
+   * will be used to determine the layout
+   */
+  get useTabbed$(): Observable<boolean> {
+    return combineLatest([
+      this.isHandset$,
+      this.settings.tabBehaviourObservable,
+    ]).pipe(
+      map(([isHandset, preference]) =>
+        preference === TabBehaviour.Responsive
+          ? isHandset
+          : preference === TabBehaviour.AlwaysUseTabs
+      )
+    );
   }
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     public settings: SettingsService,
     public vcs: BcpVcsService,
     public dialog: MatDialog
