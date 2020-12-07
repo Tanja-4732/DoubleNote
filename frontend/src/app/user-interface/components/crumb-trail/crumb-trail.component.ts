@@ -36,7 +36,7 @@ export enum Icons {
   Category = "local_offer",
   Notebook = "book",
   Settings = "settings",
-  // Settings = "miscellaneous_services",
+  Settings2 = "miscellaneous_services",
   Demo = "bug_report",
   Error = "error",
   Notebooks = "collections_bookmark",
@@ -64,6 +64,7 @@ export enum Icons {
   Server = "cloud",
   Server2 = "storage",
   Server3 = "dns",
+  Delete = "delete",
 }
 
 /**
