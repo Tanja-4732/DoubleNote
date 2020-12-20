@@ -153,6 +153,29 @@ export class BcpVcsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => this.handleResult(result));
   }
 
+  onPush(): void {
+    // TODO implement onPush
+  }
+
+  onPull(): void {
+    // TODO implement onPull
+  }
+
+  onCreateTag(): void {
+    const data: DialogData = {
+      currentCommit: this.notebook.strings.head,
+      takenNames: Object.keys(this.notebook.strings.branches),
+      notebookName: this.notebook.name,
+    };
+
+    const dialogRef = this.dialog.open(CreateBranchComponent, {
+      width: "350px",
+      data,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => this.handleResult(result));
+  }
+
   private handleResult(result: DialogResult) {
     if (result?.create && result.name) {
       this.vcs.createBranch(

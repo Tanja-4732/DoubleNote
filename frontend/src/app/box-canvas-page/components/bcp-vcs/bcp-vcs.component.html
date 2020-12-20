@@ -114,13 +114,13 @@
       </mat-menu>
 
       <mat-menu #syncMenu>
-        <button mat-menu-item (click)="(42)">Push</button>
-        <button mat-menu-item (click)="(42)">Pull</button>
+        <button mat-menu-item (click)="onPush()">Push</button>
+        <button mat-menu-item (click)="onPull()">Pull</button>
       </mat-menu>
 
       <mat-menu #createMenu>
         <button mat-menu-item (click)="onCreateBranch()">Branch</button>
-        <button mat-menu-item (click)="onCreateBranch()">Tag</button>
+        <button mat-menu-item (click)="onCreateTag()">Tag</button>
       </mat-menu>
     </mat-card-actions>
   </mat-card>
