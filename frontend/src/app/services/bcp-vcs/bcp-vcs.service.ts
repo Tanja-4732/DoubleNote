@@ -10,7 +10,7 @@ import { cloneDeep } from "lodash";
 import { fieldHider } from "src/functions/functions";
 import { log } from "src/functions/console";
 import { version } from "src/functions/version";
-import { BranchHead } from "src/typings/core/Head";
+import { BranchHead, DetachedHead } from "src/typings/core/Head";
 import { BcpTag } from "src/typings/bcp/BcpTag";
 
 // Error messages
@@ -19,6 +19,7 @@ export const WORKING_TREE_DIRTY =
 export const NO_SUCH_BRANCH = "The specified branch does not exist";
 export const HEAD_STATE_DETACHED = "Cannot commit in detached HEAD state";
 export const BRANCH_NAME_TAKEN = "Branch exists already";
+export const TAG_NAME_TAKEN = "Tag exists already";
 export const NO_SUCH_COMMIT = "The specified commit does not exist";
 export const NO_SUCH_NOTEBOOK = "Notebook not found";
 
@@ -260,6 +261,80 @@ export class BcpVcsService {
 
     // Persist the new branch
     this.persistNotebooks();
+  }
+
+  /**
+   * Creates a new tag with a specified name (and an optional description)
+   * for a BCP notebook, based on the specified commit.
+   *
+   * This process does not create a new commit. Instead, the new tag
+   * will point to the specified commit hash directly.
+   *
+   * @param notebook The notebook for which a tag should be created
+   * @param name The name of the tag to be created (may not exist already)
+   * @param description The description of the tag (may be an empty string)
+   * @param target The hash of the commit to which the tag should point to
+   * @param checkout If the new tag should be checked out (in headless mode)
+   */
+  createTag(
+    notebook: BcpNotebook,
+    name: string,
+    description: string,
+    target: string,
+    checkout: boolean
+  ): void {
+    // Null check
+    if (notebook.objects == null) {
+      throw new Error("notebook.objects is nullish");
+    }
+
+    // Check if the tag exists already
+    if (notebook.strings.tags.hasOwnProperty(name)) {
+      throw new Error(TAG_NAME_TAKEN);
+    }
+
+    // Get the target commit
+    const commit = this.commits[target];
+
+    // Make sure the specified commit exists
+    if (commit == null) {
+      throw new Error(NO_SUCH_COMMIT);
+    }
+
+    /**
+     * The tag object created by this method
+     */
+    const tag: BcpTag = {
+      timestamp: new Date().toISOString(),
+      name,
+      description,
+      strings: {
+        target,
+      },
+      objects: {
+        target: commit,
+      },
+    };
+
+    /**
+     * The hash of the tag
+     */
+    const tagHash = sha256(JSON.stringify(tag, fieldHider));
+
+    // Save the tag
+    this.tags[tagHash] = tag;
+    notebook.objects.tags.push(tag);
+    notebook.strings.tags.push(tagHash);
+
+    // Move the HEAD to the specified tag if desired
+    if (checkout) {
+      notebook.strings.head = target;
+      notebook.objects.head.commit = commit;
+      notebook.objects.head.detached = true;
+    }
+
+    // Persist the new tag
+    this.persistTags();
   }
 
   /**
