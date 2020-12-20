@@ -85,19 +85,18 @@
 
       <!-- Tags -->
       <mat-menu #selectTag>
-        <button mat-menu-item disabled>TODO 🤷</button>
-        <button mat-menu-item disabled>
-          You can't create them either 🤷🤷
-        </button>
-        <!-- <ng-container *ngFor="let tag of notebook.strings.tags | keyvalue">
-          <button
-            mat-menu-item
-            (click)="onCheckoutBranch(tag.key)"
-            *ngIf="notebook.strings.TODO !== tag.key"
-          >
-            {{ tag.key }}
+        <ng-container *ngFor="let tag of notebook.objects?.tags">
+          <button mat-menu-item (click)="onCheckoutTag(tag)">
+            {{ tag.name }}
           </button>
-        </ng-container> -->
+        </ng-container>
+        <button
+          mat-menu-item
+          disabled
+          *ngIf="notebook.objects?.tags.length === 0"
+        >
+          None so far
+        </button>
       </mat-menu>
 
       <button mat-button [matMenuTriggerFor]="moreActions">

@@ -25,6 +25,12 @@ import { SettingsService } from "src/app/services/settings/settings.service";
 import { TabBehaviour } from "src/typings/settings/TabBehaviour";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { combineLatest, Observable } from "rxjs";
+import {
+  CreateTagComponent,
+  CreateTagInput,
+  CreateTagOutput,
+} from "../create-tag/create-tag.component";
+import { BcpTag } from "src/typings/bcp/BcpTag";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -150,7 +156,88 @@ export class BcpVcsComponent implements OnInit {
       data,
     });
 
-    dialogRef.afterClosed().subscribe((result) => this.handleResult(result));
+    const subscription = dialogRef
+      .afterClosed()
+      .subscribe((result: DialogResult) => {
+        if (result?.create && result.name) {
+          this.vcs.createBranch(
+            this.notebook,
+            result.name,
+            this.vcs.resolveHead(this.notebook.strings.head, this.notebook),
+            true
+          );
+        }
+        subscription.unsubscribe();
+      });
+  }
+
+  onCheckoutTag(tag: BcpTag): void {
+    // TODO implement onCheckoutTag
+    // try {
+    //   this.vcs.checkoutTag(this.notebook, name);
+    //   BcpTreeComponent.setDataSub.next();
+    // } catch (err) {
+    //   if ((err as Error).message === WORKING_TREE_DIRTY) {
+    //     const data: ConfirmDialogInput = {
+    //       heading: "Force checkout?",
+    //       body:
+    //         "There are uncommitted changes in the working tree.\nA checkout to " +
+    //         tag.name +
+    //         (tag.description !== ""
+    //           ? tag.description
+    //           : `(${tag.description})`) +
+    //         " would lead to the loss of this data.\n\nAre you sure you want to continue?",
+    //       cancel: {
+    //         color: "primary",
+    //         text: "Cancel",
+    //       },
+    //       confirm: {
+    //         color: "warn",
+    //         text: "Force checkout",
+    //       },
+    //     };
+    //     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    //       width: "350px",
+    //       data,
+    //     });
+    //     dialogRef.afterClosed().subscribe((result: ConfirmDialogOutput) => {
+    //       if (result?.result) {
+    //         this.vcs.checkoutTag(this.notebook, name, true);
+    //         BcpTreeComponent.setDataSub.next();
+    //       }
+    //     });
+    //   } else {
+    //     error(err);
+    //   }
+    // }
+  }
+
+  onCreateTag(): void {
+    const data: CreateTagInput = {
+      currentCommit: this.notebook.strings.head,
+      takenNames: Object.keys(this.notebook.strings.tags),
+      notebookName: this.notebook.name,
+    };
+
+    const dialogRef = this.dialog.open(CreateTagComponent, {
+      width: "350px",
+      data,
+    });
+
+    const subscription = dialogRef
+      .afterClosed()
+      .subscribe((result: CreateTagOutput) => {
+        if (result?.create && result.name) {
+          this.vcs.createTag(
+            this.notebook,
+            result.name,
+            result.description,
+            this.vcs.resolveHead(this.notebook.strings.head, this.notebook),
+            false
+          );
+        }
+        subscription.unsubscribe();
+      });
   }
 
   onPush(): void {
@@ -159,32 +246,6 @@ export class BcpVcsComponent implements OnInit {
 
   onPull(): void {
     // TODO implement onPull
-  }
-
-  onCreateTag(): void {
-    const data: DialogData = {
-      currentCommit: this.notebook.strings.head,
-      takenNames: Object.keys(this.notebook.strings.branches),
-      notebookName: this.notebook.name,
-    };
-
-    const dialogRef = this.dialog.open(CreateBranchComponent, {
-      width: "350px",
-      data,
-    });
-
-    dialogRef.afterClosed().subscribe((result) => this.handleResult(result));
-  }
-
-  private handleResult(result: DialogResult) {
-    if (result?.create && result.name) {
-      this.vcs.createBranch(
-        this.notebook,
-        result.name,
-        this.vcs.resolveHead(this.notebook.strings.head, this.notebook),
-        true
-      );
-    }
   }
 
   onCommit(): void {

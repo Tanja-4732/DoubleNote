@@ -574,12 +574,9 @@ export class BcpVcsService {
     for (const tagHash of notebook.strings.tags) {
       const tag = this.tags[tagHash];
 
-      // Null check
-      if (tag.objects == null) {
-        throw new Error("tag.objects is nullish");
-      }
+      // Load the tags objects
+      tag.objects = { target: this.commits[tag.strings.target] };
 
-      tag.objects.target = this.commits[tag.strings.target];
       notebook.objects.tags.push(tag);
     }
 

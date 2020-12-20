@@ -1,1 +1,35 @@
-<p>create-tag works!</p>
+<h1 mat-dialog-title>Create tag</h1>
+<p>Notebook: {{ this.data.notebookName }}</p>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="My branch"
+        required
+        cdkFocusInitial
+      />
+      <mat-error *ngIf="formGroup.invalid">
+        An unused name must be provided
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="(optional)"
+      ></textarea>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" type="button">Cancel</button>
+    <button mat-button [disabled]="formGroup.invalid" type="submit">
+      Confirm
+    </button>
+  </div>
+</form>
