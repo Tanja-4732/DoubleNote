@@ -17,6 +17,7 @@ import { ConfirmDialogComponent } from "./components/confirm-dialog/confirm-dial
 import { MarkdownDirective } from "./directives/markdown/markdown.directive";
 import { ContentEditableDirective } from "./directives/content-editable/content-editable.directive";
 import { PmBoxComponent } from "./components/pm-box/pm-box.component";
+import { CreateTagComponent } from './components/create-tag/create-tag.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { PmBoxComponent } from "./components/pm-box/pm-box.component";
     MarkdownDirective,
     ContentEditableDirective,
     PmBoxComponent,
+    CreateTagComponent,
   ],
   imports: [
     CommonModule,
