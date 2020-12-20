@@ -1,20 +1,20 @@
 <mat-tab-group dynamicHeight *ngIf="useTabbed$ | async">
-  <mat-tab label="VCS Status">
-    <div class="example-small-box mat-elevation-z4">
-      <ng-container *ngTemplateOutlet="VcsStatus"> </ng-container>
-    </div>
-  </mat-tab>
   <mat-tab label="Branches & Tags">
     <div class="example-large-box mat-elevation-z4">
       <ng-container *ngTemplateOutlet="BranchesAndTags"> </ng-container>
     </div>
   </mat-tab>
+
+  <mat-tab label="VCS Status">
+    <div class="example-small-box mat-elevation-z4">
+      <ng-container *ngTemplateOutlet="VcsStatus"> </ng-container>
+    </div>
+  </mat-tab>
 </mat-tab-group>
 
 <div class="card-grid" *ngIf="!(useTabbed$ | async)">
-  <!-- (span>lorem)*100 -->
-  <ng-container *ngTemplateOutlet="VcsStatus"> </ng-container>
   <ng-container *ngTemplateOutlet="BranchesAndTags"> </ng-container>
+  <ng-container *ngTemplateOutlet="VcsStatus"> </ng-container>
 </div>
 
 <ng-template #VcsStatus>
@@ -100,7 +100,28 @@
         </ng-container> -->
       </mat-menu>
 
-      <button mat-button (click)="onCreateBranch()">Create branch</button>
+      <button mat-button [matMenuTriggerFor]="moreActions">
+        Actions
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #moreActions>
+        <button mat-menu-item (click)="onCommit()" [disabled]="disableCommit">
+          {{ commitText }}
+        </button>
+        <button mat-menu-item [matMenuTriggerFor]="syncMenu">Sync</button>
+        <button mat-menu-item [matMenuTriggerFor]="createMenu">Create</button>
+      </mat-menu>
+
+      <mat-menu #syncMenu>
+        <button mat-menu-item (click)="(42)">Push</button>
+        <button mat-menu-item (click)="(42)">Pull</button>
+      </mat-menu>
+
+      <mat-menu #createMenu>
+        <button mat-menu-item (click)="onCreateBranch()">Branch</button>
+        <button mat-menu-item (click)="onCreateBranch()">Tag</button>
+      </mat-menu>
     </mat-card-actions>
   </mat-card>
 </ng-template>
