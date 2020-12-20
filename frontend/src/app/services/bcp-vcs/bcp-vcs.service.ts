@@ -17,6 +17,7 @@ import { BcpTag } from "src/typings/bcp/BcpTag";
 export const WORKING_TREE_DIRTY =
   "The working tree contains uncommitted changes and the force flag was not set";
 export const NO_SUCH_BRANCH = "The specified branch does not exist";
+export const NO_SUCH_TAG = "The specified tag does not exist";
 export const HEAD_STATE_DETACHED = "Cannot commit in detached HEAD state";
 export const BRANCH_NAME_TAKEN = "Branch exists already";
 export const TAG_NAME_TAKEN = "Tag exists already";
@@ -394,6 +395,61 @@ export class BcpVcsService {
   }
 
   /**
+   * Checks out a specified tag in a specified notebook
+   *
+   * This moves the HEAD to the specified tag.
+   * The tag must exist in the notebook.
+   *
+   * If the working tree contains uncommitted changes,
+   * the checkout will fail with an error, expect for when
+   * the force flag is set, which may lead to data loss.
+   *
+   * @param notebook The notebook to be updated
+   * @param tag The tag to be checked out
+   * @param force Whether to force the checkout process (may result in data loss)
+   */
+  checkoutTag(notebook: BcpNotebook, tag: BcpTag, force = false): void {
+    // Null check
+    if (notebook.objects?.head.commit.objects?.rootCategory == null) {
+      throw new Error(
+        "notebook.objects?.head.commit.objects?.rootCategory is nullish"
+      );
+    }
+
+    // Check if the tag exists in the notebook
+    if (!notebook.objects.tags.some((t) => t.name === tag.name)) {
+      throw new Error(NO_SUCH_TAG);
+    }
+
+    // Prevent unwanted data loss
+    if (
+      !force &&
+      this.commits[this.resolveHead(notebook.strings.head, notebook)].strings
+        .rootCategory !== notebook.strings.workingTree
+    ) {
+      throw new Error(WORKING_TREE_DIRTY);
+    }
+
+    // Move the HEAD to the specified tag
+    notebook.strings.head = tag.strings.target;
+    notebook.objects.head.commit = tag.objects?.target!;
+    notebook.objects.head.detached = true;
+
+    // Null check
+    if (notebook.objects.head.commit.objects == null) {
+      throw new Error("notebook.objects.head.commit.objects is nullish");
+    }
+
+    // Copy the working tree
+    notebook.objects.workingTree = cloneDeep(
+      notebook.objects.head.commit.objects.rootCategory
+    );
+
+    // Update the working tree hash
+    this.persistWorkingTree(notebook);
+  }
+
+  /**
    * Saves the uncommitted changes without committing them
    *
    * You must call this method before creating a commit.
@@ -576,6 +632,16 @@ export class BcpVcsService {
 
       // Load the tags objects
       tag.objects = { target: this.commits[tag.strings.target] };
+
+      // Initialize the target commit if needed
+      if (tag.objects.target.objects == null) {
+        tag.objects.target.objects = {
+          previous: this.commits[tag.objects.target.strings.previous],
+          rootCategory: this.trees[tag.objects.target.strings.rootCategory],
+        };
+
+        this.loadTree(tag.objects.target.objects.rootCategory);
+      }
 
       notebook.objects.tags.push(tag);
     }

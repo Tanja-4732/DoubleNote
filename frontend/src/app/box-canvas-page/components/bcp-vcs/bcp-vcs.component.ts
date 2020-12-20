@@ -1,36 +1,36 @@
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { Component, Input, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
+import { combineLatest, Observable } from "rxjs";
+import { map, shareReplay } from "rxjs/operators";
 import {
   BcpVcsService,
   WORKING_TREE_DIRTY,
 } from "src/app/services/bcp-vcs/bcp-vcs.service";
+import { SettingsService } from "src/app/services/settings/settings.service";
 import { environment } from "src/environments/environment";
-import { log, error } from "src/functions/console";
+import { error, log } from "src/functions/console";
+import { hash } from "src/functions/functions";
 import { BcpNotebook } from "src/typings/bcp/BcpNotebook";
+import { BcpTag } from "src/typings/bcp/BcpTag";
+import { BranchHead } from "src/typings/core/Head";
+import { TabBehaviour } from "src/typings/settings/TabBehaviour";
+import { BcpTreeComponent } from "../bcp-tree/bcp-tree.component";
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogInput,
+  ConfirmDialogOutput,
+} from "../confirm-dialog/confirm-dialog.component";
 import {
   CreateBranchComponent,
   DialogData,
   DialogResult,
 } from "../create-branch/create-branch.component";
-import { hash } from "src/functions/functions";
-import { BcpTreeComponent } from "../bcp-tree/bcp-tree.component";
-import { map, shareReplay } from "rxjs/operators";
-import {
-  ConfirmDialogOutput,
-  ConfirmDialogInput,
-  ConfirmDialogComponent,
-} from "../confirm-dialog/confirm-dialog.component";
-import { BranchHead } from "src/typings/core/Head";
-import { SettingsService } from "src/app/services/settings/settings.service";
-import { TabBehaviour } from "src/typings/settings/TabBehaviour";
-import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
-import { combineLatest, Observable } from "rxjs";
 import {
   CreateTagComponent,
   CreateTagInput,
   CreateTagOutput,
 } from "../create-tag/create-tag.component";
-import { BcpTag } from "src/typings/bcp/BcpTag";
 
 @Component({
   selector: "app-bcp-vcs",
@@ -98,7 +98,9 @@ export class BcpVcsComponent implements OnInit {
   }
 
   get branchText(): string {
-    return (this.notebook.objects?.head as BranchHead).name || "Detached";
+    return this.notebook.objects?.head.detached
+      ? "Detached"
+      : (this.notebook.objects?.head as BranchHead).name;
   }
 
   calcDisableBranchButton(name: string): boolean {
@@ -172,44 +174,41 @@ export class BcpVcsComponent implements OnInit {
   }
 
   onCheckoutTag(tag: BcpTag): void {
-    // TODO implement onCheckoutTag
-    // try {
-    //   this.vcs.checkoutTag(this.notebook, name);
-    //   BcpTreeComponent.setDataSub.next();
-    // } catch (err) {
-    //   if ((err as Error).message === WORKING_TREE_DIRTY) {
-    //     const data: ConfirmDialogInput = {
-    //       heading: "Force checkout?",
-    //       body:
-    //         "There are uncommitted changes in the working tree.\nA checkout to " +
-    //         tag.name +
-    //         (tag.description !== ""
-    //           ? tag.description
-    //           : `(${tag.description})`) +
-    //         " would lead to the loss of this data.\n\nAre you sure you want to continue?",
-    //       cancel: {
-    //         color: "primary",
-    //         text: "Cancel",
-    //       },
-    //       confirm: {
-    //         color: "warn",
-    //         text: "Force checkout",
-    //       },
-    //     };
-    //     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //       width: "350px",
-    //       data,
-    //     });
-    //     dialogRef.afterClosed().subscribe((result: ConfirmDialogOutput) => {
-    //       if (result?.result) {
-    //         this.vcs.checkoutTag(this.notebook, name, true);
-    //         BcpTreeComponent.setDataSub.next();
-    //       }
-    //     });
-    //   } else {
-    //     error(err);
-    //   }
-    // }
+    try {
+      this.vcs.checkoutTag(this.notebook, tag);
+      BcpTreeComponent.setDataSub.next();
+    } catch (err) {
+      if ((err as Error).message === WORKING_TREE_DIRTY) {
+        const data: ConfirmDialogInput = {
+          heading: "Force checkout?",
+          body:
+            "There are uncommitted changes in the working tree.\nA checkout to " +
+            tag.name +
+            (tag.description !== "" ? ` (${tag.description})` : "") +
+            " would lead to the loss of this data.\n\nAre you sure you want to continue?",
+          cancel: {
+            color: "primary",
+            text: "Cancel",
+          },
+          confirm: {
+            color: "warn",
+            text: "Force checkout",
+          },
+        };
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: "350px",
+          data,
+        });
+        dialogRef.afterClosed().subscribe((result: ConfirmDialogOutput) => {
+          if (result?.result) {
+            this.vcs.checkoutTag(this.notebook, tag, true);
+            BcpTreeComponent.setDataSub.next();
+          }
+        });
+      } else {
+        error(err);
+      }
+    }
   }
 
   onCreateTag(): void {
