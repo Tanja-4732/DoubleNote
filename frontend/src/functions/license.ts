@@ -12,7 +12,7 @@ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along with DoubleNote.
-If not, see <https://www.gnu.org/licenses/>.
+If not, see https://www.gnu.org/licenses/.
 \n`;
 
 export function logLicenseNotice(): void {
