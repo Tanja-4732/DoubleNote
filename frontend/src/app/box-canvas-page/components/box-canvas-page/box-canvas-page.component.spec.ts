@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BoxCanvasPageComponent } from './box-canvas-page.component';
 
@@ -6,7 +6,7 @@ describe('BoxCanvasPageComponent', () => {
   let component: BoxCanvasPageComponent;
   let fixture: ComponentFixture<BoxCanvasPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ BoxCanvasPageComponent ]
     })

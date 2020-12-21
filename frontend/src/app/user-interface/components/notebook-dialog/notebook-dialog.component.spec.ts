@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NotebookDialogComponent } from './notebook-dialog.component';
 
@@ -6,7 +6,7 @@ describe('CreateNotebookComponent', () => {
   let component: NotebookDialogComponent;
   let fixture: ComponentFixture<NotebookDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NotebookDialogComponent ]
     })
