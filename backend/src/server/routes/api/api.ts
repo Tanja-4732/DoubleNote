@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { V1 } from "./v1";
+import { V1 } from "./v1/v1";
 import { version } from "../../functions/version";
 
 export class API {

@@ -5,6 +5,7 @@
     "CQRS",
     "MDOM",
     "Matcha",
+    "TOTP",
     "UUIDs",
     "Vercel",
     "codelyzer",
